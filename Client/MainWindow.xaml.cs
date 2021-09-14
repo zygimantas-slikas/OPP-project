@@ -25,19 +25,32 @@ namespace Client
         {
             InitializeComponent();
         }
-        private void Text_changed(object sender, RoutedEventArgs e)
-        {
-            this.addr = ((TextBox)sender).Text;
-        }
-        string addr = "";
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            var connection = new HubConnectionBuilder().WithUrl("https://localhost:5001/messageHub").Build();
-            connection.StartAsync();
 
+        private HubConnection connection;
+
+
+        private void Connect_to_server(object sender, RoutedEventArgs e)
+        {
+            if (this.connection != null)
+            {
+                this.connection.DisposeAsync();
+            }
+            debug_list.Items.Add(server_addr.Text + "/messageHub");
+            this.connection = new HubConnectionBuilder().WithUrl(server_addr.Text + "/messageHub").Build();
+            debug_list.Items.Add(connection.State.ToString());
+            connection.StartAsync();
+            debug_list.Items.Add(connection.State.ToString());
             connection.InvokeCoreAsync("SendMessage", args: new[] { "user1", "hello" });
-  
-          
+        }
+
+        private void Join_room(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Create_new_room(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
