@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.AspNetCore.SignalR.Client;
 
 namespace Client
 {
@@ -23,6 +24,20 @@ namespace Client
         public MainWindow()
         {
             InitializeComponent();
+        }
+        private void Text_changed(object sender, RoutedEventArgs e)
+        {
+            this.addr = ((TextBox)sender).Text;
+        }
+        string addr = "";
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var connection = new HubConnectionBuilder().WithUrl("https://localhost:5001/messageHub").Build();
+            connection.StartAsync();
+
+            connection.InvokeCoreAsync("SendMessage", args: new[] { "user1", "hello" });
+  
+          
         }
     }
 }
