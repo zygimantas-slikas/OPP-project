@@ -37,18 +37,40 @@ namespace Client
             }
             debug_list.Items.Add(server_addr.Text + "/messageHub");
             this.connection = new HubConnectionBuilder().WithUrl(server_addr.Text + "/messageHub").Build();
-            debug_list.Items.Add(connection.State.ToString());
+            //add functions==================
+            connection.On<string[]>("Show_maps_options", this.Show_maps_options);
+
+            //===============================
             connection.StartAsync();
-            debug_list.Items.Add(connection.State.ToString());
-            connection.InvokeCoreAsync("SendMessage", args: new[] { "user1", "hello" });
+            connection.SendAsync("Connect");
+        }
+
+        private void Create_new_room(object sender, RoutedEventArgs e)
+        {
+            Object[] args = new Object[2] 
+            { Convert.ToInt32(this.players_count.Text), Convert.ToInt32(this.map_size.Text)};
+            this.connection.SendCoreAsync("Create_map", args);
         }
 
         private void Join_room(object sender, RoutedEventArgs e)
         {
 
         }
+        
+        private void Show_maps_options (string[] list)
+        {
+            this.rooms_select.Items.Clear();
+            foreach (string line1 in list)
+            {
+                this.rooms_select.Items.Add(line1);
+            }
+            this.rooms_select.IsDropDownOpen = true;
+        }
+        private void Set_map()
+        {
 
-        private void Create_new_room(object sender, RoutedEventArgs e)
+        }
+        private void Update_map_state()
         {
 
         }

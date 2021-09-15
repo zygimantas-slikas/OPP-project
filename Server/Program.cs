@@ -7,15 +7,17 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
-
+using System.Collections.Generic;
 
 
 namespace Server
 {
-    class Program
+    static class Program
     {
+        public static List<Room> rooms;
         static void Main(string[] args)
         {
+            rooms = new List<Room>();
             CreateHostBuilder(args).Build().Run();
         }
         public static IWebHostBuilder CreateHostBuilder(string[] args) =>
@@ -45,6 +47,5 @@ namespace Server
             });
         }
     }
-
 
 }

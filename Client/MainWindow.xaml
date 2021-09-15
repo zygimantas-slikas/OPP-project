@@ -38,7 +38,7 @@
         <StackPanel Grid.Row="1" Grid.Column="1">
             <Label HorizontalAlignment="Center">Join</Label>
             <WrapPanel>
-                <ComboBox Name="rooms_select" Margin="20" Width="150" Height="30"/>
+                <ComboBox Name="rooms_select" Margin="20" Width="200" Height="30" />
                 <Button Click="Join_room" Content="Join" Margin="20" Width="80" Height="30"/>
             </WrapPanel>
         </StackPanel>
