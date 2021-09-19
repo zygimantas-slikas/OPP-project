@@ -7,46 +7,53 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         Background="DarkGray">
-    <Grid Margin="10">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="100"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+    <TabControl x:Name="Tabs_control">
+        <TabItem Header="Login" x:Name="Login" Margin="10, 0, 0, 0" Width="100">
+            <Grid Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
         
-        <WrapPanel Grid.Row="0" Grid.Column="0">
-            <TextBox x:Name="server_addr" Width="250" Margin="10" Text="https://localhost:5001"/>
-            <Button Content="Connect" Click="Connect_to_server" Margin="10" Width="80"/>
-        </WrapPanel>
+                <WrapPanel Grid.Row="0" Grid.Column="0">
+                    <TextBox x:Name="server_addr" Width="250" Margin="10" Text="https://localhost:5001"/>
+                    <Button Content="Connect" Click="Connect_to_server" Margin="10" Width="80"/>
+                </WrapPanel>
         
-        <StackPanel Grid.Row="1" Grid.Column="0">
-            <Label HorizontalAlignment="Center">Create</Label>
-            <WrapPanel HorizontalAlignment="Center">
-                <StackPanel>
-                    <Label>Players count</Label>
-                    <TextBox x:Name="players_count" Width="150" Margin="10,0,10,10"/>
-                    <Label>Map size</Label>
-                    <TextBox x:Name="map_size" Width="150" Margin="10,0,10,10"/>
+                <StackPanel Grid.Row="1" Grid.Column="0">
+                    <Label HorizontalAlignment="Center">Create</Label>
+                    <WrapPanel HorizontalAlignment="Center">
+                        <StackPanel>
+                            <Label>Players count</Label>
+                            <TextBox x:Name="players_count" Width="150" Margin="10,0,10,10"/>
+                            <Label>Map size</Label>
+                            <TextBox x:Name="map_size" Width="150" Margin="10,0,10,10"/>
+                        </StackPanel>
+                        <Button Content="Create" Click="Create_new_room" Margin="20" Width="80" Height="30"/>
+                    </WrapPanel>
                 </StackPanel>
-                <Button Content="Create" Click="Create_new_room" Margin="20" Width="80" Height="30"/>
-            </WrapPanel>
-        </StackPanel>
         
-        <StackPanel Grid.Row="1" Grid.Column="1">
-            <Label HorizontalAlignment="Center">Join</Label>
-            <WrapPanel>
-                <ComboBox Name="rooms_select" Margin="20" Width="200" Height="30" />
-                <Button Click="Join_room" Content="Join" Margin="20" Width="80" Height="30"/>
-            </WrapPanel>
-        </StackPanel>
+                <StackPanel Grid.Row="1" Grid.Column="1">
+                    <Label HorizontalAlignment="Center">Join</Label>
+                    <WrapPanel>
+                        <ComboBox Name="rooms_select" Margin="20" Width="200" Height="30" />
+                        <Button Click="Join_room" Content="Join" Margin="20" Width="80" Height="30"/>
+                    </WrapPanel>
+                </StackPanel>
 
-        <ListBox Grid.Row="0" Grid.Column="1" x:Name="debug_list" Margin="10" Background="Gray">
-            <ListBoxItem Content="Debug window"/>
-        </ListBox>
-
-    </Grid>
-
+                <ListBox Grid.Row="0" Grid.Column="1" x:Name="debug_list" Margin="10" Background="Gray">
+                    <ListBoxItem Content="Debug window"/>
+                </ListBox>
+            </Grid>
+        </TabItem>
+        <TabItem Header="Game" x:Name="Game" Margin="10, 0, 0, 0" Width="100">
+            <Canvas Margin="10" Name="Canvas1">
+                
+            </Canvas>
+        </TabItem>
+    </TabControl>
 </Window>

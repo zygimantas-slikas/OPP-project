@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
-
+using System.Text.Json;
 
 namespace Server
 {
@@ -39,15 +39,17 @@ namespace Server
         {
             Room r1 = new Room(Program.rooms.Count + 1, players_count, map_size);
             Program.rooms.Add(r1);
-            //create hub's group
             this.Connect();
         }
         public async Task Join_map(Int32 id)
         {
-            //player joins map
-            //add player to hub's communication group
-
+            int index = Program.rooms.FindIndex(x => x.Id == id);
+            Program.rooms[index].Add_player(Context.ConnectionId.ToString());
+            this.Groups.AddToGroupAsync(Context.ConnectionId, id.ToString());
+            string json_map = Program.rooms[index].To_Json();
+            this.Clients.Caller.SendAsync("Set_map", json_map);
         }
+        // map id = hub group name
         public async Task Move()
         {
 

@@ -2,7 +2,8 @@
 {
     public class Tile
     {
-        //content
+        public int Groud = 1;
+        
     }
 
 }
