@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
-
+using System;
 
 namespace Server
 {
@@ -28,9 +28,12 @@ namespace Server
             this.state = Room_satate.empty;
             t.Wait();
         }
-        public void Add_player(string con_id)
+        public void Add_player(string con_id, string name)
         {
-            players.Add(new Player(con_id));
+            var rand = new Random();
+            int x = rand.Next(0, map_size), y = rand.Next(0, map_size);
+            //check if no one else has same coordinates
+            players.Add(new Player(con_id, name, x, y));
             this.current_players++;
         }
         private void Generate_map()
@@ -48,6 +51,13 @@ namespace Server
 
         }
         //move function
+        public string Players_to_Json()
+        {
+            string t1 = JsonSerializer.Serialize(players);
+            //remove conId
+            return t1;
+        }
+
 
     }
 

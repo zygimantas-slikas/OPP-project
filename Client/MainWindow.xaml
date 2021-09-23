@@ -40,7 +40,11 @@
                 <StackPanel Grid.Row="1" Grid.Column="1">
                     <Label HorizontalAlignment="Center">Join</Label>
                     <WrapPanel>
-                        <ComboBox Name="rooms_select" Margin="20" Width="200" Height="30" />
+                        <StackPanel>
+                            <ComboBox Name="rooms_select" Margin="10,20,10,10" Width="200" Height="30" />
+                            <Label>User name</Label>
+                            <TextBox Name="player_name" Margin="10,0,10,10" Width="200"/>
+                        </StackPanel>
                         <Button Click="Join_room" Content="Join" Margin="20" Width="80" Height="30"/>
                     </WrapPanel>
                 </StackPanel>
@@ -51,10 +55,27 @@
             </Grid>
         </TabItem>
         <TabItem Header="Game" x:Name="Game" Margin="10, 0, 0, 0" Width="100">
-            <ScrollViewer  Name="canvas_scrollbar" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible">
-                <Canvas Margin="10" Name="canvas1">
-                </Canvas>
-            </ScrollViewer>
+            <Grid>
+                <!--<Grid.RowDefinitions>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>-->
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="300"/>
+                </Grid.ColumnDefinitions>
+                
+                <ScrollViewer Grid.Column="0" Name="canvas_scrollbar" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible">
+                    <Canvas Margin="10" Name="canvas1">
+                    </Canvas>
+                </ScrollViewer>
+
+                <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Visible">
+                    <StackPanel Name="players_scrollbar">
+                        
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
         </TabItem>
     </TabControl>
 </Window>

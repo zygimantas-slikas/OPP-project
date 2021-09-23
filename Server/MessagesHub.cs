@@ -40,18 +40,20 @@ namespace Server
             Room r1 = new Room(Program.rooms.Count + 1, players_count, map_size);
             Program.rooms.Add(r1);
             await this.Connect();
-            //test
-            Console.WriteLine(JsonSerializer.Serialize(r1));
         }
-        public async Task Join_map(Int32 id)
+        public async Task Join_map(Int32 id, string name)
         {
+            // 1 check if map isn't full already
             int index = Program.rooms.FindIndex(x => x.Id == id);
-            Program.rooms[index].Add_player(Context.ConnectionId.ToString());
+            Program.rooms[index].Add_player(Context.ConnectionId.ToString(), name);
             Task t1 = this.Groups.AddToGroupAsync(Context.ConnectionId, id.ToString());
+
             string json_map = Program.rooms[index].To_Json();
+            string json_players = Program.rooms[index].Players_to_Json();
+            
+            await this.Clients.Group(id.ToString()).SendAsync("Set_players", json_players);
             await this.Clients.Caller.SendAsync("Set_map", json_map);
-            // 1 notify other players
-            // 2 check if map if full already
+            // 2 check if map is full already
         }
         // map id = hub group name
         public async Task Move()
