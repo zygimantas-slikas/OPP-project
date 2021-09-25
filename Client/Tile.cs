@@ -1,4 +1,4 @@
-﻿namespace Server
+﻿namespace Client
 {
     public class Tile
     {
@@ -9,6 +9,7 @@
         {
             this.Surface = t;
         }
+        
     }
 
 }

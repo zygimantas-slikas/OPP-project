@@ -11,10 +11,12 @@ namespace Client
         public int x, y; //coordinates
         public string Con_id { get; }
         public int Health { get; }
-        public Player(string id)
+        public List<Item> Inventory { get; set; }
+        public Player()
         {
-            this.Con_id = id;
+            Inventory = new List<Item>();
             this.Health = 100;
         }
     }
+
 }

@@ -52,9 +52,10 @@
             </Grid>
         </TabItem>
         <TabItem Header="Game" x:Name="Game" Margin="10, 0, 0, 0" Width="100">
-            <Canvas Margin="10" Name="Canvas1">
-                
-            </Canvas>
+            <ScrollViewer  Name="canvas_scrollbar" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible">
+                <Canvas Margin="10" Name="canvas1">
+                </Canvas>
+            </ScrollViewer>
         </TabItem>
     </TabControl>
 </Window>
