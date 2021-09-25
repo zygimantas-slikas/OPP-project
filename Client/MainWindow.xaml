@@ -43,6 +43,7 @@
                         <ComboBox Name="rooms_select" Margin="20" Width="200" Height="30" />
                         <Button Click="Join_room" Content="Join" Margin="20" Width="80" Height="30"/>
                     </WrapPanel>
+                    <Button Content="Test Serialize" Click="Test_Serialize"/>
                 </StackPanel>
 
                 <ListBox Grid.Row="0" Grid.Column="1" x:Name="debug_list" Margin="10" Background="Gray">

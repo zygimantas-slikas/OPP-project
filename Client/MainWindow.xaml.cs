@@ -99,5 +99,21 @@ namespace Client
         {
 
         }
+
+        private void RecieveMessage(string msg)
+        {
+            debug_list.Items.Add(msg);
+        }
+
+        private void Test_Serialize(object sender, RoutedEventArgs e)
+        {
+            Player p = new Player("1");
+            DataProcessor dp = new DataProcessor();
+            //debug_list.Items.Add(dp.SerializeJson(p));
+
+            Object[] args = new Object[1]
+            { dp.SerializeJson(p)};
+            this.connection.SendCoreAsync("SendMessage", args);
+        }
     }
 }

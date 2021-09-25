@@ -10,10 +10,10 @@ namespace Server
 {
     class MessagesHub : Hub
     {
-        public async Task SendMessage(string user, string message)
+        public async Task SendMessage(string message)
         {
-            Console.WriteLine(user + ": " + message);
-            await Clients.All.SendAsync("RecieveMessage", user, message);
+            //Console.WriteLine(user + ": " + message);
+            this.Clients.All.SendAsync("RecieveMessage", message);
         }
 
         public async Task Connect()
