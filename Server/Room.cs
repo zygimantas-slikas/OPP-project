@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
-
+using System.Linq;
+using Newtonsoft.Json;
 
 namespace Server
 {
@@ -14,7 +15,7 @@ namespace Server
         public int map_size { get; }
         public Room_satate state { get; }
 
-        private List<Player> players;
+        public List<Player> players;
         public Tile[,] map;
         public Room(int id, int players_count, int map_size)
         {
@@ -30,18 +31,57 @@ namespace Server
         }
         public void Add_player(string con_id)
         {
-            players.Add(new Player(con_id));
+            Player p = new Player(con_id);
+
+            if (this.map[0, 0].Player_Standing == false) {
+                this.map[0, 0].Player_Standing = true;
+                p.x = 0;
+                p.y = 0;
+            }
+            else if (this.map[0, map_size - 1].Player_Standing == false) {
+                this.map[0, map_size - 1].Player_Standing = true;
+                p.x = 0;
+                p.y = map_size - 1;
+            }
+            else if (this.map[map_size - 1, 0].Player_Standing == false) {
+                this.map[map_size - 1, 0].Player_Standing = true;
+                p.x = map_size - 1;
+                p.y = 0;
+            }
+            else if (this.map[map_size - 1, map_size - 1].Player_Standing == false) {
+                this.map[map_size - 1, map_size - 1].Player_Standing = true;
+                p.x = map_size - 1;
+                p.y = map_size - 1;
+            }
+            players.Add(p);
             this.current_players++;
         }
+
+        public void Add_Tile(int x, int y, Tile.Tile_type tile_Type)
+        {
+            map[x, y] = new Tile(tile_Type);
+        }
+
         private void Generate_map()
         {
-            
+            for (int i = 0; i < map.GetLength(0); i++)
+                for (int j = 0; j < map.GetLength(1); j++)
+                    if (j == 2 && i == 2)
+                        map[i, j] = new Tile(Tile.Tile_type.wall);
+                    else
+                        map[i, j] = new Tile();
         }
+
         public string To_Json()
         {
-            // test
-            string test = this.map_size.ToString();
-            return test;
+            List<Tile> tiles = new List<Tile>();
+            for (int i = 0; i < map.GetLength(0); i++)
+                for (int j = 0; j < map.GetLength(1); j++)
+                    tiles.Add(map[i, j]);
+
+            var serializerSettings = new JsonSerializerSettings { PreserveReferencesHandling = PreserveReferencesHandling.Objects };
+            string json = JsonConvert.SerializeObject(this, Formatting.Indented, serializerSettings);
+            return json;//"[" + JsonSerializer.Serialize(map_size) + "," + JsonSerializer.Serialize(tiles) + "]";
         }
         public void From_Json(string json)
         {
