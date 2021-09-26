@@ -53,7 +53,7 @@ namespace Server
             
             await this.Clients.Group(id.ToString()).SendAsync("Set_players", json_players);
             await this.Clients.Caller.SendAsync("Set_map", json_map);
-            // 2 check if map is full already
+            // 2 check if map is full already strat the game
         }
         // map id = hub group name
         public async Task Move()

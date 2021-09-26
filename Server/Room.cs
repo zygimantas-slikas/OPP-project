@@ -54,7 +54,7 @@ namespace Server
         public string Players_to_Json()
         {
             string t1 = JsonSerializer.Serialize(players);
-            //remove conId
+            //remove conId ("conID":"[\d\D]+",)
             return t1;
         }
 
