@@ -47,7 +47,6 @@ namespace Client
             connection.On<string>("Set_map", this.Set_map);
             connection.On<string>("Set_players", this.Set_players);
             connection.On<string>("Update_map_state", this.Update_map_state);
-            connection.On<string>("ReceiveMessage", this.ReceiveMessage);
             //===============================
             connection.StartAsync();
             connection.SendAsync("Connect");
@@ -67,7 +66,7 @@ namespace Client
             Match match = re.Match(room_text);
             Int32 id = Convert.ToInt32(match.ToString());
             mapId = id;
-            Object[] args = new Object[1]{ id};
+            Object[] args = new Object[2]{ id, player_name.Text};
             this.connection.SendCoreAsync("Join_map", args);
             this.Tabs_control.SelectedItem = this.Game;
         }
@@ -96,10 +95,7 @@ namespace Client
             //example
             DrawMap();
         }
-        private void Set_players(string json_text)
-        {
 
-        }
         private void Update_map_state(string json_text)
         {
             if (this.map1 != null && this.current_Player != null)
@@ -128,7 +124,7 @@ namespace Client
                     if (!map1.map[i, j].Player_Standing)
                             myRect.Fill = System.Windows.Media.Brushes.LightGreen;
                     else
-                        if (i == current_Player.x && j == current_Player.y)
+                        if (i == current_Player.X && j == current_Player.Y)
                         myRect.Fill = System.Windows.Media.Brushes.Black;
                     else
                         myRect.Fill = System.Windows.Media.Brushes.Red;
@@ -142,10 +138,35 @@ namespace Client
                 pos_y += 50;
             }
         }
-
-        private void ReceiveMessage(string msg)
+        private void Set_players(string json_text)
         {
-            debug_list.Items.Add(msg);
+            players1 = System.Text.Json.JsonSerializer.Deserialize<List<Player>>(json_text);
+            players_scrollbar.Children.Clear();
+            for (int i = 0; i < players1.Count; i++)
+            {
+                StackPanel p1 = new StackPanel();
+                p1.Margin = new Thickness(10);
+                Border b1 = new Border();
+                b1.Width = 1;
+                p1.Background = System.Windows.Media.Brushes.DarkGray;
+                Label name = new Label();
+                name.Content = "Name: " + players1[i].Name;
+                Label health = new Label();
+                health.Content = "Health: " + players1[i].Health;
+                Label items = new Label();
+                items.Content = "Items";
+                Label position = new Label();
+                position.Content = String.Format("X:{0}, Y:{1}", players1[i].X, players1[i].Y);
+                p1.Children.Add(name);
+                p1.Children.Add(health);
+                p1.Children.Add(position);
+                p1.Children.Add(items);
+                players_scrollbar.Children.Add(p1);
+            }
+        }
+        private void Update_map_state()
+        {
+            //debug_list.Items.Add(msg);
         }
     }
 }

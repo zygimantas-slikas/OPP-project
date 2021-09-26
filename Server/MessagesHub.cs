@@ -10,10 +10,6 @@ namespace Server
 {
     class MessagesHub : Hub
     {
-        public async Task SendMessage(string message)
-        {
-            await this.Clients.All.SendAsync("RecieveMessage", message);
-        }
 
         public async Task Connect()
         {
@@ -43,21 +39,20 @@ namespace Server
             //test
             //Console.WriteLine(JsonSerializer.Serialize(r1));
         }
-        public async Task Join_map(Int32 id)
+        public async Task Join_map(Int32 id, string name)
         {
+            // 1 check if map isn't full already
             int index = Program.rooms.FindIndex(x => x.Id == id);
-            Program.rooms[index].Add_player(Context.ConnectionId.ToString());
+            Program.rooms[index].Add_player(Context.ConnectionId.ToString(), name);
             Task t1 = this.Groups.AddToGroupAsync(Context.ConnectionId, id.ToString());
+
             string json_map = Program.rooms[index].To_Json();
-            //test
-            //Console.WriteLine(JsonSerializer.Serialize(json_map));
-            //await this.Clients.Caller.SendAsync("Set_map_size", Program.rooms[index].map_size);
-            Console.WriteLine(json_map);
+            string json_players = Program.rooms[index].Players_to_Json();
             
+            await this.Clients.Group(id.ToString()).SendAsync("Set_players", json_players);
             await Clients.All.SendAsync("Update_map_state", json_map);
             await this.Clients.Caller.SendAsync("Set_map", json_map);
-            // 1 notify other players
-            // 2 check if map if full already
+            // 2 check if map is full already strat the game
         }
 
         // map id = hub group name

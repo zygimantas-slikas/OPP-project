@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Linq;
 using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Server
 {
@@ -29,29 +30,29 @@ namespace Server
             this.state = Room_satate.empty;
             t.Wait();
         }
-        public void Add_player(string con_id)
+        public void Add_player(string con_id, string name)
         {
             Player p = new Player(con_id);
 
             if (this.map[0, 0].Player_Standing == false) {
                 this.map[0, 0].Player_Standing = true;
-                p.x = 0;
-                p.y = 0;
+                p.X = 0;
+                p.Y = 0;
             }
             else if (this.map[0, map_size - 1].Player_Standing == false) {
                 this.map[0, map_size - 1].Player_Standing = true;
-                p.x = 0;
-                p.y = map_size - 1;
+                p.X = 0;
+                p.Y = map_size - 1;
             }
             else if (this.map[map_size - 1, 0].Player_Standing == false) {
                 this.map[map_size - 1, 0].Player_Standing = true;
-                p.x = map_size - 1;
-                p.y = 0;
+                p.X = map_size - 1;
+                p.Y = 0;
             }
             else if (this.map[map_size - 1, map_size - 1].Player_Standing == false) {
                 this.map[map_size - 1, map_size - 1].Player_Standing = true;
-                p.x = map_size - 1;
-                p.y = map_size - 1;
+                p.X = map_size - 1;
+                p.Y = map_size - 1;
             }
             players.Add(p);
             this.current_players++;
@@ -88,6 +89,13 @@ namespace Server
 
         }
         //move function
+        public string Players_to_Json()
+        {
+            string t1 = System.Text.Json.JsonSerializer.Serialize(players);
+            //remove conId ("conID":"[\d\D]+",)
+            return t1;
+        }
+
 
     }
 
