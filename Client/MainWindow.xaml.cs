@@ -25,6 +25,7 @@ namespace Client
     {
         private Map map1;
         private List<Player> players1;
+        private Dictionary<String, Shape> players_gui;
         private String current_player_name;
         private Player current_Player;
         private Int32 mapId;
@@ -71,6 +72,7 @@ namespace Client
             Object[] args = new Object[2] { id, player_name.Text };
             this.connection.SendCoreAsync("Join_map", args);
             this.Tabs_control.SelectedItem = this.Game;
+            this.players_gui = new Dictionary<String, Shape>();
         }
 
         private void Show_maps_options(string[] list)
@@ -89,7 +91,7 @@ namespace Client
             this.map1 = new Map();
             var t1 = Task.Run(() => map1.From_json(json_text));
             t1.Wait();
-            this.debug_list.Items.Add(json_text);
+            //this.debug_list.Items.Add(json_text);
             DrawMap();
         }
 
@@ -108,6 +110,7 @@ namespace Client
         private void DrawMap()
         {
             int pos_x = 0, pos_y = 0;
+            canvas1.Children.Clear();
             canvas1.Height = Convert.ToInt32(map1.map_size) * 50 + 20;
             canvas1.Width = Convert.ToInt32(map1.map_size) * 50 + 20;
             debug_list.Items.Add(map1.map_size);
@@ -149,15 +152,24 @@ namespace Client
                     this.canvas1.Children.Add(myRect);
                     Canvas.SetTop(myRect, pos_y);
                     Canvas.SetLeft(myRect, pos_x);
+                    Canvas.SetZIndex(myRect, 0);
                     pos_x += 50;
                 }
                 pos_y += 50;
             }
+            foreach(var el in players_gui.Values)
+            {
+                canvas1.Children.Remove(el);
+                canvas1.Children.Add(el);
+                Canvas.SetZIndex(el, 10);
+            } 
+
         }
         private void Set_players(string json_text)
         {
             players1 = System.Text.Json.JsonSerializer.Deserialize<List<Player>>(json_text);
             current_Player = players1.Find(x => x.Name == current_player_name);
+            this.Update_players_objects();
             players_scrollbar.Children.Clear();
             for (int i = 0; i < players1.Count; i++)
             {
@@ -181,6 +193,42 @@ namespace Client
                 players_scrollbar.Children.Add(p1);
             }
         }
+        private void Update_players_objects()
+        {
+            IEnumerable<string> names = from Player p in players1 select p.Name;
+            IEnumerable<string> created = players_gui.Keys.ToList();
+            foreach (var existing in created)
+            {
+                if (!names.Contains(existing))
+                {
+                    //delete old
+                    canvas1.Children.Remove(players_gui[existing]);
+                    players_gui.Remove(existing);
+                }
+            }
+            foreach(var new1 in names)
+            {
+                if (!created.Contains(new1))
+                {
+                    //add new
+                    Shape s = new Ellipse();
+                    s.Stroke = System.Windows.Media.Brushes.Black;
+                    s.Fill = System.Windows.Media.Brushes.DarkBlue;
+                    s.Width = 40;
+                    s.Height = 40;
+                    players_gui.Add(new1, s);
+                    canvas1.Children.Add(s);
+                    Canvas.SetZIndex(s, 10);
+                    Canvas.SetTop(s, players1.Find(x => x.Name == new1).Y * 50 +5);
+                    Canvas.SetLeft(s, players1.Find(x => x.Name == new1).X * 50 +5);
+                }
+                else
+                {
+                    Canvas.SetTop(players_gui[new1], players1.Find(x => x.Name == new1).Y * 50 +5);
+                    Canvas.SetLeft(players_gui[new1], players1.Find(x => x.Name == new1).X * 50 +5);
+                }
+            }
+        }
 
         private void DataWindow_Closing(object sender, EventArgs e)
         {
@@ -195,7 +243,7 @@ namespace Client
             bool changed = false;
             if (e.Key == Key.W)
             {
-                if (current_Player.Y > 0 && map1.map[current_Player.X, current_Player.Y - 1].Surface != Tile.Tile_type.wall)
+                if (current_Player.Y > 0 && map1.map[current_Player.Y -1, current_Player.X].Surface != Tile.Tile_type.wall)
                 {
                     current_Player.Y -= 1;
                     changed = true;
@@ -203,7 +251,7 @@ namespace Client
             }
             else if (e.Key == Key.A)
             {
-                if (current_Player.X > 0 && map1.map[current_Player.X - 1, current_Player.Y].Surface != Tile.Tile_type.wall)
+                if (current_Player.X > 0 && map1.map[current_Player.Y , current_Player.X -1].Surface != Tile.Tile_type.wall)
                 {
                     current_Player.X -= 1;
                     changed = true;
@@ -211,7 +259,7 @@ namespace Client
             }
             else if (e.Key == Key.S)
             {
-                if (current_Player.Y < map1.map_size - 1 && map1.map[current_Player.X, current_Player.Y + 1].Surface != Tile.Tile_type.wall)
+                if (current_Player.Y < map1.map_size - 1 && map1.map[current_Player.Y +1, current_Player.X].Surface != Tile.Tile_type.wall)
                 {
                     current_Player.Y += 1;
                     changed = true;
@@ -219,7 +267,7 @@ namespace Client
             }
             else if (e.Key == Key.D)
             {
-                if (current_Player.X < map1.map_size - 1 && map1.map[current_Player.X + 1, current_Player.Y].Surface != Tile.Tile_type.wall)
+                if (current_Player.X < map1.map_size - 1 && map1.map[current_Player.Y, current_Player.X +1].Surface != Tile.Tile_type.wall)
                 {
                     current_Player.X += 1;
                     changed = true;
@@ -231,7 +279,8 @@ namespace Client
                 Object[] args = new Object[3] { mapId, current_Player.X, current_Player.Y };
                 this.connection.SendCoreAsync("Move", args);
             }
-
         }
+
+
     }
 }

@@ -82,12 +82,13 @@ namespace Server
             Player p = r.players.Find(x => x.Con_id == Context.ConnectionId);
             if ((Math.Abs(p.X - x) + Math.Abs(p.Y - y) ) < 2)
             {
+                r.map[p.Y, p.X].Player_Standing = null;
                 p.X = x;
                 p.Y = y;
-                string json_map = r.To_Json();
+                r.map[p.Y, p.X].Player_Standing = p.Name;
                 string json_players = r.Players_to_Json();
                 await this.Clients.Group(map_id.ToString()).SendAsync("Set_players", json_players);
-                //await Clients.Group(map_id.ToString()).SendAsync("Update_map_state", json_map);
+                //update map state
             }
 
         }
