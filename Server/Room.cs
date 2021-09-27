@@ -22,12 +22,12 @@ namespace Server
         public Room(int id, int players_count, int map_size)
         {
             this.map_size = map_size;
+            this.map = new Tile[map_size, map_size];
             var t = Task.Run(() => this.Generate_map());
             this.Id = id;
             this.max_players = players_count;
             this.current_players = 0;
             this.players = new List<Player>(players_count);
-            this.map = new Tile[map_size, map_size];
             this.state = Room_satate.empty;
             t.Wait();
         }
@@ -67,12 +67,10 @@ namespace Server
         }
         private void Generate_map()
         {
-            for (int i = 0; i < map.GetLength(0); i++)
-                for (int j = 0; j < map.GetLength(1); j++)
-                    if (j == 2 && i == 2)
-                        map[i, j] = new Tile(Tile.Tile_type.wall);
-                    else
-                        map[i, j] = new Tile();
+            for (int i = 0; i < map_size; i++)
+                for (int j = 0; j < map_size; j++)
+                    map[i, j] = new Tile(Tile.Tile_type.wall);
+
         }
 
         public string To_Json()

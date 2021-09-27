@@ -122,13 +122,32 @@ namespace Client
                 {
                     Rectangle myRect = new System.Windows.Shapes.Rectangle();
                     myRect.Stroke = System.Windows.Media.Brushes.Black;
-                    if (map1.map[i, j].Player_Standing == null)
+                    if (map1.map[i, j].Surface == Tile.Tile_type.grass)
+                    {
                         myRect.Fill = System.Windows.Media.Brushes.LightGreen;
-                    else
-                        if (i == current_Player.X && j == current_Player.Y)
-                        myRect.Fill = System.Windows.Media.Brushes.Black;
-                    else
-                        myRect.Fill = System.Windows.Media.Brushes.Red;
+                    }
+                    else if (map1.map[i, j].Surface == Tile.Tile_type.wall)
+                    {
+                        myRect.Fill = System.Windows.Media.Brushes.Gray;
+                    }
+                    else if (map1.map[i, j].Surface == Tile.Tile_type.water)
+                    {
+                        myRect.Fill = System.Windows.Media.Brushes.Blue;
+                    }
+                    else if (map1.map[i, j].Surface == Tile.Tile_type.lava)
+                    {
+                        myRect.Fill = System.Windows.Media.Brushes.OrangeRed;
+                    }
+                    else if (map1.map[i, j].Surface == Tile.Tile_type.bush)
+                    {
+                        myRect.Fill = System.Windows.Media.Brushes.DarkGreen;
+                    }
+
+                    //if (i == current_Player.X && j == current_Player.Y)
+                    //    myRect.Fill = System.Windows.Media.Brushes.Black;
+                    //else
+                    //    myRect.Fill = System.Windows.Media.Brushes.Red;
+
                     myRect.Height = 50;
                     myRect.Width = 50;
                     this.canvas1.Children.Add(myRect);
