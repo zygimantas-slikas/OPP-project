@@ -65,7 +65,7 @@
                     <ColumnDefinition Width="300"/>
                 </Grid.ColumnDefinitions>
                 
-                <ScrollViewer Grid.Column="0" Name="canvas_scrollbar" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible">
+                <ScrollViewer Grid.Column="0" Name="canvas_scrollbar" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" KeyDown="Key_pressed">
                     <Canvas Margin="10" Name="canvas1">
                     </Canvas>
                 </ScrollViewer>

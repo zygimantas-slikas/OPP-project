@@ -76,8 +76,19 @@ namespace Server
         }
 
         // map id = hub group name
-        public async Task Move()
+        public async Task Move(Int32 map_id, Int32 x, Int32 y)
         {
+            Room r = Program.rooms.Find(x => x.Id == map_id);
+            Player p = r.players.Find(x => x.Con_id == Context.ConnectionId);
+            if ((Math.Abs(p.X - x) + Math.Abs(p.Y - y) ) < 2)
+            {
+                p.X = x;
+                p.Y = y;
+                string json_map = r.To_Json();
+                string json_players = r.Players_to_Json();
+                await this.Clients.Group(map_id.ToString()).SendAsync("Set_players", json_players);
+                await Clients.Group(map_id.ToString()).SendAsync("Update_map_state", json_map);
+            }
 
         }
     }

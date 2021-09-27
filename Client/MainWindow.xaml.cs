@@ -193,5 +193,49 @@ namespace Client
                 this.connection.DisposeAsync();
             }
         }
+
+        private void Key_pressed(object sender, KeyEventArgs e)
+        {
+            bool changed = false;
+            if (e.Key == Key.W)
+            {
+                if (current_Player.Y > 0 && map1.map[current_Player.X, current_Player.Y - 1].Surface != Tile.Tile_type.wall)
+                {
+                    current_Player.Y -= 1;
+                    changed = true;
+                }
+            }
+            else if (e.Key == Key.A)
+            {
+                if (current_Player.X > 0 && map1.map[current_Player.X - 1, current_Player.Y].Surface != Tile.Tile_type.wall)
+                {
+                    current_Player.X -= 1;
+                    changed = true;
+                }
+            }
+            else if (e.Key == Key.S)
+            {
+                if (current_Player.Y < map1.map_size - 1 && map1.map[current_Player.X, current_Player.Y + 1].Surface != Tile.Tile_type.wall)
+                {
+                    current_Player.Y += 1;
+                    changed = true;
+                }
+            }
+            else if (e.Key == Key.D)
+            {
+                if (current_Player.X < map1.map_size - 1 && map1.map[current_Player.X + 1, current_Player.Y].Surface != Tile.Tile_type.wall)
+                {
+                    current_Player.X += 1;
+                    changed = true;
+                }
+            }
+
+            if (changed == true)
+            {
+                Object[] args = new Object[3] { mapId, current_Player.X, current_Player.Y };
+                this.connection.SendCoreAsync("Move", args);
+            }
+
+        }
     }
 }
