@@ -10,20 +10,21 @@ namespace Server
         public int Health { get; }
         public string Name { get; }
         public List<Item> Inventory { get; set; }
-        public Player(string id, string name, int x, int y)
+        public Player(string id, string name, int x, int y, List<Item> inventory)
         {
             this.X = x;
             this.Y = y;
             this.Name = name;
-            Inventory = new List<Item>();
+            Inventory = inventory;
             this.Con_id = id;
             this.Health = 100;
         }
-        public Player(string name)
+        public Player(string id, string name)
         {
             this.X = 0;
             this.Y = 0;
             this.Name = name;
+            this.Con_id = id;
             Inventory = new List<Item>();
             this.Health = 100;
         }

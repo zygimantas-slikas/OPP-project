@@ -50,9 +50,9 @@ namespace Server
             string json_players = Program.rooms[index].Players_to_Json();
             
             await this.Clients.Group(id.ToString()).SendAsync("Set_players", json_players);
-            await Clients.All.SendAsync("Update_map_state", json_map);
+            //Console.WriteLine(json_players);
             await this.Clients.Caller.SendAsync("Set_map", json_map);
-            // 2 check if map is full already strat the game
+            await Clients.Group(id.ToString()).SendAsync("Update_map_state", json_map);
         }
 
         // map id = hub group name

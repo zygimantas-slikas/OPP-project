@@ -16,7 +16,7 @@ namespace Client
         public int map_size { get; set; }
         public Room_satate state { get; }
         public Tile[,] map;
-        public List<Player> players;
+        //public List<Player> players;
         public Map()
         {
 

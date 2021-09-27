@@ -25,6 +25,7 @@ namespace Client
     {
         private Map map1;
         private List<Player> players1;
+        private String current_player_name;
         private Player current_Player;
         private Int32 mapId;
         public MainWindow()
@@ -66,6 +67,7 @@ namespace Client
             Match match = re.Match(room_text);
             Int32 id = Convert.ToInt32(match.ToString());
             mapId = id;
+            current_player_name = player_name.Text;
             Object[] args = new Object[2]{ id, player_name.Text};
             this.connection.SendCoreAsync("Join_map", args);
             this.Tabs_control.SelectedItem = this.Game;
@@ -82,12 +84,11 @@ namespace Client
             this.rooms_select.IsDropDownOpen = true;
         }
 
-        private async Task Set_map(string json_text)
+        private void Set_map(string json_text)
         {
             this.map1 = new Map();
             var serializerSettings = new JsonSerializerSettings { PreserveReferencesHandling = PreserveReferencesHandling.Objects };
             this.map1 = JsonConvert.DeserializeObject<Map>(json_text, serializerSettings);
-            current_Player = this.map1.players.Last();
             //var t1 = Task.Run(() => map1.From_json(json_text));
             //await t1;
 
@@ -121,7 +122,7 @@ namespace Client
                 {
                     Rectangle myRect = new System.Windows.Shapes.Rectangle();
                     myRect.Stroke = System.Windows.Media.Brushes.Black;
-                    if (!map1.map[i, j].Player_Standing)
+                    if (map1.map[i, j].Player_Standing == null)
                             myRect.Fill = System.Windows.Media.Brushes.LightGreen;
                     else
                         if (i == current_Player.X && j == current_Player.Y)
@@ -141,6 +142,7 @@ namespace Client
         private void Set_players(string json_text)
         {
             players1 = System.Text.Json.JsonSerializer.Deserialize<List<Player>>(json_text);
+            current_Player = players1.Find(x => x.Name == current_player_name);
             players_scrollbar.Children.Clear();
             for (int i = 0; i < players1.Count; i++)
             {
@@ -163,10 +165,6 @@ namespace Client
                 p1.Children.Add(items);
                 players_scrollbar.Children.Add(p1);
             }
-        }
-        private void Update_map_state()
-        {
-            //debug_list.Items.Add(msg);
         }
     }
 }
