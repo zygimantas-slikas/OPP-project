@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
-
+using System;
 
 namespace Server
 {
@@ -58,6 +58,7 @@ namespace Server
             players.Add(p);
             this.current_players++;
         }
+
         public void Remove_player(string con_id)
         {
             Player p = players.Find(x => x.Con_id == con_id);
@@ -65,19 +66,68 @@ namespace Server
             this.players.Remove(p);
             this.current_players--;
         }
+
         private void Generate_map()
         {
             for (int i = 0; i < map_size; i++)
+            {
                 for (int j = 0; j < map_size; j++)
-                    map[i, j] = new Tile(Tile.Tile_type.wall);
-
+                {
+                    //if (i == 0 || j == 0 || i == map_size - 1 || j == map_size - 1)
+                    //{
+                    //    map[i, j] = new Tile(Tile.Tile_type.wall);
+                    //}
+                    //else
+                    {
+                        map[i, j] = new Tile(Tile.Tile_type.grass);
+                    }
+                }
+            }
+            for(int i = 0; i < 4; i++)
+            {
+                var rand = new Random();
+                for (int j = 0; j < map_size/2; j++)
+                {
+                    int x = rand.Next(0, map_size);
+                    int y = rand.Next(0, map_size);
+                    if (i == 0)
+                    {
+                        map[x, y].Surface = Tile.Tile_type.water;
+                    }
+                    else if (i == 1)
+                    {
+                        map[x, y].Surface = Tile.Tile_type.bush;
+                    }
+                    else if (i == 2)
+                    {
+                        map[x, y].Surface = Tile.Tile_type.lava;
+                    }
+                    else
+                    {
+                        x = rand.Next(1, map_size-1);
+                        y = rand.Next(1, map_size-1);
+                        int r = rand.Next(0, 2);
+                        if (r == 0)
+                        {
+                            map[x-1, y].Surface = Tile.Tile_type.wall;
+                            map[x, y].Surface = Tile.Tile_type.wall;
+                            map[x+1, y].Surface = Tile.Tile_type.wall;
+                        }
+                        else
+                        {
+                            map[x, y-1].Surface = Tile.Tile_type.wall;
+                            map[x, y].Surface = Tile.Tile_type.wall;
+                            map[x, y+1].Surface = Tile.Tile_type.wall;
+                        }
+                    }
+                }
+            }
         }
 
         public string To_Json()
         {
             var serializerSettings = new JsonSerializerSettings { PreserveReferencesHandling = PreserveReferencesHandling.Objects };
             string json = JsonConvert.SerializeObject(this, Formatting.Indented, serializerSettings);
-
             return json;//"[" + JsonSerializer.Serialize(map_size) + "," + JsonSerializer.Serialize(tiles) + "]";
         }
 
@@ -95,5 +145,4 @@ namespace Server
 
 
     }
-
 }

@@ -87,7 +87,7 @@ namespace Server
                 string json_map = r.To_Json();
                 string json_players = r.Players_to_Json();
                 await this.Clients.Group(map_id.ToString()).SendAsync("Set_players", json_players);
-                await Clients.Group(map_id.ToString()).SendAsync("Update_map_state", json_map);
+                //await Clients.Group(map_id.ToString()).SendAsync("Update_map_state", json_map);
             }
 
         }

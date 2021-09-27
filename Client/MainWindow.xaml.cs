@@ -87,26 +87,22 @@ namespace Client
         private void Set_map(string json_text)
         {
             this.map1 = new Map();
-            var serializerSettings = new JsonSerializerSettings { PreserveReferencesHandling = PreserveReferencesHandling.Objects };
-            this.map1 = JsonConvert.DeserializeObject<Map>(json_text, serializerSettings);
-            //var t1 = Task.Run(() => map1.From_json(json_text));
-            //await t1;
-
+            var t1 = Task.Run(() => map1.From_json(json_text));
+            t1.Wait();
             this.debug_list.Items.Add(json_text);
-            //example
             DrawMap();
         }
 
         private void Update_map_state(string json_text)
         {
-            if (this.map1 != null && this.current_Player != null)
-            {
-                var serializerSettings = new JsonSerializerSettings { PreserveReferencesHandling = PreserveReferencesHandling.Objects };
-                this.map1 = JsonConvert.DeserializeObject<Map>(json_text, serializerSettings);
-                this.debug_list.Items.Add(json_text);
+            //if (this.map1 != null && this.current_Player != null)
+            //{
+            //    var serializerSettings = new JsonSerializerSettings { PreserveReferencesHandling = PreserveReferencesHandling.Objects };
+            //    this.map1 = JsonConvert.DeserializeObject<Map>(json_text, serializerSettings);
+            //    this.debug_list.Items.Add(json_text);
 
-                DrawMap();
-            }
+            //    DrawMap();
+            //}
         }
 
         private void DrawMap()
