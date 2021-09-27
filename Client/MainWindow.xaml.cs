@@ -55,7 +55,7 @@ namespace Client
 
         private void Create_new_room(object sender, RoutedEventArgs e)
         {
-            Object[] args = new Object[2] 
+            Object[] args = new Object[2]
             { Convert.ToInt32(this.players_count.Text), Convert.ToInt32(this.map_size.Text)};
             this.connection.SendCoreAsync("Create_map", args);
         }
@@ -68,12 +68,12 @@ namespace Client
             Int32 id = Convert.ToInt32(match.ToString());
             mapId = id;
             current_player_name = player_name.Text;
-            Object[] args = new Object[2]{ id, player_name.Text};
+            Object[] args = new Object[2] { id, player_name.Text };
             this.connection.SendCoreAsync("Join_map", args);
             this.Tabs_control.SelectedItem = this.Game;
         }
-        
-        private void Show_maps_options (string[] list)
+
+        private void Show_maps_options(string[] list)
         {
             debug_list.Items.Add("show maps options");
             this.rooms_select.Items.Clear();
@@ -123,7 +123,7 @@ namespace Client
                     Rectangle myRect = new System.Windows.Shapes.Rectangle();
                     myRect.Stroke = System.Windows.Media.Brushes.Black;
                     if (map1.map[i, j].Player_Standing == null)
-                            myRect.Fill = System.Windows.Media.Brushes.LightGreen;
+                        myRect.Fill = System.Windows.Media.Brushes.LightGreen;
                     else
                         if (i == current_Player.X && j == current_Player.Y)
                         myRect.Fill = System.Windows.Media.Brushes.Black;
@@ -164,6 +164,14 @@ namespace Client
                 p1.Children.Add(position);
                 p1.Children.Add(items);
                 players_scrollbar.Children.Add(p1);
+            }
+        }
+
+        private void DataWindow_Closing(object sender, EventArgs e)
+        {
+            if (this.connection != null)
+            {
+                this.connection.DisposeAsync();
             }
         }
     }

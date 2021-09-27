@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Client"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
-        Background="DarkGray">
+        Background="DarkGray" Closed="DataWindow_Closing">
     <TabControl x:Name="Tabs_control">
         <TabItem Header="Login" x:Name="Login" Margin="10, 0, 0, 0" Width="100">
             <Grid Margin="10">

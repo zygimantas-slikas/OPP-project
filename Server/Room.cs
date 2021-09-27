@@ -58,7 +58,13 @@ namespace Server
             players.Add(p);
             this.current_players++;
         }
-
+        public void Remove_player(string con_id)
+        {
+            Player p = players.Find(x => x.Con_id == con_id);
+            map[p.X, p.Y].Player_Standing = null;
+            this.players.Remove(p);
+            this.current_players--;
+        }
         private void Generate_map()
         {
             for (int i = 0; i < map.GetLength(0); i++)
@@ -81,8 +87,11 @@ namespace Server
         {
             string t1 = System.Text.Json.JsonSerializer.Serialize(players);
             Regex re = new Regex("\"Con_id\":\"[^\"]+\",");
-            Match match = re.Match(t1);
-            t1 = t1.Remove(match.Index, match.Length);
+            MatchCollection matches = re.Matches(t1);
+            for(int i = matches.Count-1; i >= 0; i--)
+            {
+                t1 = t1.Remove(matches[i].Index, matches[i].Length);
+            }
             return t1;
         }
 

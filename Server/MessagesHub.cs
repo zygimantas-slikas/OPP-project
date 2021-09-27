@@ -44,15 +44,35 @@ namespace Server
             // 1 check if map isn't full already
             int index = Program.rooms.FindIndex(x => x.Id == id);
             Program.rooms[index].Add_player(Context.ConnectionId.ToString(), name);
-            Task t1 = this.Groups.AddToGroupAsync(Context.ConnectionId, id.ToString());
+            await Groups.AddToGroupAsync(Context.ConnectionId, id.ToString());
 
             string json_map = Program.rooms[index].To_Json();
             string json_players = Program.rooms[index].Players_to_Json();
             
             await this.Clients.Group(id.ToString()).SendAsync("Set_players", json_players);
-            //Console.WriteLine(json_players);
             await this.Clients.Caller.SendAsync("Set_map", json_map);
             await Clients.Group(id.ToString()).SendAsync("Update_map_state", json_map);
+        }
+
+        public override async Task OnDisconnectedAsync(Exception exception)
+        {
+            int index = 0;
+            for (int i = 0; i < Program.rooms.Count; i++)
+            {
+                for (int j = 0; j < Program.rooms[i].current_players; j++)
+                {
+                    if (Program.rooms[i].players[j].Con_id == Context.ConnectionId)
+                    {
+                        index = i;
+                    }
+                }
+            }
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, Program.rooms[index].Id.ToString());
+            Program.rooms[index].Remove_player(Context.ConnectionId);
+            string json_players = Program.rooms[index].Players_to_Json();
+            await this.Clients.Group(Program.rooms[index].Id.ToString()).SendAsync("Set_players", json_players);
+            //redraw map
+            await base.OnDisconnectedAsync(exception);
         }
 
         // map id = hub group name
