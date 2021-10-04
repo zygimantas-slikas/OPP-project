@@ -20,7 +20,7 @@
                 </Grid.ColumnDefinitions>
         
                 <WrapPanel Grid.Row="0" Grid.Column="0">
-                    <TextBox x:Name="server_addr" Width="250" Margin="10" Text="https://localhost:5001"/>
+                    <TextBox x:Name="server_addr" Width="250" Margin="10" Text="http://localhost:5000"/>
                     <Button Content="Connect" Click="Connect_to_server" Margin="10" Width="80"/>
                 </WrapPanel>
         

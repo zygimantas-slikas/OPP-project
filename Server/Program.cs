@@ -15,13 +15,17 @@ namespace Server
     static class Program
     {
         public static List<Room> rooms;
+        public static string ip;
         static void Main(string[] args)
         {
             rooms = new List<Room>();
+            Console.Write("Type in your ip address: ");
+            ip = Console.ReadLine();
+            ip = "http://" + ip + ":5000";
             CreateHostBuilder(args).Build().Run();
         }
         public static IWebHostBuilder CreateHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args).UseStartup<Startup>();
+            WebHost.CreateDefaultBuilder(args).UseUrls(ip).UseStartup<Startup>();
     }
 
 
