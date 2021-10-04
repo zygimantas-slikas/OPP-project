@@ -56,6 +56,23 @@ namespace Client
 
         private void Create_new_room(object sender, RoutedEventArgs e)
         {
+            if (connection == null || connection.State != HubConnectionState.Connected)
+            {
+                MessageBox.Show("Connect to server first!");
+                return;
+            }
+            int p_c, m_s;
+            if (!int.TryParse(this.players_count.Text, out p_c) || p_c > 4 || p_c < 2)
+            {
+                MessageBox.Show("Players count must be between 2 and 4!");
+                return;
+            }
+            if (!int.TryParse(this.map_size.Text, out m_s) || m_s < 10)
+            {
+                MessageBox.Show("Map size must be bigger than 10!");
+                return;
+            }
+
             Object[] args = new Object[2]
             { Convert.ToInt32(this.players_count.Text), Convert.ToInt32(this.map_size.Text)};
             this.connection.SendCoreAsync("Create_map", args);
@@ -63,10 +80,33 @@ namespace Client
 
         private void Join_room(object sender, RoutedEventArgs e)
         {
-            string room_text = rooms_select.SelectedItem.ToString();
-            Regex re = new Regex(@"\d+");
-            Match match = re.Match(room_text);
-            Int32 id = Convert.ToInt32(match.ToString());
+            if (connection == null || connection.State != HubConnectionState.Connected)
+            {
+                MessageBox.Show("Connect to server first!");
+                return;
+            }
+            if (player_name.Text == "")
+            {
+                MessageBox.Show("Player name not set!");
+                return;
+            }
+            int id;
+            if (rooms_select.SelectedItem == null)
+            {
+                MessageBox.Show("Choose a map!");
+                return;
+            }
+            else
+            {
+                string room_text = rooms_select.SelectedItem.ToString();
+                Regex re = new Regex(@"\d+");
+                Match match = re.Match(room_text);
+                if (!int.TryParse(match.ToString(), out id))
+                {
+                    MessageBox.Show("Choose a map!");
+                    return;
+                }
+            }
             mapId = id;
             current_player_name = player_name.Text;
             Object[] args = new Object[2] { id, player_name.Text };
@@ -280,7 +320,5 @@ namespace Client
                 this.connection.SendCoreAsync("Move", args);
             }
         }
-
-
     }
 }

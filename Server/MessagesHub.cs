@@ -56,7 +56,7 @@ namespace Server
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            int index = 0;
+            int index = -1;
             for (int i = 0; i < Program.rooms.Count; i++)
             {
                 for (int j = 0; j < Program.rooms[i].current_players; j++)
@@ -67,11 +67,13 @@ namespace Server
                     }
                 }
             }
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, Program.rooms[index].Id.ToString());
-            Program.rooms[index].Remove_player(Context.ConnectionId);
-            string json_players = Program.rooms[index].Players_to_Json();
-            await this.Clients.Group(Program.rooms[index].Id.ToString()).SendAsync("Set_players", json_players);
-            //redraw map
+            if (index != -1)
+            {
+                await Groups.RemoveFromGroupAsync(Context.ConnectionId, Program.rooms[index].Id.ToString());
+                Program.rooms[index].Remove_player(Context.ConnectionId);
+                string json_players = Program.rooms[index].Players_to_Json();
+                await this.Clients.Group(Program.rooms[index].Id.ToString()).SendAsync("Set_players", json_players);
+            }
             await base.OnDisconnectedAsync(exception);
         }
 
