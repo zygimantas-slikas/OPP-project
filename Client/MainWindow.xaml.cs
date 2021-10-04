@@ -44,7 +44,7 @@ namespace Client
             {
                 this.connection.DisposeAsync();
             }
-            debug_list.Items.Add(server_addr.Text + "/messageHub");
+            //debug_list.Items.Add(server_addr.Text + "/messageHub");
             this.connection = new HubConnectionBuilder().WithUrl(server_addr.Text + "/messageHub").Build();
             //add functions==================
             connection.On<string[]>("Show_maps_options", this.Show_maps_options);
@@ -119,7 +119,6 @@ namespace Client
 
         private void Show_maps_options(string[] list)
         {
-            debug_list.Items.Add("show maps options");
             this.rooms_select.Items.Clear();
             foreach (string line1 in list)
             {
@@ -155,7 +154,6 @@ namespace Client
             canvas1.Children.Clear();
             canvas1.Height = Convert.ToInt32(map1.map_size) * 50 + 20;
             canvas1.Width = Convert.ToInt32(map1.map_size) * 50 + 20;
-            debug_list.Items.Add(map1.map_size);
             for (int i = 0; i < Convert.ToInt32(map1.map_size); i++)
             {
                 pos_x = 0;
@@ -256,8 +254,8 @@ namespace Client
                     playerSprite.Width = 40;
                     playerSprite.Height = 40;
                     ImageBrush myBrush = new ImageBrush();
-
-                    myBrush.ImageSource = new BitmapImage(new Uri(@"C:\Users\Karolis\Desktop\OPP-project-master (1)\OPP-project-master\Sprites\png-clipart-knight-free-content-school-uniform-cartoon-fictional-character.png", UriKind.RelativeOrAbsolute));
+                    
+                    myBrush.ImageSource = new BitmapImage(new Uri(@"..\..\..\..\Sprites\png-clipart-knight-free-content-school-uniform-cartoon-fictional-character.png", UriKind.RelativeOrAbsolute));
                     playerSprite.Fill = myBrush;
                     //add new
                     //Shape s = new Ellipse();
@@ -289,45 +287,52 @@ namespace Client
 
         private async void Key_pressed(object sender, KeyEventArgs e)
         {
+            //debug_list.Items.Add("scrol_width" + canvas_scrollbar.ActualHeight.ToString());
+            //debug_list.Items.Add(canvas1.Height.ToString());
+            //debug_list.Items.Add(canvas_scrollbar.VerticalOffset.ToString());
             bool changed = false;
             if (e.Key == Key.W)
             {
-                await Task.Delay(settings.PlayerDelaySpeed);
-                if (e.IsRepeat) return;
+                if (!settings.Delay.IsCompleted) return;
                 else if (current_Player.Y > 0 && map1.map[current_Player.Y - 1, current_Player.X].Surface != Tile.Tile_type.wall)
                 {
                     current_Player.Y -= 1;
                     changed = true;
+                    canvas_scrollbar.ScrollToVerticalOffset(current_Player.Y*50+5 - canvas_scrollbar.ActualHeight/2);
+                    settings.moved();
                 }
             }
             else if (e.Key == Key.A)
             {
-                await Task.Delay(settings.PlayerDelaySpeed);
-                if (e.IsRepeat) return;
+                if (!settings.Delay.IsCompleted) return;
                 else if (current_Player.X > 0 && map1.map[current_Player.Y, current_Player.X - 1].Surface != Tile.Tile_type.wall)
                 {
                     current_Player.X -= 1;
                     changed = true;
+                    canvas_scrollbar.ScrollToHorizontalOffset(current_Player.X * 50 + 5 - canvas_scrollbar.ActualWidth / 2);
+                    settings.moved();
                 }
             }
             else if (e.Key == Key.S)
             {
-                await Task.Delay(settings.PlayerDelaySpeed);
-                if (e.IsRepeat) return;
+                if (!settings.Delay.IsCompleted) return;
                 else if (current_Player.Y < map1.map_size - 1 && map1.map[current_Player.Y + 1, current_Player.X].Surface != Tile.Tile_type.wall)
                 {
                     current_Player.Y += 1;
                     changed = true;
+                    canvas_scrollbar.ScrollToVerticalOffset(current_Player.Y * 50 + 5 - canvas_scrollbar.ActualHeight/2);
+                    settings.moved();
                 }
             }
             else if (e.Key == Key.D)
             {
-                await Task.Delay(settings.PlayerDelaySpeed);
-                if (e.IsRepeat) return;
+                if (!settings.Delay.IsCompleted) return;
                 else if (current_Player.X < map1.map_size - 1 && map1.map[current_Player.Y, current_Player.X + 1].Surface != Tile.Tile_type.wall)
                 {
                     current_Player.X += 1;
                     changed = true;
+                    canvas_scrollbar.ScrollToHorizontalOffset(current_Player.X * 50 + 5 - canvas_scrollbar.ActualWidth / 2);
+                    settings.moved();
                 }
             }
 
