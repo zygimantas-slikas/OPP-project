@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using Microsoft.AspNetCore.SignalR.Client;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
+using Server;
 
 namespace Client
 {
@@ -29,6 +30,7 @@ namespace Client
         private String current_player_name;
         private Player current_Player;
         private Int32 mapId;
+        private GameSettings settings = GameSettings.Instance;
         public MainWindow()
         {
             InitializeComponent();
@@ -250,17 +252,24 @@ namespace Client
             {
                 if (!created.Contains(new1))
                 {
+                    Ellipse playerSprite = new Ellipse();
+                    playerSprite.Width = 40;
+                    playerSprite.Height = 40;
+                    ImageBrush myBrush = new ImageBrush();
+
+                    myBrush.ImageSource = new BitmapImage(new Uri(@"C:\Users\Karolis\Desktop\OPP-project-master (1)\OPP-project-master\Sprites\png-clipart-knight-free-content-school-uniform-cartoon-fictional-character.png", UriKind.RelativeOrAbsolute));
+                    playerSprite.Fill = myBrush;
                     //add new
-                    Shape s = new Ellipse();
-                    s.Stroke = System.Windows.Media.Brushes.Black;
-                    s.Fill = System.Windows.Media.Brushes.DarkBlue;
-                    s.Width = 40;
-                    s.Height = 40;
-                    players_gui.Add(new1, s);
-                    canvas1.Children.Add(s);
-                    Canvas.SetZIndex(s, 10);
-                    Canvas.SetTop(s, players1.Find(x => x.Name == new1).Y * 50 +5);
-                    Canvas.SetLeft(s, players1.Find(x => x.Name == new1).X * 50 +5);
+                    //Shape s = new Ellipse();
+                    //s.Stroke = System.Windows.Media.Brushes.Black;
+                    //s.Fill = System.Windows.Media.Brushes.DarkBlue;
+                    //s.Width = 40;
+                    //s.Height = 40;
+                    players_gui.Add(new1, playerSprite);
+                    canvas1.Children.Add(playerSprite);
+                    Canvas.SetZIndex(playerSprite, 10);
+                    Canvas.SetTop(playerSprite, players1.Find(x => x.Name == new1).Y * 50 +5);
+                    Canvas.SetLeft(playerSprite, players1.Find(x => x.Name == new1).X * 50 +5);
                 }
                 else
                 {
@@ -278,12 +287,14 @@ namespace Client
             }
         }
 
-        private void Key_pressed(object sender, KeyEventArgs e)
+        private async void Key_pressed(object sender, KeyEventArgs e)
         {
             bool changed = false;
             if (e.Key == Key.W)
             {
-                if (current_Player.Y > 0 && map1.map[current_Player.Y -1, current_Player.X].Surface != Tile.Tile_type.wall)
+                await Task.Delay(settings.PlayerDelaySpeed);
+                if (e.IsRepeat) return;
+                else if (current_Player.Y > 0 && map1.map[current_Player.Y - 1, current_Player.X].Surface != Tile.Tile_type.wall)
                 {
                     current_Player.Y -= 1;
                     changed = true;
@@ -291,7 +302,9 @@ namespace Client
             }
             else if (e.Key == Key.A)
             {
-                if (current_Player.X > 0 && map1.map[current_Player.Y , current_Player.X -1].Surface != Tile.Tile_type.wall)
+                await Task.Delay(settings.PlayerDelaySpeed);
+                if (e.IsRepeat) return;
+                else if (current_Player.X > 0 && map1.map[current_Player.Y, current_Player.X - 1].Surface != Tile.Tile_type.wall)
                 {
                     current_Player.X -= 1;
                     changed = true;
@@ -299,7 +312,9 @@ namespace Client
             }
             else if (e.Key == Key.S)
             {
-                if (current_Player.Y < map1.map_size - 1 && map1.map[current_Player.Y +1, current_Player.X].Surface != Tile.Tile_type.wall)
+                await Task.Delay(settings.PlayerDelaySpeed);
+                if (e.IsRepeat) return;
+                else if (current_Player.Y < map1.map_size - 1 && map1.map[current_Player.Y + 1, current_Player.X].Surface != Tile.Tile_type.wall)
                 {
                     current_Player.Y += 1;
                     changed = true;
@@ -307,7 +322,9 @@ namespace Client
             }
             else if (e.Key == Key.D)
             {
-                if (current_Player.X < map1.map_size - 1 && map1.map[current_Player.Y, current_Player.X +1].Surface != Tile.Tile_type.wall)
+                await Task.Delay(settings.PlayerDelaySpeed);
+                if (e.IsRepeat) return;
+                else if (current_Player.X < map1.map_size - 1 && map1.map[current_Player.Y, current_Player.X + 1].Surface != Tile.Tile_type.wall)
                 {
                     current_Player.X += 1;
                     changed = true;
