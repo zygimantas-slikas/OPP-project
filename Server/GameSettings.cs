@@ -19,9 +19,8 @@ namespace Server
         {
             PlayerDelaySpeed = 1000;
         }
-        public static GameSettings Instance
+        public static GameSettings GetInstance()
         {
-            get
             {
                 if (instance == null)
                 {

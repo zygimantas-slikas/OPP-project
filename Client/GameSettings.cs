@@ -21,9 +21,8 @@ namespace Server
             PlayerDelaySpeed = 100;
             Delay = Task.Delay(this.PlayerDelaySpeed);
         }
-        public static GameSettings Instance
+        public static GameSettings GetInstance()
         {
-            get
             {
                 if (instance == null)
                 {

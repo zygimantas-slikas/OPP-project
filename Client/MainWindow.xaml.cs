@@ -30,7 +30,7 @@ namespace Client
         private String current_player_name;
         private Player current_Player;
         private Int32 mapId;
-        private GameSettings settings = GameSettings.Instance;
+        private GameSettings settings = GameSettings.GetInstance();
         public MainWindow()
         {
             InitializeComponent();
