@@ -10,9 +10,16 @@ namespace Server
     {
         private static GameSettings instance = null;
         public int PlayerDelaySpeed;
+        public Task Delay;
+        public void moved()
+        {
+            Delay = Task.Delay(this.PlayerDelaySpeed);
+        }
+
         private GameSettings()
         {
-            PlayerDelaySpeed = 1000;
+            PlayerDelaySpeed = 100;
+            Delay = Task.Delay(this.PlayerDelaySpeed);
         }
         public static GameSettings Instance
         {
