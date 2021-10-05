@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 using System;
 using Server.Factory;
+using Server.AbstractFactory;
 
 namespace Server
 {
@@ -18,7 +19,9 @@ namespace Server
         public int map_size { get; }
         public Room_satate state { get; }
 
-        private static IFactory<Tile> factory;
+        private static AFactory<Tile> bfactory;
+        private static AFactory<Tile> gfactory;
+        private static AFactory<Tile> nfactory;
 
         public List<Player> players;
         public Tile[,] map;
@@ -72,9 +75,11 @@ namespace Server
 
         private void Generate_map()
         {
-            factory = new TilesFactory();
+            bfactory = new BadTile();
+            gfactory = new GoodTile();
+            nfactory = new NeutralTile();
 
-            for(int i = 0; i < 4; i++)
+            for (int i = 0; i < 4; i++)
             {
                 var rand = new Random();
                 for (int j = 0; j < map_size/2; j++)
@@ -83,15 +88,15 @@ namespace Server
                     int y = rand.Next(0, map_size);
                     if (i == 0)
                     {
-                        map[x, y] = factory.FactoryMethod(Tile.Tile_type.water);
+                        map[x, y] = gfactory.FactoryMethod(Tile.Tile_type.water);
                     }
                     else if (i == 1)
                     {
-                        map[x, y] = factory.FactoryMethod(Tile.Tile_type.bush);
+                        map[x, y] = gfactory.FactoryMethod(Tile.Tile_type.bush);
                     }
                     else if (i == 2)
                     {
-                        map[x, y] = factory.FactoryMethod(Tile.Tile_type.lava);
+                        map[x, y] = bfactory.FactoryMethod(Tile.Tile_type.lava);
                     }
                     else
                     {
@@ -100,15 +105,15 @@ namespace Server
                         int r = rand.Next(0, 2);
                         if (r == 0)
                         {
-                            map[x-1, y] = factory.FactoryMethod(Tile.Tile_type.wall);
-                            map[x, y] = factory.FactoryMethod(Tile.Tile_type.wall);
-                            map[x+1, y] = factory.FactoryMethod(Tile.Tile_type.wall);
+                            map[x-1, y] = nfactory.FactoryMethod(Tile.Tile_type.wall);
+                            map[x, y] = nfactory.FactoryMethod(Tile.Tile_type.wall);
+                            map[x+1, y] = nfactory.FactoryMethod(Tile.Tile_type.wall);
                         }
                         else
                         {
-                            map[x, y-1] = factory.FactoryMethod(Tile.Tile_type.wall);
-                            map[x, y] = factory.FactoryMethod(Tile.Tile_type.wall);
-                            map[x, y+1] = factory.FactoryMethod(Tile.Tile_type.wall);
+                            map[x, y-1] = nfactory.FactoryMethod(Tile.Tile_type.wall);
+                            map[x, y] = nfactory.FactoryMethod(Tile.Tile_type.wall);
+                            map[x, y+1] = nfactory.FactoryMethod(Tile.Tile_type.wall);
                         }
                     }
                 }
@@ -120,7 +125,7 @@ namespace Server
                 {
                     if (map[i, j] == null)
                     {
-                        map[i, j] = factory.FactoryMethod(Tile.Tile_type.grass);
+                        map[i, j] = nfactory.FactoryMethod(Tile.Tile_type.grass);
                     }
                 }
             }
