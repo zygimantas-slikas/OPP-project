@@ -5,6 +5,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 using System;
+using Server.Factory;
 
 namespace Server
 {
@@ -16,6 +17,8 @@ namespace Server
         public int current_players { get; set; }
         public int map_size { get; }
         public Room_satate state { get; }
+
+        private static IFactory<Tile> factory;
 
         public List<Player> players;
         public Tile[,] map;
@@ -69,20 +72,8 @@ namespace Server
 
         private void Generate_map()
         {
-            for (int i = 0; i < map_size; i++)
-            {
-                for (int j = 0; j < map_size; j++)
-                {
-                    //if (i == 0 || j == 0 || i == map_size - 1 || j == map_size - 1)
-                    //{
-                    //    map[i, j] = new Tile(Tile.Tile_type.wall);
-                    //}
-                    //else
-                    {
-                        map[i, j] = new Tile(Tile.Tile_type.grass);
-                    }
-                }
-            }
+            factory = new TilesFactory();
+
             for(int i = 0; i < 4; i++)
             {
                 var rand = new Random();
@@ -92,15 +83,15 @@ namespace Server
                     int y = rand.Next(0, map_size);
                     if (i == 0)
                     {
-                        map[x, y].Surface = Tile.Tile_type.water;
+                        map[x, y] = factory.FactoryMethod(Tile.Tile_type.water);
                     }
                     else if (i == 1)
                     {
-                        map[x, y].Surface = Tile.Tile_type.bush;
+                        map[x, y] = factory.FactoryMethod(Tile.Tile_type.bush);
                     }
                     else if (i == 2)
                     {
-                        map[x, y].Surface = Tile.Tile_type.lava;
+                        map[x, y] = factory.FactoryMethod(Tile.Tile_type.lava);
                     }
                     else
                     {
@@ -109,16 +100,27 @@ namespace Server
                         int r = rand.Next(0, 2);
                         if (r == 0)
                         {
-                            map[x-1, y].Surface = Tile.Tile_type.wall;
-                            map[x, y].Surface = Tile.Tile_type.wall;
-                            map[x+1, y].Surface = Tile.Tile_type.wall;
+                            map[x-1, y] = factory.FactoryMethod(Tile.Tile_type.wall);
+                            map[x, y] = factory.FactoryMethod(Tile.Tile_type.wall);
+                            map[x+1, y] = factory.FactoryMethod(Tile.Tile_type.wall);
                         }
                         else
                         {
-                            map[x, y-1].Surface = Tile.Tile_type.wall;
-                            map[x, y].Surface = Tile.Tile_type.wall;
-                            map[x, y+1].Surface = Tile.Tile_type.wall;
+                            map[x, y-1] = factory.FactoryMethod(Tile.Tile_type.wall);
+                            map[x, y] = factory.FactoryMethod(Tile.Tile_type.wall);
+                            map[x, y+1] = factory.FactoryMethod(Tile.Tile_type.wall);
                         }
+                    }
+                }
+            }
+
+            for (int i = 0; i < map_size; i++)
+            {
+                for (int j = 0; j < map_size; j++)
+                {
+                    if (map[i, j] == null)
+                    {
+                        map[i, j] = factory.FactoryMethod(Tile.Tile_type.grass);
                     }
                 }
             }

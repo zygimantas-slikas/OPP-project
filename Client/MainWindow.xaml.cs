@@ -257,7 +257,7 @@ namespace Client
                     playerSprite.Height = 40;
                     ImageBrush myBrush = new ImageBrush();
 
-                    myBrush.ImageSource = new BitmapImage(new Uri(@"C:\Users\Karolis\Desktop\OPP-project-master (1)\OPP-project-master\Sprites\png-clipart-knight-free-content-school-uniform-cartoon-fictional-character.png", UriKind.RelativeOrAbsolute));
+                    myBrush.ImageSource = new BitmapImage(new Uri(@"png-clipart-knight-free-content-school-uniform-cartoon-fictional-character.png", UriKind.RelativeOrAbsolute));
                     playerSprite.Fill = myBrush;
                     //add new
                     //Shape s = new Ellipse();
