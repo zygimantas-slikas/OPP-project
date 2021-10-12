@@ -16,9 +16,14 @@ namespace Server
             Delay = Task.Delay(this.PlayerDelaySpeed);
         }
 
+        public void SetSpeed(int newSpeed)
+        {
+            this.PlayerDelaySpeed = newSpeed;
+        }
+
         private GameSettings()
         {
-            PlayerDelaySpeed = 100;
+            this.PlayerDelaySpeed = 100;
             Delay = Task.Delay(this.PlayerDelaySpeed);
         }
         public static GameSettings GetInstance()

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json.Serialization;
+using Client.Strategy;
 
 namespace Client
 {
@@ -15,6 +16,7 @@ namespace Client
         public int Health { get; }
         public string Name { get; }
         public List<Item> Inventory { get; set; }
+        private IMovementStrategy strategy;
 
         [JsonConstructor]
         public Player(string Con_id, int Health, string Name, int X, int Y, List<Item> Inventory)
@@ -34,6 +36,16 @@ namespace Client
             this.Con_id = id;
             Inventory = new List<Item>();
             this.Health = 100;
+        }
+
+        public void setStrategy(IMovementStrategy strategy)
+        {
+            this.strategy = strategy;
+        }
+
+        public void move()
+        {
+            this.strategy.Move();
         }
     }
 

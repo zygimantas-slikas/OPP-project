@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Server;
+using Client.Strategy;
 
 namespace Client
 {
@@ -300,6 +301,23 @@ namespace Client
                     changed = true;
                     canvas_scrollbar.ScrollToVerticalOffset(current_Player.Y*50+5 - canvas_scrollbar.ActualHeight/2);
                     settings.moved();
+                    if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
+                    {
+                        current_Player.setStrategy(new MoveOnWater());
+                    }
+                    else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.bush)
+                    {
+                        current_Player.setStrategy(new MoveOnBush());
+                    }
+                    else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.lava)
+                    {
+                        current_Player.setStrategy(new MoveOnLava());
+                    }
+                    else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.grass)
+                    {
+                        current_Player.setStrategy(new MoveOnGrass());
+                    }
+                    current_Player.move();
                 }
             }
             else if (e.Key == Key.A)
@@ -311,6 +329,24 @@ namespace Client
                     changed = true;
                     canvas_scrollbar.ScrollToHorizontalOffset(current_Player.X * 50 + 5 - canvas_scrollbar.ActualWidth / 2);
                     settings.moved();
+
+                    if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
+                    {
+                        current_Player.setStrategy(new MoveOnWater());
+                    }
+                    else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.bush)
+                    {
+                        current_Player.setStrategy(new MoveOnBush());
+                    }
+                    else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.lava)
+                    {
+                        current_Player.setStrategy(new MoveOnLava());
+                    }
+                    else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.grass)
+                    {
+                        current_Player.setStrategy(new MoveOnGrass());
+                    }
+                    current_Player.move();
                 }
             }
             else if (e.Key == Key.S)
@@ -322,6 +358,24 @@ namespace Client
                     changed = true;
                     canvas_scrollbar.ScrollToVerticalOffset(current_Player.Y * 50 + 5 - canvas_scrollbar.ActualHeight/2);
                     settings.moved();
+
+                    if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
+                    {
+                        current_Player.setStrategy(new MoveOnWater());
+                    }
+                    else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.bush)
+                    {
+                        current_Player.setStrategy(new MoveOnBush());
+                    }
+                    else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.lava)
+                    {
+                        current_Player.setStrategy(new MoveOnLava());
+                    }
+                    else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.grass)
+                    {
+                        current_Player.setStrategy(new MoveOnGrass());
+                    }
+                    current_Player.move();
                 }
             }
             else if (e.Key == Key.D)
@@ -333,6 +387,24 @@ namespace Client
                     changed = true;
                     canvas_scrollbar.ScrollToHorizontalOffset(current_Player.X * 50 + 5 - canvas_scrollbar.ActualWidth / 2);
                     settings.moved();
+
+                    if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
+                    {
+                        current_Player.setStrategy(new MoveOnWater());
+                    }
+                    else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.bush)
+                    {
+                        current_Player.setStrategy(new MoveOnBush());
+                    }
+                    else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.lava)
+                    {
+                        current_Player.setStrategy(new MoveOnLava());
+                    }
+                    else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.grass)
+                    {
+                        current_Player.setStrategy(new MoveOnGrass());
+                    }
+                    current_Player.move();
                 }
             }
 
