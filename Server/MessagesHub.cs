@@ -10,10 +10,8 @@ namespace Server
 {
     class MessagesHub : Hub
     {
-
         public async Task Connect()
         {
-            //Console.WriteLine("Connected");
             string[] maps;
             if (Program.rooms.Count > 0)
             {
@@ -40,19 +38,16 @@ namespace Server
         }
         public async Task Join_map(Int32 id, string name)
         {
-            // 1 check if map isn't full already
+            // TODO: check if map isn't full already
             int index = Program.rooms.FindIndex(x => x.Id == id);
             Program.rooms[index].Add_player(Context.ConnectionId.ToString(), name);
             await Groups.AddToGroupAsync(Context.ConnectionId, id.ToString());
-
             string json_map = Program.rooms[index].To_Json();
             string json_players = Program.rooms[index].Players_to_Json();
-            
             await this.Clients.Group(id.ToString()).SendAsync("Set_players", json_players);
             await this.Clients.Caller.SendAsync("Set_map", json_map);
             await Clients.Group(id.ToString()).SendAsync("Update_map_state", json_map);
         }
-
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             int index = -1;
@@ -75,7 +70,6 @@ namespace Server
             }
             await base.OnDisconnectedAsync(exception);
         }
-
         // map id = hub group name
         public async Task Move(Int32 map_id, Int32 x, Int32 y)
         {
@@ -89,9 +83,8 @@ namespace Server
                 r.map[p.Y, p.X].Player_Standing = p.Name;
                 string json_players = r.Players_to_Json();
                 await this.Clients.Group(map_id.ToString()).SendAsync("Set_players", json_players);
-                //update map state
+                //TODO: update map state
             }
-
         }
     }
 }

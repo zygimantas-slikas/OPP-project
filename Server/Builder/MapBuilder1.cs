@@ -79,15 +79,28 @@ namespace Server.Builder
         }
         public override void fill_grass()
         {
+            var rand = new Random();
             for (int i = 0; i < map_size; i++)
             {
                 for (int j = 0; j < map_size; j++)
                 {
                     if (map[i, j] == null)
                     {
+                        int prob = rand.Next(0, 100);
                         Tile t = this.prototype.Clone();
                         t.Surface = Tile.Tile_type.grass;
-                        t.Loot = this.items_factory.Create_berry();
+                        if (0 <= prob && prob <= 5)
+                        {
+                            t.Loot = this.items_factory.Create_berry();
+                        }
+                        else if (10 <= prob && prob <= 15)
+                        {
+                            t.Loot = this.items_factory.Create_gun();
+                        }
+                        else
+                        {
+                            t.Loot = null;
+                        }
                         map[i, j] = t;
                     }
                 }

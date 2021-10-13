@@ -8,6 +8,7 @@ namespace Server
 {
     abstract public class Item
     {
+        public string Type { get; protected set; }
         public string take(Player p, Tile[,] map)
         {
             return "json";
@@ -36,6 +37,7 @@ namespace Server
         {
             this.Points = 200;
             this.Heal = 20;
+            this.Type = this.GetType().Name;
         }
     }
     class RedBerry : Berry
@@ -44,6 +46,7 @@ namespace Server
         {
             this.Points = 100;
             this.Heal = 10;
+            this.Type = this.GetType().Name;
         }
     }
     public class Gun : Item
@@ -64,6 +67,7 @@ namespace Server
         {
             this.Damage = 10;
             this.Ammo = 12;
+            this.Type = this.GetType().Name;
         }
     }
     class RedGun : Gun
@@ -72,6 +76,7 @@ namespace Server
         {
             this.Damage = 30;
             this.Ammo = 6;
+            this.Type = this.GetType().Name;
         }
     }
 }

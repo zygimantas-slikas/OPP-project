@@ -3,11 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Shapes;
+using System.Windows.Controls;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
 
 namespace Client
 {
-    public class Item
+    abstract public class Item
     {
+        abstract public Rectangle get_view();
+        public string Type { get; protected set; }
         public string take(Player p, Tile[,] map)
         {
             return "json";
@@ -16,22 +22,92 @@ namespace Client
         {
             return "json";
         }
+    }
+    abstract public class Berry : Item
+    {
+        public virtual int Points { get; protected set; }
+        public virtual int Heal { get; protected set; }
+    }
+    class BlueBerry : Berry
+    {
+        public override Rectangle get_view()
+        {
+            Rectangle img = new Rectangle();
+            img.Width = 40;
+            img.Height = 40;
+            ImageBrush myBrush = new ImageBrush();
+            myBrush.ImageSource = new BitmapImage(new Uri(@"..\..\..\..\Sprites\blueberry.jpg", UriKind.RelativeOrAbsolute));
+            img.Fill = myBrush;
+            return img;
+        }
+        public BlueBerry()
+        {
+            this.Points = 200;
+            this.Heal = 20;
+            this.Type = this.GetType().Name;
+        }
+    }
+    class RedBerry : Berry
+    {
+        public override Rectangle get_view()
+        {
+            Rectangle img = new Rectangle();
+            img.Width = 40;
+            img.Height = 40;
+            ImageBrush myBrush = new ImageBrush();
+            myBrush.ImageSource = new BitmapImage(new Uri(@"..\..\..\..\Sprites\redberry.jpg", UriKind.RelativeOrAbsolute));
+            img.Fill = myBrush;
+            return img;
+        }
+        public RedBerry()
+        {
+            this.Points = 100;
+            this.Heal = 10;
+            this.Type = this.GetType().Name;
+        }
+    }
+    abstract public class Gun : Item
+    {
+        public virtual int Damage { get; protected set; }
+        public virtual int Ammo { get; protected set; }
 
     }
-    public class RedBerry : Item
+    class BlueGun : Gun
     {
-
+        public override Rectangle get_view()
+        {
+            Rectangle img = new Rectangle();
+            img.Width = 40;
+            img.Height = 40;
+            ImageBrush myBrush = new ImageBrush();
+            myBrush.ImageSource = new BitmapImage(new Uri(@"..\..\..\..\Sprites\bluegun.png", UriKind.RelativeOrAbsolute));
+            img.Fill = myBrush;
+            return img;
+        }
+        public BlueGun()
+        {
+            this.Damage = 10;
+            this.Ammo = 12;
+            this.Type = this.GetType().Name;
+        }
     }
-    public class BlueBerry : Item
+    class RedGun : Gun
     {
-
-    }
-    public class Dynamite : Item
-    {
-
-    }
-    public class Gun : Item
-    {
-
+        public override Rectangle get_view()
+        {
+            Rectangle img = new Rectangle();
+            img.Width = 40;
+            img.Height = 40;
+            ImageBrush myBrush = new ImageBrush();
+            myBrush.ImageSource = new BitmapImage(new Uri(@"..\..\..\..\Sprites\redgun.png", UriKind.RelativeOrAbsolute));
+            img.Fill = myBrush;
+            return img;
+        }
+        public RedGun()
+        {
+            this.Damage = 30;
+            this.Ammo = 6;
+            this.Type = this.GetType().Name;
+        }
     }
 }

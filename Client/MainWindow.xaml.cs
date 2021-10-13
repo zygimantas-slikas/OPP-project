@@ -24,20 +24,18 @@ namespace Client
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Map map1;
-        private List<Player> players1;
-        private Dictionary<String, Shape> players_gui;
-        private String current_player_name;
-        private Player current_Player;
-        private Int32 mapId;
-        private GameSettings settings = GameSettings.GetInstance();
+        protected Map map1;
+        protected List<Player> players1;
+        protected Dictionary<String, Shape> players_gui;
+        protected String current_player_name;
+        protected Player current_Player;
+        protected Int32 mapId;
+        protected GameSettings settings = GameSettings.GetInstance();
+        protected HubConnection connection;
         public MainWindow()
         {
             InitializeComponent();
         }
-
-        private HubConnection connection;
-
         private void Connect_to_server(object sender, RoutedEventArgs e)
         {
             if (this.connection != null)
@@ -55,7 +53,6 @@ namespace Client
             connection.StartAsync();
             connection.SendAsync("Connect");
         }
-
         private void Create_new_room(object sender, RoutedEventArgs e)
         {
             if (connection == null || connection.State != HubConnectionState.Connected)
@@ -81,7 +78,6 @@ namespace Client
             { Convert.ToInt32(this.players_count.Text), Convert.ToInt32(this.map_size.Text), level};
             this.connection.SendCoreAsync("Create_map", args);
         }
-
         private void Join_room(object sender, RoutedEventArgs e)
         {
             if (connection == null || connection.State != HubConnectionState.Connected)
@@ -118,7 +114,6 @@ namespace Client
             this.Tabs_control.SelectedItem = this.Game;
             this.players_gui = new Dictionary<String, Shape>();
         }
-
         private void Show_maps_options(string[] list)
         {
             this.rooms_select.Items.Clear();
@@ -128,7 +123,6 @@ namespace Client
             }
             this.rooms_select.IsDropDownOpen = true;
         }
-
         private void Set_map(string json_text)
         {
             this.map1 = new Map();
@@ -136,9 +130,8 @@ namespace Client
             t1.Wait();
             DrawMap();
         }
-
         private void Update_map_state(string json_text)
-        {
+        {//TODO: map update from short json
             //if (this.map1 != null && this.current_Player != null)
             //{
             //    var serializerSettings = new JsonSerializerSettings { PreserveReferencesHandling = PreserveReferencesHandling.Objects };
@@ -148,7 +141,6 @@ namespace Client
             //    DrawMap();
             //}
         }
-
         private void DrawMap()
         {
             int pos_x = 0, pos_y = 0;
@@ -182,18 +174,20 @@ namespace Client
                     {
                         myRect.Fill = System.Windows.Media.Brushes.DarkGreen;
                     }
-
-                    //if (i == current_Player.X && j == current_Player.Y)
-                    //    myRect.Fill = System.Windows.Media.Brushes.Black;
-                    //else
-                    //    myRect.Fill = System.Windows.Media.Brushes.Red;
-
                     myRect.Height = 50;
                     myRect.Width = 50;
                     this.canvas1.Children.Add(myRect);
                     Canvas.SetTop(myRect, pos_y);
                     Canvas.SetLeft(myRect, pos_x);
                     Canvas.SetZIndex(myRect, 0);
+                    if (map1.map[i, j].Loot != null)
+                    {
+                        map1.map[i, j].Icon = map1.map[i, j].Loot.get_view();
+                        this.canvas1.Children.Add(map1.map[i, j].Icon);
+                        Canvas.SetTop(map1.map[i, j].Icon, pos_y +5);
+                        Canvas.SetLeft(map1.map[i, j].Icon, pos_x+5);
+                        Canvas.SetZIndex(map1.map[i, j].Icon, 1);
+                    }
                     pos_x += 50;
                 }
                 pos_y += 50;
@@ -204,7 +198,6 @@ namespace Client
                 canvas1.Children.Add(el);
                 Canvas.SetZIndex(el, 10);
             } 
-
         }
         private void Set_players(string json_text)
         {
@@ -240,9 +233,8 @@ namespace Client
             IEnumerable<string> created = players_gui.Keys.ToList();
             foreach (var existing in created)
             {
-                if (!names.Contains(existing))
+                if (!names.Contains(existing))//delete old
                 {
-                    //delete old
                     canvas1.Children.Remove(players_gui[existing]);
                     players_gui.Remove(existing);
                 }
@@ -255,7 +247,6 @@ namespace Client
                     playerSprite.Width = 40;
                     playerSprite.Height = 40;
                     ImageBrush myBrush = new ImageBrush();
-                    
                     myBrush.ImageSource = new BitmapImage(new Uri(@"..\..\..\..\Sprites\png-clipart-knight-free-content-school-uniform-cartoon-fictional-character.png", UriKind.RelativeOrAbsolute));
                     playerSprite.Fill = myBrush;
                     //add new
@@ -277,7 +268,6 @@ namespace Client
                 }
             }
         }
-
         private void DataWindow_Closing(object sender, EventArgs e)
         {
             if (this.connection != null)
@@ -285,7 +275,6 @@ namespace Client
                 this.connection.DisposeAsync();
             }
         }
-
         private async void Key_pressed(object sender, KeyEventArgs e)
         {
             bool changed = false;
@@ -326,7 +315,6 @@ namespace Client
                     changed = true;
                     canvas_scrollbar.ScrollToHorizontalOffset(current_Player.X * 50 + 5 - canvas_scrollbar.ActualWidth / 2);
                     settings.moved();
-
                     if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
                     {
                         current_Player.setStrategy(new MoveOnWater());
@@ -355,7 +343,6 @@ namespace Client
                     changed = true;
                     canvas_scrollbar.ScrollToVerticalOffset(current_Player.Y * 50 + 5 - canvas_scrollbar.ActualHeight/2);
                     settings.moved();
-
                     if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
                     {
                         current_Player.setStrategy(new MoveOnWater());
@@ -384,7 +371,6 @@ namespace Client
                     changed = true;
                     canvas_scrollbar.ScrollToHorizontalOffset(current_Player.X * 50 + 5 - canvas_scrollbar.ActualWidth / 2);
                     settings.moved();
-
                     if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
                     {
                         current_Player.setStrategy(new MoveOnWater());
@@ -404,7 +390,6 @@ namespace Client
                     current_Player.move();
                 }
             }
-
             if (changed == true)
             {
                 Object[] args = new Object[3] { mapId, current_Player.X, current_Player.Y };

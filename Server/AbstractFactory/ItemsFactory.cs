@@ -11,7 +11,6 @@ namespace Server.AbstractFactory
         abstract public Berry Create_berry();
         abstract public Gun Create_gun();
     }
-
     class Level1Factory : ItemsFactory
     {
         public override Berry Create_berry()

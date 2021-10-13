@@ -27,8 +27,6 @@ namespace Server
         public static IWebHostBuilder CreateHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args).UseUrls(ip).UseStartup<Startup>();
     }
-
-
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -36,12 +34,10 @@ namespace Server
             Configuration = configuration;
         }
         public IConfiguration Configuration { get; }
-
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSignalR();
         }
-
         public void Configure(IApplicationBuilder app)
         {
             app.UseRouting();
@@ -51,5 +47,4 @@ namespace Server
             });
         }
     }
-
 }
