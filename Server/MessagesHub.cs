@@ -30,9 +30,9 @@ namespace Server
             }
             await this.Clients.Caller.SendAsync("Show_maps_options", maps);
         }
-        public async Task Create_map(Int32 players_count, Int32 map_size, Int32 level)
+        public async Task Create_map(Int32 players_count, Int32 map_size, Int32 level, int type)
         {
-            Room r1 = new Room(Program.rooms.Count + 1, players_count, map_size, level);
+            Room r1 = new Room(Program.rooms.Count + 1, players_count, map_size, level, type);
             Program.rooms.Add(r1);
             await this.Connect();
         }

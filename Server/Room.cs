@@ -21,10 +21,10 @@ namespace Server
         public int level { get; }
         public List<Player> players;
         public Tile[,] map;
-        public Room(int id, int players_count, int map_size, int level)
+        public Room(int id, int players_count, int map_size, int level, int type)
         {
             MapBuilder builder;
-            if (true) builder = new MapBuilder1(map_size, level); //TODO: add users choice
+            if (type == 1) builder = new MapBuilder1(map_size, level); 
             else builder = new MapBuilder2(map_size, level);
             Director director = new Director(builder);
             var t = Task.Run(() => director.Construct());

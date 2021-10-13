@@ -74,8 +74,11 @@ namespace Client
             Int32 level = 0;
             if (game_mode_easy.IsChecked == true) level = 1;
             else if (game_mode_hard.IsChecked == true) level = 2;
-            Object[] args = new Object[3]
-            { Convert.ToInt32(this.players_count.Text), Convert.ToInt32(this.map_size.Text), level};
+            Int32 map_type = 0;
+            if (map_type_1.IsChecked == true) map_type = 1;
+            else if (map_type_2.IsChecked == true) map_type = 2;
+            Object[] args = new Object[4]{ Convert.ToInt32(this.players_count.Text), 
+                Convert.ToInt32(this.map_size.Text), level, map_type};
             this.connection.SendCoreAsync("Create_map", args);
         }
         private void Join_room(object sender, RoutedEventArgs e)
@@ -249,12 +252,6 @@ namespace Client
                     ImageBrush myBrush = new ImageBrush();
                     myBrush.ImageSource = new BitmapImage(new Uri(@"..\..\..\..\Sprites\png-clipart-knight-free-content-school-uniform-cartoon-fictional-character.png", UriKind.RelativeOrAbsolute));
                     playerSprite.Fill = myBrush;
-                    //add new
-                    //Shape s = new Ellipse();
-                    //s.Stroke = System.Windows.Media.Brushes.Black;
-                    //s.Fill = System.Windows.Media.Brushes.DarkBlue;
-                    //s.Width = 40;
-                    //s.Height = 40;
                     players_gui.Add(new1, playerSprite);
                     canvas1.Children.Add(playerSprite);
                     Canvas.SetZIndex(playerSprite, 10);

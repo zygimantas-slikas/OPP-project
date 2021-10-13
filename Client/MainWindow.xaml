@@ -33,9 +33,14 @@
                             <Label>Map size</Label>
                             <TextBox x:Name="map_size" Width="150" Margin="10,0,10,10"/>
                             <Label>Difficulty</Label>
-                            <WrapPanel>
+                            <WrapPanel Margin="10,0,10,10">
                                 <RadioButton x:Name="game_mode_easy" Margin="10" IsChecked="True" GroupName="difficulty_button">Blue</RadioButton>
                                 <RadioButton x:Name="game_mode_hard" Margin="10" GroupName="difficulty_button">Red</RadioButton>
+                            </WrapPanel>
+                            <Label>Map type</Label>
+                            <WrapPanel Margin="10,0,10,10">
+                                <RadioButton x:Name="map_type_1" Margin="10" IsChecked="True" GroupName="map_type_button">Type 1</RadioButton>
+                                <RadioButton x:Name="map_type_2" Margin="10" GroupName="map_type_button">Type 2</RadioButton>
                             </WrapPanel>
                         </StackPanel>
                         <Button Content="Create" Click="Create_new_room" Margin="20" Width="80" Height="30"/>
