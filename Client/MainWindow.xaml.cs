@@ -15,7 +15,6 @@ using System.Windows.Shapes;
 using Microsoft.AspNetCore.SignalR.Client;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
-using Server;
 using Client.Strategy;
 
 namespace Client
@@ -75,9 +74,11 @@ namespace Client
                 MessageBox.Show("Map size must be bigger than 10!");
                 return;
             }
-
-            Object[] args = new Object[2]
-            { Convert.ToInt32(this.players_count.Text), Convert.ToInt32(this.map_size.Text)};
+            Int32 level = 0;
+            if (game_mode_easy.IsChecked == true) level = 1;
+            else if (game_mode_hard.IsChecked == true) level = 2;
+            Object[] args = new Object[3]
+            { Convert.ToInt32(this.players_count.Text), Convert.ToInt32(this.map_size.Text), level};
             this.connection.SendCoreAsync("Create_map", args);
         }
 
@@ -133,7 +134,6 @@ namespace Client
             this.map1 = new Map();
             var t1 = Task.Run(() => map1.From_json(json_text));
             t1.Wait();
-            //this.debug_list.Items.Add(json_text);
             DrawMap();
         }
 
@@ -288,9 +288,6 @@ namespace Client
 
         private async void Key_pressed(object sender, KeyEventArgs e)
         {
-            //debug_list.Items.Add("scrol_width" + canvas_scrollbar.ActualHeight.ToString());
-            //debug_list.Items.Add(canvas1.Height.ToString());
-            //debug_list.Items.Add(canvas_scrollbar.VerticalOffset.ToString());
             bool changed = false;
             if (e.Key == Key.W)
             {
@@ -411,7 +408,7 @@ namespace Client
             if (changed == true)
             {
                 Object[] args = new Object[3] { mapId, current_Player.X, current_Player.Y };
-                this.connection.SendCoreAsync("Move", args);
+                await this.connection.SendCoreAsync("Move", args);
             }
         }
     }

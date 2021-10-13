@@ -13,6 +13,21 @@ namespace Server
             this.Surface = t;
             Player_Standing = null;
         }
+        public Tile Clone()
+        {
+            Tile c = new Tile();
+            c.Surface = this.Surface;
+            c.Player_Standing = this.Player_Standing;
+            if (this.Loot != null)
+            {
+                c.Loot = this.Loot.Clone();
+            }
+            else
+            {
+                c.Loot = null;
+            }
+            return c;
+        }
     }
 
 }

@@ -8,7 +8,6 @@ namespace Server.Factory
 {
     public class TilesFactory : IFactory<Tile>
     {
-
         public Tile FactoryMethod(Tile.Tile_type type)
         {
             switch (type)

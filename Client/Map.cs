@@ -17,10 +17,8 @@ namespace Client
         public int map_size { get; set; }
         public Room_satate state { get; set; }
         public Tile[,] map;
-        //public List<Player> players;
         public Map()
         {
-
         }
         public void From_json(string json)
         {
@@ -41,22 +39,10 @@ namespace Client
                     map[i, j] = t;
                 }
             }
-
-            //var serializerSettings = new JsonSerializerSettings { PreserveReferencesHandling = PreserveReferencesHandling.Objects };
-            //var serializerSettings = new JsonSerializerSettings { PreserveReferencesHandling = PreserveReferencesHandling.Objects };
-            //this.map1 = JsonConvert.DeserializeObject<Map>(json_text, serializerSettings);
-            //string json = JsonConvert.SerializeObject(people, Formatting.Indented, serializerSettings);
-            //JsonConvert.DeserializeObject<Map>(json, serializerSettings);
-            //this.map = new Tile[map_size, map_size];
-            //for (int i = 0; i < map_size; i++)
-            //{
-            //    for (int j = 0; j < map_size; j++)
-            //    {
-            //        this.map[i, j] = new Tile(tiles[i * j].Surface);
-            //        this.map[i, j].Player_Standing = tiles[i * j].Player_Standing;
-            //    }
-            //}
         }
+        public void Json_update (string json)
+        {
 
+        }
     }
 }

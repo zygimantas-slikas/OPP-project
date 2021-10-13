@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server
 {
-    public class Item
+    abstract public class Item
     {
         public string take(Player p, Tile[,] map)
         {
@@ -16,22 +16,62 @@ namespace Server
         {
             return "json";
         }
-
+        abstract public Item Clone();
     }
-    public class RedBerry : Item
+    public class Berry : Item
     {
-
+        public virtual int Points { get; protected set; }
+        public virtual int Heal { get; protected set; }
+        public override Berry Clone()
+        {
+            Berry c = new Berry();
+            c.Points = this.Points;
+            c.Heal = this.Heal;
+            return c;
+        }
     }
-    public class BlueBerry : Item
+    class BlueBerry : Berry
     {
-
+        public BlueBerry()
+        {
+            this.Points = 200;
+            this.Heal = 20;
+        }
     }
-    public class Dynamite: Item
+    class RedBerry : Berry
     {
-
+        public RedBerry()
+        {
+            this.Points = 100;
+            this.Heal = 10;
+        }
     }
-    public class Gun: Item
+    public class Gun : Item
     {
-
+        public virtual int Damage { get; protected set; }
+        public virtual int Ammo { get; protected set; }
+        public override Item Clone()
+        {
+            Gun c = new Gun();
+            c.Damage = this.Damage;
+            c.Ammo = this.Ammo;
+            return c;
+        }
+    }
+    class BlueGun : Gun
+    {
+        public BlueGun()
+        {
+            this.Damage = 10;
+            this.Ammo = 12;
+        }
+    }
+    class RedGun : Gun
+    {
+        public RedGun()
+        {
+            this.Damage = 30;
+            this.Ammo = 6;
+        }
     }
 }
