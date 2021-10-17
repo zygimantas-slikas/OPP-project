@@ -26,7 +26,6 @@ namespace Client
     abstract public class Berry : Item
     {
         public virtual int Points { get; protected set; }
-        public virtual int Heal { get; protected set; }
     }
     class BlueBerry : Berry
     {
@@ -43,7 +42,6 @@ namespace Client
         public BlueBerry()
         {
             this.Points = 200;
-            this.Heal = 20;
             this.Type = this.GetType().Name;
         }
     }
@@ -62,6 +60,45 @@ namespace Client
         public RedBerry()
         {
             this.Points = 100;
+            this.Type = this.GetType().Name;
+        }
+    }
+    abstract class MedicKit : Item
+    {
+        public virtual int Heal { get; protected set; }
+    }
+    class BlueMedicKit : MedicKit
+    {
+        public override Rectangle get_view()
+        {
+            Rectangle img = new Rectangle();
+            img.Width = 40;
+            img.Height = 40;
+            ImageBrush myBrush = new ImageBrush();
+            myBrush.ImageSource = new BitmapImage(new Uri(@"..\..\..\..\Sprites\bluemedic.png", UriKind.RelativeOrAbsolute));
+            img.Fill = myBrush;
+            return img;
+        }
+        public BlueMedicKit()
+        {
+            this.Heal = 20;
+            this.Type = this.GetType().Name;
+        }
+    }
+    class RedMedicKit : MedicKit
+    {
+        public override Rectangle get_view()
+        {
+            Rectangle img = new Rectangle();
+            img.Width = 40;
+            img.Height = 40;
+            ImageBrush myBrush = new ImageBrush();
+            myBrush.ImageSource = new BitmapImage(new Uri(@"..\..\..\..\Sprites\redmedic.png", UriKind.RelativeOrAbsolute));
+            img.Fill = myBrush;
+            return img;
+        }
+        public RedMedicKit()
+        {
             this.Heal = 10;
             this.Type = this.GetType().Name;
         }

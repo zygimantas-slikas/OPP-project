@@ -93,7 +93,11 @@ namespace Server.Builder
                         {
                             t.Loot = this.items_factory.Create_berry();
                         }
-                        else if (10 <= prob && prob <= 15)
+                        else if (20 <= prob && prob <= 23)
+                        {
+                            t.Loot = this.items_factory.Create_medic();
+                        }
+                        else if (10 <= prob && prob <= 12)
                         {
                             t.Loot = this.items_factory.Create_gun();
                         }

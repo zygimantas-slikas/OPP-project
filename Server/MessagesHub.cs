@@ -8,7 +8,7 @@ using System.Text.Json;
 
 namespace Server
 {
-    class MessagesHub : Hub
+    public class MessagesHub : Hub
     {
         public async Task Connect()
         {

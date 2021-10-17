@@ -10,6 +10,7 @@ namespace Server.AbstractFactory
     {
         abstract public Berry Create_berry();
         abstract public Gun Create_gun();
+        abstract public MedicKit Create_medic();
     }
     class Level1Factory : ItemsFactory
     {
@@ -21,6 +22,10 @@ namespace Server.AbstractFactory
         {
             return new BlueGun();
         }
+        public override MedicKit Create_medic()
+        {
+            return new BlueMedicKit();
+        }
     }
     class Level2Factory : ItemsFactory
     {
@@ -31,6 +36,10 @@ namespace Server.AbstractFactory
         public override Gun Create_gun()
         {
             return new RedGun();
+        }
+        public override MedicKit Create_medic()
+        {
+            return new RedMedicKit();
         }
     }
 }

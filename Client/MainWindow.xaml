@@ -46,7 +46,7 @@
                         <Button Content="Create" Click="Create_new_room" Margin="20" Width="80" Height="30"/>
                     </WrapPanel>
                 </StackPanel>
-        
+
                 <StackPanel Grid.Row="1" Grid.Column="1">
                     <Label HorizontalAlignment="Center">Join</Label>
                     <WrapPanel>
@@ -74,16 +74,13 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="300"/>
                 </Grid.ColumnDefinitions>
-                
+
                 <ScrollViewer Grid.Column="0" Name="canvas_scrollbar" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" KeyDown="Key_pressed">
-                    <Canvas Margin="10" Name="canvas1">
-                    </Canvas>
+                    <Canvas Margin="10" Name="canvas1"/>
                 </ScrollViewer>
 
                 <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Visible">
-                    <StackPanel Name="players_scrollbar">
-                        
-                    </StackPanel>
+                    <StackPanel Name="players_scrollbar"/>
                 </ScrollViewer>
             </Grid>
         </TabItem>

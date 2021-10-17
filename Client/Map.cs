@@ -54,6 +54,12 @@ namespace Client
                             case "RedGun":
                                 item1 = new RedGun();
                                 break;
+                            case "BlueMedicKit":
+                                item1 = new BlueMedicKit();
+                                break;
+                            case "RedMedicKit":
+                                item1 = new RedMedicKit();
+                                break;
                             default:
                                 item1 = null;
                                 break;

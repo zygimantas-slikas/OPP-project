@@ -22,12 +22,10 @@ namespace Server
     public class Berry : Item
     {
         public virtual int Points { get; protected set; }
-        public virtual int Heal { get; protected set; }
         public override Berry Clone()
         {
             Berry c = new Berry();
             c.Points = this.Points;
-            c.Heal = this.Heal;
             return c;
         }
     }
@@ -36,7 +34,6 @@ namespace Server
         public BlueBerry()
         {
             this.Points = 200;
-            this.Heal = 20;
             this.Type = this.GetType().Name;
         }
     }
@@ -45,6 +42,31 @@ namespace Server
         public RedBerry()
         {
             this.Points = 100;
+            this.Type = this.GetType().Name;
+        }
+    }
+    class MedicKit : Item
+    {
+        public virtual int Heal { get; protected set; }
+        public override MedicKit Clone()
+        {
+            MedicKit c = new MedicKit();
+            c.Heal = this.Heal;
+            return c;
+        }
+    }
+    class BlueMedicKit : MedicKit
+    {
+        public BlueMedicKit()
+        {
+            this.Heal = 20;
+            this.Type = this.GetType().Name;
+        }
+    }
+    class RedMedicKit : MedicKit
+    {
+        public RedMedicKit()
+        {
             this.Heal = 10;
             this.Type = this.GetType().Name;
         }
