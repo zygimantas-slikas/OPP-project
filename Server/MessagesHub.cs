@@ -86,5 +86,9 @@ namespace Server
                 //TODO: update map state
             }
         }
+        public async Task Action(Int32 map_id, string action)
+        {
+
+        }
     }
 }

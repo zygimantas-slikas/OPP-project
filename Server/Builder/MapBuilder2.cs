@@ -130,10 +130,6 @@ namespace Server.Builder
                         {
                             t.Loot = this.items_factory.Create_gun();
                         }
-                        else
-                        {
-                            t.Loot = null;
-                        }
                         map[i, j] = t;
                     }
                 }
