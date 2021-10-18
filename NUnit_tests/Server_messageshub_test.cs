@@ -22,7 +22,7 @@ namespace NUnit_tests
         }
 
         [Test]
-        [TestCase(2, 10, 1, 1)]
+        [TestCase(2, 10000, 1, 1)]
         public void Create_map_test(Int32 players_count, Int32 map_size, Int32 level, int type)
         {
             Task map = a.Create_map(players_count, map_size, level, type);
@@ -40,6 +40,7 @@ namespace NUnit_tests
         [TestCase(1, 10, 10)]
         public void Move_test(Int32 map_id, Int32 x, Int32 y)
         {
+             //Program.rooms
             Assert.AreEqual(r1.Id, map_id);
             Task move = a.Move(map_id, x, y);
             
@@ -50,12 +51,7 @@ namespace NUnit_tests
         /// </summary>
         [TearDown]
         public void CleanUp()
-        {//r1.players.Find x.
-            //Context.ConnectionId
-            //r1..c.map[r1.playersm..]
-            //Task map = a.Create_map(2, 20, 1, 1);
-            //map.
-            //Task join = a..Join_map(id, name);
+        {
         }
     }
 }
