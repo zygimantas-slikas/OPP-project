@@ -25,6 +25,7 @@ namespace Server
         public override Berry Clone()
         {
             Berry c = new Berry();
+            c.Type = this.Type;
             c.Points = this.Points;
             return c;
         }
@@ -51,6 +52,7 @@ namespace Server
         public override MedicKit Clone()
         {
             MedicKit c = new MedicKit();
+            c.Type = this.Type;
             c.Heal = this.Heal;
             return c;
         }
@@ -78,6 +80,7 @@ namespace Server
         public override Item Clone()
         {
             Gun c = new Gun();
+            c.Type = this.Type;
             c.Damage = this.Damage;
             c.Ammo = this.Ammo;
             return c;

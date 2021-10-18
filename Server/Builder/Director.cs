@@ -42,6 +42,7 @@ namespace Server.Builder
                 this.items_factory = new Level2Factory();
             }
             this.prototype = new Tile(Tile.Tile_type.grass);
+            //this.prototype.Loot = new RedBerry();
         }
         virtual public void add_lakes()
         {

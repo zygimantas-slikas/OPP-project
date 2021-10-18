@@ -9,20 +9,20 @@ namespace Client
     public class GameSettings
     {
         private static GameSettings instance = null;
+        public int Player_direction { get; set; }
         public int PlayerDelaySpeed;
         public Task Delay;
         public void moved()
         {
             Delay = Task.Delay(this.PlayerDelaySpeed);
         }
-
         public void SetSpeed(int newSpeed)
         {
             this.PlayerDelaySpeed = newSpeed;
         }
-
         private GameSettings()
         {
+            this.Player_direction = 0;
             this.PlayerDelaySpeed = 100;
             Delay = Task.Delay(this.PlayerDelaySpeed);
         }

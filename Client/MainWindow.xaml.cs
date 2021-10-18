@@ -219,12 +219,15 @@ namespace Client
                 name.Content = "Name: " + players1[i].Name;
                 Label health = new Label();
                 health.Content = "Health: " + players1[i].Health;
+                Label points= new Label();
+                points.Content = "Points: " + players1[i].Points;
                 Label items = new Label();
                 items.Content = "Items";
                 Label position = new Label();
                 position.Content = String.Format("X:{0}, Y:{1}", players1[i].X, players1[i].Y);
                 p1.Children.Add(name);
                 p1.Children.Add(health);
+                p1.Children.Add(points);
                 p1.Children.Add(position);
                 p1.Children.Add(items);
                 players_scrollbar.Children.Add(p1);
@@ -274,6 +277,37 @@ namespace Client
         }
         private async void Key_pressed(object sender, KeyEventArgs e)
         {
+            string action = "";
+            if (e.Key == Key.L)
+            {
+                //TODO: switch to next item
+                //switchCommand.undo();
+            }
+            else if (e.Key == Key.J)
+            {
+                //TODO: switch to previous item
+                //switchCommand.execute();
+            }
+            if (e.Key == Key.E)
+            {
+                //TODO: take
+                //action = TakeCommand.Execute();
+            }
+            else if (e.Key == Key.Q)
+            {
+                //TODO: drop
+                //action = TakeCommand.Undo();
+            }
+            else if (e.Key == Key.K)
+            {
+                //TODO: use item
+                //action = item.use();
+            }
+            //if (action != true)
+            //{
+            //    Object[] args = new Object[3] { mapId, action};
+            //    await this.connection.SendCoreAsync("Action", args);
+            //}
             bool changed = false;
             if (e.Key == Key.W)
             {
