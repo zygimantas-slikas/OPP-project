@@ -60,6 +60,12 @@ namespace Client
                             case "RedMedicKit":
                                 item1 = new RedMedicKit();
                                 break;
+                            case "VisibleTrap":
+                                item1 = new VisibleTrap();
+                                break;
+                            case "InVisibleTrap":
+                                item1 = new InVisibleTrap();
+                                break;
                             default:
                                 item1 = null;
                                 break;

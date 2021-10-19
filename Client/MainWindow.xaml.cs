@@ -133,6 +133,7 @@ namespace Client
             t1.Wait();
             DrawMap();
         }
+
         private void Update_map_state(string json_text)
         {//TODO: map update from short json
             //if (this.map1 != null && this.current_Player != null)
@@ -302,6 +303,12 @@ namespace Client
             {
                 //TODO: use item
                 //action = item.use();
+            }
+            else if (e.Key == Key.B)
+            {
+                //TODO: drop a trap
+                Object[] args = new Object[3] { mapId, current_Player.X, current_Player.Y };
+                await this.connection.SendCoreAsync("DropTrap", args);
             }
             //if (action != true)
             //{

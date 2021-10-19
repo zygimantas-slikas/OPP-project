@@ -104,4 +104,31 @@ namespace Server
             this.Type = this.GetType().Name;
         }
     }
+    public class Trap : Item
+    {
+        public virtual int Damage { get; protected set; }
+        public override Item Clone()
+        {
+            Trap c = new Trap();
+            c.Type = this.Type;
+            c.Damage = this.Damage;
+            return c;
+        }
+    }
+    class VisibleTrap : Trap
+    {
+        public VisibleTrap()
+        {
+            this.Damage = 30;
+            this.Type = this.GetType().Name;
+        }
+    }
+    class InVisibleTrap : Trap
+    {
+        public InVisibleTrap()
+        {
+            this.Damage = 35;
+            this.Type = this.GetType().Name;
+        }
+    }
 }

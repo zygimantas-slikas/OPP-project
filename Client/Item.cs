@@ -147,4 +147,47 @@ namespace Client
             this.Type = this.GetType().Name;
         }
     }
+
+    abstract public class Trap : Item
+    {
+        public virtual int Damage { get; protected set; }
+    }
+    class VisibleTrap : Trap
+    {
+        public override Rectangle get_view()
+        {
+            Rectangle img = new Rectangle();
+            img.Width = 40;
+            img.Height = 40;
+            ImageBrush myBrush = new ImageBrush();
+            myBrush.ImageSource = new BitmapImage(new Uri(@"..\..\..\..\Sprites\trap.png", UriKind.RelativeOrAbsolute));
+            img.Fill = myBrush;
+            return img;
+        }
+
+        public VisibleTrap()
+        {
+            this.Damage = 30;
+            this.Type = this.GetType().Name;
+        }
+    }
+    class InVisibleTrap : Trap
+    {
+        public override Rectangle get_view()
+        {
+            Rectangle img = new Rectangle();
+            img.Width = 40;
+            img.Height = 40;
+            ImageBrush myBrush = new ImageBrush();
+            myBrush.ImageSource = new BitmapImage(new Uri(@"..\..\..\..\Sprites\invisibletrap.png", UriKind.RelativeOrAbsolute));
+            img.Fill = myBrush;
+            return img;
+        }
+
+        public InVisibleTrap()
+        {
+            this.Damage = 35;
+            this.Type = this.GetType().Name;
+        }
+    }
 }

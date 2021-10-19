@@ -11,6 +11,7 @@ namespace Server.AbstractFactory
         abstract public Berry Create_berry();
         abstract public Gun Create_gun();
         abstract public MedicKit Create_medic();
+        abstract public Trap Create_trap();
     }
     class Level1Factory : ItemsFactory
     {
@@ -26,6 +27,10 @@ namespace Server.AbstractFactory
         {
             return new BlueMedicKit();
         }
+        public override Trap Create_trap()
+        {
+            return new VisibleTrap();
+        }
     }
     class Level2Factory : ItemsFactory
     {
@@ -40,6 +45,10 @@ namespace Server.AbstractFactory
         public override MedicKit Create_medic()
         {
             return new RedMedicKit();
+        }
+        public override Trap Create_trap()
+        {
+            return new InVisibleTrap();
         }
     }
 }

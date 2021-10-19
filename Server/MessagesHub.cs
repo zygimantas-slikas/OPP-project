@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using System.Text.Json;
+using Server.AbstractFactory;
+using Server.Builder;
 
 namespace Server
 {
@@ -89,6 +91,27 @@ namespace Server
         public async Task Action(Int32 map_id, string action)
         {
 
+        }
+
+        public async Task DropTrap(Int32 map_id, Int32 x, Int32 y)
+        {
+            Room r = Program.rooms.Find(x => x.Id == map_id);
+            Player p = r.players.Find(x => x.Con_id == Context.ConnectionId);
+            ItemsFactory items_factory;
+            if ((Math.Abs(p.X - x) + Math.Abs(p.Y - y)) < 2)
+            {
+                if (r.level == 1)
+                {
+                    items_factory = new Level1Factory();
+                }
+                else
+                {
+                    items_factory = new Level2Factory();
+                }
+                r.map[p.Y, p.X].Loot = items_factory.Create_trap();
+                string json_map = r.To_Json();
+                await this.Clients.Group(map_id.ToString()).SendAsync("Set_map", json_map);
+            }
         }
     }
 }
