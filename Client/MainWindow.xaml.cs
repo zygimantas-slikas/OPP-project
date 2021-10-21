@@ -114,7 +114,7 @@ namespace Client
             current_player_name = player_name.Text;
             Object[] args = new Object[2] { id, player_name.Text };
             this.connection.SendCoreAsync("Join_map", args);
-            this.Tabs_control.SelectedItem = this.Game;
+            //this.Tabs_control.SelectedItem = this.Game; //UNDONE: to be fixed
             this.players_gui = new Dictionary<String, Shape>();
         }
         private void Show_maps_options(string[] list)
