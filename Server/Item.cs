@@ -8,6 +8,10 @@ namespace Server
 {
     abstract public class Item
     {
+        public Item()
+        {
+
+        }
         public string Type { get; protected set; }
         public string take(Player p, Tile[,] map)
         {
@@ -18,6 +22,7 @@ namespace Server
             return "json";
         }
         abstract public Item Clone();
+        abstract public void PickupEffect(Player p);
     }
     public class Berry : Item
     {
@@ -28,6 +33,11 @@ namespace Server
             c.Type = this.Type;
             c.Points = this.Points;
             return c;
+        }
+
+        public override void PickupEffect(Player p)
+        {
+            p.Addpoints(this.Points);
         }
     }
     class BlueBerry : Berry
@@ -55,6 +65,11 @@ namespace Server
             c.Type = this.Type;
             c.Heal = this.Heal;
             return c;
+        }
+
+        public override void PickupEffect(Player p)
+        {
+            p.AddHealth(this.Heal);
         }
     }
     class BlueMedicKit : MedicKit
@@ -85,6 +100,11 @@ namespace Server
             c.Ammo = this.Ammo;
             return c;
         }
+
+        public override void PickupEffect(Player p)
+        {
+            
+        }
     }
     class BlueGun : Gun
     {
@@ -113,6 +133,11 @@ namespace Server
             c.Type = this.Type;
             c.Damage = this.Damage;
             return c;
+        }
+
+        public override void PickupEffect(Player p)
+        {
+            p.AddDamage(this.Damage);
         }
     }
     class VisibleTrap : Trap
