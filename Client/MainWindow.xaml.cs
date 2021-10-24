@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Client.Strategy;
+using System.Windows.Media.Animation;
 
 namespace Client
 {
@@ -35,6 +36,19 @@ namespace Client
         public MainWindow()
         {
             InitializeComponent();
+            Login.Visibility = Visibility.Visible;
+            Join.Visibility = Visibility.Hidden;
+            Setting_menu.Visibility = Visibility.Hidden;
+            create_map_panel.Visibility = Visibility.Hidden;
+            Game.Visibility = Visibility.Hidden;
+            BrushConverter bc = new BrushConverter();
+            Brush brush1 = (Brush)bc.ConvertFrom("#FF18E79D");
+            brush1.Freeze();
+            Brush brush2 = (Brush)bc.ConvertFrom("#FF131B3C");
+            brush2.Freeze();
+            login_tab_button.BorderBrush = brush1;
+            join_tab_button.BorderBrush = brush2;
+            game_tab_button.BorderBrush = brush2;
         }
         private void Connect_to_server(object sender, RoutedEventArgs e)
         {
@@ -42,6 +56,23 @@ namespace Client
             {
                 this.connection.DisposeAsync();
             }
+            //BeginStoryboard()
+            //transition_login_to_join.Begin();
+            //var keys = main_window.Resources;
+            //var story = main_window.Resources.Values.GetEnumerator();
+            Join.Visibility = Visibility.Visible;
+            Login.Visibility = Visibility.Hidden;
+            create_map_panel.Visibility = Visibility.Hidden;
+            maps_list_menu.Visibility = Visibility.Visible;
+            BrushConverter bc = new BrushConverter();
+            Brush brush1 = (Brush)bc.ConvertFrom("#FF18E79D");
+            brush1.Freeze();
+            Brush brush2 = (Brush)bc.ConvertFrom("#FF131B3C");
+            brush2.Freeze();
+            login_tab_button.BorderBrush = brush2;
+            join_tab_button.BorderBrush = brush1;
+            game_tab_button.BorderBrush = brush2;
+
             //debug_list.Items.Add(server_addr.Text + "/messageHub");
             this.connection = new HubConnectionBuilder().WithUrl(server_addr.Text + "/messageHub").Build();
             //add functions==================
@@ -94,37 +125,46 @@ namespace Client
                 return;
             }
             int id;
-            if (rooms_select.SelectedItem == null)
+            if (rooms_for_join.SelectedItem == null)
             {
                 MessageBox.Show("Choose a map!");
                 return;
             }
             else
             {
-                string room_text = rooms_select.SelectedItem.ToString();
-                Regex re = new Regex(@"\d+");
-                Match match = re.Match(room_text);
-                if (!int.TryParse(match.ToString(), out id))
-                {
-                    MessageBox.Show("Choose a map!");
-                    return;
-                }
+                Rooms_list_view_obj obj = (Rooms_list_view_obj)rooms_for_join.SelectedItem;
+                id = int.Parse(obj.map_id);
+                //string room_text = rooms_select.SelectedItem.ToString();
+                //Regex re = new Regex(@"\d+");
+                //Match match = re.Match(room_text);
+                //if (!int.TryParse(match.ToString(), out id))
+                //{
+                //    MessageBox.Show("Choose a map!");
+                //    return;
+                //}
             }
             mapId = id;
             current_player_name = player_name.Text;
             Object[] args = new Object[2] { id, player_name.Text };
             this.connection.SendCoreAsync("Join_map", args);
-            //this.Tabs_control.SelectedItem = this.Game; //UNDONE: to be fixed
+            this.Show_game_tab(sender, e);
             this.players_gui = new Dictionary<String, Shape>();
         }
         private void Show_maps_options(string[] list)
         {
-            this.rooms_select.Items.Clear();
+            if (list[0][0] == 'N') //TODO: finish
+            {
+                return;
+            }
+            this.rooms_for_join.Items.Clear();
             foreach (string line1 in list)
             {
-                this.rooms_select.Items.Add(line1);
+                string[] data = line1.Split(',');
+                string map_id =   data[0].Split(new char[] { ':'})[1];
+                string players =  data[1].Split(new char[] { ':'})[1];
+                string map_size = data[2].Split(new char[] { ':'})[1];
+                rooms_for_join.Items.Add(new Rooms_list_view_obj( map_id, players, map_size ));
             }
-            this.rooms_select.IsDropDownOpen = true;
         }
         private void Set_map(string json_text)
         {
@@ -215,7 +255,10 @@ namespace Client
                 p1.Margin = new Thickness(10);
                 Border b1 = new Border();
                 b1.Width = 1;
-                p1.Background = System.Windows.Media.Brushes.DarkGray;
+                BrushConverter bc = new BrushConverter();
+                Brush brush = (Brush)bc.ConvertFrom("#FF131B3C");
+                brush.Freeze();
+                p1.Background = brush;
                 Label name = new Label();
                 name.Content = "Name: " + players1[i].Name;
                 Label health = new Label();
@@ -433,6 +476,80 @@ namespace Client
                 Object[] args = new Object[3] { mapId, current_Player.X, current_Player.Y };
                 await this.connection.SendCoreAsync("Move", args);
             }
+        }
+
+        private void Show_maps_list(object sender, RoutedEventArgs e)
+        {
+            BrushConverter bc = new BrushConverter();
+            Brush brush1 = (Brush)bc.ConvertFrom("#FF18E79D");
+            brush1.Freeze();
+            Brush brush2 = (Brush)bc.ConvertFrom("#FF131B3C");
+            brush2.Freeze();
+            login_tab_button.BorderBrush = brush2;
+            join_tab_button.BorderBrush = brush1;
+            game_tab_button.BorderBrush = brush2;
+            Join.Visibility = Visibility.Visible;
+            Login.Visibility = Visibility.Hidden;
+            Setting_menu.Visibility = Visibility.Hidden;
+            Game.Visibility = Visibility.Hidden;
+            create_map_panel.Visibility = Visibility.Hidden;
+            rooms_for_join.Visibility = Visibility.Visible;
+            maps_list_menu.Visibility = Visibility.Visible;
+        }
+
+        private void Show_create_map_options(object sender, RoutedEventArgs e)
+        {
+            BrushConverter bc = new BrushConverter();
+            Brush brush1 = (Brush)bc.ConvertFrom("#FF18E79D");
+            brush1.Freeze();
+            Brush brush2 = (Brush)bc.ConvertFrom("#FF131B3C");
+            brush2.Freeze();
+            login_tab_button.BorderBrush = brush2;
+            join_tab_button.BorderBrush = brush1;
+            game_tab_button.BorderBrush = brush2;
+            Join.Visibility = Visibility.Visible;
+            maps_list_menu.Visibility = Visibility.Hidden;
+            create_map_panel.Visibility = Visibility.Visible;
+        }
+
+        private void Back_to_login(object sender, RoutedEventArgs e)
+        {
+            BrushConverter bc = new BrushConverter();
+            Brush brush1 = (Brush)bc.ConvertFrom("#FF18E79D");
+            brush1.Freeze();
+            Brush brush2 = (Brush)bc.ConvertFrom("#FF131B3C");
+            brush2.Freeze();
+            login_tab_button.BorderBrush = brush1;
+            join_tab_button.BorderBrush = brush2;
+            game_tab_button.BorderBrush = brush2;
+            Login.Visibility = Visibility.Visible;
+            Join.Visibility = Visibility.Hidden;
+            create_map_panel.Visibility = Visibility.Hidden;
+            Game.Visibility = Visibility.Hidden;
+            Setting_menu.Visibility = Visibility.Hidden;
+        }
+
+        private void Show_settings_menu(object sender, RoutedEventArgs e)
+        {
+            Login.Visibility = Visibility.Hidden;
+            Setting_menu.Visibility = Visibility.Visible;
+        }
+
+        private void Show_game_tab(object sender, RoutedEventArgs e)
+        {
+            BrushConverter bc = new BrushConverter();
+            Brush brush1 = (Brush)bc.ConvertFrom("#FF18E79D");
+            brush1.Freeze();
+            Brush brush2 = (Brush)bc.ConvertFrom("#FF131B3C");
+            brush2.Freeze();
+            login_tab_button.BorderBrush = brush2;
+            join_tab_button.BorderBrush = brush2;
+            game_tab_button.BorderBrush = brush1;
+            Login.Visibility = Visibility.Hidden;
+            Join.Visibility = Visibility.Hidden;
+            create_map_panel.Visibility = Visibility.Hidden;
+            Game.Visibility = Visibility.Visible;
+            Setting_menu.Visibility = Visibility.Hidden;
         }
     }
 }

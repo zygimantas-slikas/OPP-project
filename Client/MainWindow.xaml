@@ -8,7 +8,16 @@
         xmlns:b="http://schemas.microsoft.com/xaml/behaviors" x:Class="Client.MainWindow"
         mc:Ignorable="d"
         Name="main_window"
-        Title="MainWindow" Height="450" Width="800" Closed="DataWindow_Closing" AllowsTransparency="False" Background="DarkBlue" WindowStyle="SingleBorderWindow" >
+        Title="MainWindow" Height="450" Width="800" Closed="DataWindow_Closing" AllowsTransparency="False" Background="#FF333337" WindowStyle="SingleBorderWindow" >
+    <Window.Resources>
+        <Storyboard x:Key="story_join_move_left">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Join" Storyboard.TargetProperty="(Canvas.Left)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00" Value="800"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:00.5000000" Value="400"/>
+                <EasingDoubleKeyFrame KeyTime="00:00:01" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+    </Window.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -16,15 +25,60 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="7*"/>
+            <ColumnDefinition Width="33*"/>
         </Grid.ColumnDefinitions>
-        <WrapPanel Grid.Row="0" >
-            <RibbonRadioButton Width="100" Content="RadioButton" Background="#FFFF0000"/>
-            <RibbonRadioButton Width="100" Content="RibbonRadioButton" Background="#FF00FF00"/>
-            <RibbonRadioButton Width="100" Content="RibbonRadioButton" Background="#FF0000FF"/>
-        </WrapPanel>
-        <Canvas Name="canvas0" Grid.Row="1" Height="Auto" Width="Auto" >
-            <Grid x:Name="Login" Width="{Binding ActualWidth, ElementName=canvas0}" Height="{Binding ActualHeight, ElementName=canvas0}" Canvas.Left="0" Canvas.Top="0" d:IsHidden="True" >
+        <Grid Grid.Row="0" Width="{Binding ActualWidth, ElementName=main_window}" Background="#FF333337" Grid.ColumnSpan="2" >
+            <Button Name="login_tab_button" Content="Login" Margin="20,0,20,0" HorizontalAlignment="Left"  Width="90" Click="Back_to_login"/>
+            <Button Name="join_tab_button" Content="Join" Margin="20,0,20,0" HorizontalAlignment="Center" Width="90" Click="Show_maps_list"/>
+            <Button Name="game_tab_button" Content="Game" Margin="20,0,20,0" HorizontalAlignment="Right"  Width="90" Click="Show_game_tab" />
+        </Grid>
+        <Canvas Name="canvas0" Grid.Row="1" Height="Auto" Width="Auto" Grid.ColumnSpan="2" >
+
+
+            <Grid x:Name="Setting_menu" Width="{Binding ActualWidth, ElementName=canvas0}" Height="{Binding ActualHeight, ElementName=canvas0}" Canvas.Left="0" Canvas.Top="0" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="3*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Row="0" Grid.Column="0">
+                    <Label Content="Movement" HorizontalAlignment="Center"/>
+                    <Label Content="Move_up_key"/>
+                    <TextBox x:Name="Move_up_key" Width="100" HorizontalAlignment="Left" Text="W"/>
+                    <Label Content="Move_down_key"/>
+                    <TextBox x:Name="Move_down_key" Width="100" HorizontalAlignment="Left" Text="S"/>
+                    <Label Content="Move_left_key"/>
+                    <TextBox x:Name="Move_left_key" Width="100" HorizontalAlignment="Left" Text="A"/>
+                    <Label Content="Move_right_key"/>
+                    <TextBox x:Name="Move_right_key" Width="100" HorizontalAlignment="Left" Text="D"/>
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="1">
+                    <Label Content="Items control" HorizontalAlignment="Center"/>
+                    <Label Content="Take_item_key"/>
+                    <TextBox x:Name="Take_item_key" Width="100" HorizontalAlignment="Left" Text="E"/>
+                    <Label Content="Drop_item_key"/>
+                    <TextBox x:Name="Drop_item_key" Width="100" HorizontalAlignment="Left" Text="Q"/>
+                    <Label Content="Switch_left_key"/>
+                    <TextBox x:Name="Switch_left_key" Width="100" HorizontalAlignment="Left" Text="J"/>
+                    <Label Content="Switch_right_key"/>
+                    <TextBox x:Name="Switch_right_key" Width="100" HorizontalAlignment="Left" Text="L"/>
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="2">
+                    <Label Content="Items usage" HorizontalAlignment="Center"/>
+                    <Label Content="Use_item_key"/>
+                    <TextBox x:Name="Use_item_key" Width="100" HorizontalAlignment="Left" Text="K"/>
+                    <Label Content="Put_bomb_key"/>
+                    <TextBox x:Name="Put_bomb_key" Width="100" HorizontalAlignment="Left" Text="B"/>
+                </StackPanel>
+            </Grid>
+
+
+            <Grid x:Name="Login" Width="{Binding ActualWidth, ElementName=canvas0}" Height="{Binding ActualHeight, ElementName=canvas0}" Canvas.Left="0" Canvas.Top="0" Visibility="Visible" d:IsHidden="True" >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*"/>
                     <RowDefinition Height="3*"/>
@@ -39,10 +93,10 @@
                     <TextBox x:Name="server_addr" Width="250" Margin="10" Text="http://localhost:5000"/>
                     <Button Content="Connect" Click="Connect_to_server" Margin="10" Width="80"/>
                 </StackPanel>
-                <Button  Grid.Row="2" Grid.Column="0" Height="50" Width="50" Background="Transparent" BorderThickness="0" HorizontalAlignment="Left">
+                <Button  Grid.Row="2" Grid.Column="0" Height="50" Width="50" Background="Transparent" BorderThickness="0" HorizontalAlignment="Left" Margin="30,0,30,0" Click="Show_settings_menu">
                     <materialDesign:PackIcon Foreground="#FF18E794" Kind="Settings" Height="50" Width="50" />
                 </Button>
-                <Button  Grid.Row="2" Grid.Column="2" Width="50" Height="50" Background="Transparent" BorderThickness="0"  RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Right">
+                <Button  Grid.Row="2" Grid.Column="2" Width="50" Height="50" Background="Transparent" BorderThickness="0"  RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Right" Margin="30,0,30,0" Click="Connect_to_server">
                     <Button.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform/>
@@ -55,33 +109,58 @@
                 </Button>
             </Grid>
 
-            <Grid x:Name="Join" Width="{Binding ActualWidth, ElementName=canvas0}" Height="{Binding ActualHeight, ElementName=canvas0}" Canvas.Left="0" Canvas.Top="0" >
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="4*"/>
-                    <RowDefinition Height="1*"/>
-                </Grid.RowDefinitions>
+            <Grid x:Name="Join" Width="{Binding ActualWidth, ElementName=canvas0}" Height="{Binding ActualHeight, ElementName=canvas0}" Canvas.Left="0" Canvas.Top="0" Visibility="Visible" d:IsHidden="True" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="120"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-
-                <Menu Grid.Row="0" Grid.Column="0" Name="join_create_menu" Background="Transparent">
-                    <MenuItem Header="Join" Width="{Binding ActualWidth, ElementName=join_create_menu}" Height="30">
-                    </MenuItem>
-                    <MenuItem Header="Create" Width="{Binding ActualWidth, ElementName=join_create_menu}" Height="30">
-
-                    </MenuItem>
-                </Menu>
-
-                <Grid Grid.Column="1" Grid.Row="0">
+                <Border Grid.Column="0" BorderBrush="#FF18E79D" BorderThickness="1">
+                    <Grid >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="4*"/>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
+                        <Border BorderBrush="#FF18E79D" BorderThickness="1">
+                            <StackPanel Grid.Row="0" Name="join_create_menu" Background="#FF333337" >
+                                <Button Name="menu_item_1" Content="Join" Width="{Binding ActualWidth, ElementName=join_create_menu}" Height="30" Click="Show_maps_list">
+                                    <!--<Button.Triggers>
+                                    <EventTrigger RoutedEvent="Button.MouseEnter">
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                            <ColorAnimation To="#FF131B3C" 
+                                    Storyboard.TargetProperty="(Button.BorderBrush).(SolidColorBrush.Color)" 
+                                        Duration="0:0:1"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Button.Triggers>-->
+                                </Button>
+                                <Button Content="Create" Width="{Binding ActualWidth, ElementName=join_create_menu}" Height="30" Click="Show_create_map_options">
+                                </Button>
+                            </StackPanel>
+                        </Border>
+                        <Button  Grid.Row="1" Width="50" Height="50" Background="Transparent" BorderThickness="0"  RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" Margin="30,0,30,0" Click="Back_to_login">
+                            <Button.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform/>
+                                    <SkewTransform/>
+                                    <RotateTransform Angle="90"/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </Button.RenderTransform>
+                            <materialDesign:PackIcon Foreground="#FF18E794" Kind="ArrowBottomBold" Height="50" Width="50"/>
+                        </Button>
+                    </Grid>
+                </Border>
+                <Grid Grid.Column="1" Name="maps_list_menu">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <ListView x:Name="rooms_for_join" Background="Transparent">
+                    <ListView x:Name="rooms_for_join" Grid.Column="0" Grid.Row="0" Background="#FF333337" BorderBrush="#FF18E79D">
                         <ListView.View>
-                            <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Employee Information" >
-                                <GridViewColumn DisplayMemberBinding="{Binding Path=map_id}" Header="Map Id" Width="100"/>
+                            <GridView AllowsColumnReorder="true" >
+                                <GridViewColumn DisplayMemberBinding="{Binding Path=map_id}" Header="Map Id" Width="100" />
                                 <GridViewColumn DisplayMemberBinding="{Binding Path=players}" Width="100">
                                     <GridViewColumnHeader>Players Online
                                         <!--<GridViewColumnHeader.ContextMenu>
@@ -96,77 +175,81 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
-                    <StackPanel Grid.Column="1">
-                        <Label HorizontalAlignment="Center" Content="Join"/>
-                        <WrapPanel>
-                            <StackPanel>
-                                <ComboBox x:Name="rooms_select" Margin="10,20,10,10" Width="200" Height="30" />
-                                <Label Content="User name"/>
-                                <TextBox x:Name="player_name" Margin="10,0,10,10" Width="200"/>
-                            </StackPanel>
-                            <Button Click="Join_room" Content="Join" Margin="20" Width="80" Height="30"/>
-                        </WrapPanel>
-                    </StackPanel>
+                    <Border Grid.Column="1" BorderBrush="#FF18E79D" BorderThickness="1">
+                        <Grid >
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="4*"/>
+                                <RowDefinition Height="1*"/>
+                            </Grid.RowDefinitions>
+                            <!--<WrapPanel>
+                                <StackPanel>
+                                    <Label HorizontalAlignment="Center" Content="Join"/>
+                                    <ComboBox x:Name="rooms_select" Margin="10,20,10,10" Width="200" Height="30" />
+                                </StackPanel>
+                            </WrapPanel>-->
+                            <WrapPanel Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                <StackPanel  Width="200" >
+                                    <Label Content="User name"/>
+                                    <TextBox x:Name="player_name" Width="200" Height="20"/>
+                                </StackPanel>
+                                <Button  Width="50" Height="50" Background="Transparent" BorderThickness="0"  RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Right" Margin="30,15,30,0" Click="Join_room">
+                                    <Button.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform/>
+                                            <SkewTransform/>
+                                            <RotateTransform Angle="-90"/>
+                                            <TranslateTransform/>
+                                        </TransformGroup>
+                                    </Button.RenderTransform>
+                                    <materialDesign:PackIcon Foreground="#FF18E794" Kind="ArrowBottomBold" Height="50" Width="50"/>
+                                </Button>
+                            </WrapPanel>
+                        </Grid>
+                    </Border>
                 </Grid>
 
-                <Button  Grid.Row="1" Grid.Column="1" Width="50" Height="50" Background="Transparent" BorderThickness="0"  RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Right">
-                    <Button.RenderTransform>
-                        <TransformGroup>
-                            <ScaleTransform/>
-                            <SkewTransform/>
-                            <RotateTransform Angle="-90"/>
-                            <TranslateTransform/>
-                        </TransformGroup>
-                    </Button.RenderTransform>
-                    <materialDesign:PackIcon Foreground="#FF18E794" Kind="ArrowBottomBold" Height="50" Width="50"/>
-                </Button>
-
-                <Button  Grid.Row="1" Grid.Column="0" Width="50" Height="50" Background="Transparent" BorderThickness="0"  RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left">
-                    <Button.RenderTransform>
-                        <TransformGroup>
-                            <ScaleTransform/>
-                            <SkewTransform/>
-                            <RotateTransform Angle="90"/>
-                            <TranslateTransform/>
-                        </TransformGroup>
-                    </Button.RenderTransform>
-                    <materialDesign:PackIcon Foreground="#FF18E794" Kind="ArrowBottomBold" Height="50" Width="50"/>
-                </Button>
-
-                <StackPanel Grid.Row="0" Grid.Column="1">
-                    <Label HorizontalAlignment="Center" Content="Create"/>
-                    <WrapPanel HorizontalAlignment="Center">
-                        <StackPanel>
-                            <Label Content="Players count"/>
-                            <TextBox x:Name="players_count" Width="150" Margin="10,0,10,10"/>
-                            <Label Content="Map size"/>
-                            <TextBox x:Name="map_size" Width="150" Margin="10,0,10,10"/>
-                            <Label Content="Difficulty"/>
-                            <WrapPanel Margin="10,0,10,10">
-                                <RadioButton x:Name="game_mode_easy" Margin="10" IsChecked="True" GroupName="difficulty_button" Content="Blue"/>
-                                <RadioButton x:Name="game_mode_hard" Margin="10" GroupName="difficulty_button" Content="Red"/>
-                            </WrapPanel>
-                            <Label Content="Map type"/>
-                            <WrapPanel Margin="10,0,10,10">
-                                <RadioButton x:Name="map_type_1" Margin="10" IsChecked="True" GroupName="map_type_button" Content="Type 1"/>
-                                <RadioButton x:Name="map_type_2" Margin="10" GroupName="map_type_button" Content="Type 2"/>
-                            </WrapPanel>
-                        </StackPanel>
-                        <Button Content="Create" Click="Create_new_room" Margin="20" Width="80" Height="30"/>
-                    </WrapPanel>
-                </StackPanel>
+                <Border x:Name="create_map_panel" Grid.Column="1" BorderBrush="#FF18E79D" BorderThickness="1" d:IsHidden="True">
+                    <Grid   d:IsHidden="True" Height="Auto" Width="Auto">
+                        <Label HorizontalAlignment="Center" Content="Create"/>
+                        <WrapPanel HorizontalAlignment="Center">
+                            <StackPanel>
+                                <Label Content="Players count"/>
+                                <TextBox x:Name="players_count" Width="150" Margin="10,0,10,10"/>
+                                <Label Content="Map size"/>
+                                <TextBox x:Name="map_size" Width="150" Margin="10,0,10,10"/>
+                                <Label Content="Difficulty"/>
+                                <WrapPanel Margin="10,0,10,10">
+                                    <RadioButton x:Name="game_mode_easy" Margin="10" IsChecked="True" GroupName="difficulty_button" Content="Blue"/>
+                                    <RadioButton x:Name="game_mode_hard" Margin="10" GroupName="difficulty_button" Content="Red"/>
+                                </WrapPanel>
+                                <Label Content="Map type"/>
+                                <WrapPanel Margin="10,0,10,10">
+                                    <RadioButton x:Name="map_type_1" Margin="10" IsChecked="True" GroupName="map_type_button" Content="Type 1"/>
+                                    <RadioButton x:Name="map_type_2" Margin="10" GroupName="map_type_button" Content="Type 2"/>
+                                </WrapPanel>
+                            </StackPanel>
+                            <Button Content="Create" Click="Create_new_room" Margin="20" Width="80" Height="30"/>
+                        </WrapPanel>
+                    </Grid>
+                </Border>
             </Grid>
 
-            <DockPanel x:Name="Game" Width="{Binding ActualWidth, ElementName=canvas0}" Height="{Binding ActualHeight, ElementName=canvas0}" Canvas.Left="0" Canvas.Top="0" LastChildFill="True" d:IsHidden="True">
-                <ScrollViewer DockPanel.Dock="Right" Width="300" VerticalScrollBarVisibility="Visible">
-                    <StackPanel x:Name="players_scrollbar"/>
-                </ScrollViewer>
-                <WrapPanel DockPanel.Dock="Bottom" Height="100">
+            <DockPanel x:Name="Game" Width="{Binding ActualWidth, ElementName=canvas0}" Height="{Binding ActualHeight, ElementName=canvas0}" Canvas.Left="0" Canvas.Top="0" LastChildFill="True" Visibility="Visible" d:IsHidden="True">
+                <Border DockPanel.Dock="Right" BorderBrush="#FF18E79D" BorderThickness="1">
+                    <ScrollViewer  Width="300" VerticalScrollBarVisibility="Hidden" >
+                        <StackPanel x:Name="players_scrollbar"/>
+                    </ScrollViewer>
+                </Border>
+                <Border DockPanel.Dock="Bottom" BorderBrush="#FF18E79D" BorderThickness="1">
+                    <WrapPanel Height="100">
 
-                </WrapPanel>
-                <ScrollViewer DockPanel.Dock="Top" x:Name="canvas_scrollbar" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden" KeyDown="Key_pressed">
-                    <Canvas Margin="10" x:Name="canvas1"/>
-                </ScrollViewer>
+                    </WrapPanel>
+                </Border>
+                <Border DockPanel.Dock="Top" BorderBrush="#FF18E79D" BorderThickness="1">
+                    <ScrollViewer Margin="5" x:Name="canvas_scrollbar" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden" KeyDown="Key_pressed">
+                        <Canvas  x:Name="canvas1"/>
+                    </ScrollViewer>
+                </Border>
             </DockPanel>
         </Canvas>
     </Grid>
