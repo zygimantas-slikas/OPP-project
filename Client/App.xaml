@@ -4,6 +4,46 @@
              xmlns:local="clr-namespace:Client"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="Foreground" Value="#FF18E79D" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontFamily" Value="Segoe UI" />
+            <Setter Property="FontStyle" Value="Normal" />
+        </Style>
+        <Style TargetType="{x:Type RadioButton}">
+            <Setter Property="Foreground" Value="#FF131B3C" />
+            <Setter Property="Background" Value="#FF18E79D" />
+        </Style>
+        <Style TargetType="{x:Type TextBox}">
+            <Setter Property="Foreground"  Value="#FF18E79D" />
+            <Setter Property="Background"  Value="#FF131B3C" />
+            <Setter Property="BorderBrush" Value="#FF131B3C" />
+        </Style>
+        <Style TargetType="{x:Type Label}">
+            <Setter Property="Foreground"  Value="#FF18E79D" />
+            <Setter Property="Background"  Value="Transparent" />
+        </Style>
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="Foreground"  Value="#FF18E79D" />
+            <Setter Property="Background"  Value="#FF131B3C" />
+            <Setter Property="BorderBrush" Value="#FF131B3C" />
+            <Setter Property="BorderThickness" Value="3"/>
+        </Style>
+        <Style TargetType="{x:Type Grid}">
+            <!--<Setter Property="Background"  Value="#FF333337" />-->
+        </Style>
+        <Style TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
+                        <Border BorderThickness="1" BorderBrush="#FF18E79D" Background="#FF131B3C">
+                            <TextBlock x:Name="ContentHeader" Text="{TemplateBinding Content}" Padding="5,5,5,0" Width="{TemplateBinding Width}" TextAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+        </Style>
+
     </Application.Resources>
 </Application>
