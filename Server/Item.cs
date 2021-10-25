@@ -8,10 +8,6 @@ namespace Server
 {
     abstract public class Item
     {
-        public Item()
-        {
-
-        }
         public string Type { get; protected set; }
         public string take(Player p, Tile[,] map)
         {
@@ -127,17 +123,20 @@ namespace Server
     public class Trap : Item
     {
         public virtual int Damage { get; protected set; }
+        public virtual bool Activated { get; protected set; }
         public override Item Clone()
         {
             Trap c = new Trap();
             c.Type = this.Type;
             c.Damage = this.Damage;
+            c.Activated = this.Activated;
             return c;
         }
 
         public override void PickupEffect(Player p)
         {
-            p.AddDamage(this.Damage);
+            //p.AddDamage(this.Damage);
+            Activated = true;
         }
     }
     class VisibleTrap : Trap
@@ -146,6 +145,7 @@ namespace Server
         {
             this.Damage = 30;
             this.Type = this.GetType().Name;
+            this.Activated = false;
         }
     }
     class InVisibleTrap : Trap
@@ -154,6 +154,29 @@ namespace Server
         {
             this.Damage = 35;
             this.Type = this.GetType().Name;
+            this.Activated = false;
+        }
+    }
+
+    public class Fire : Item
+    {
+        public virtual int TimesStepped { get; protected set; }
+        public Fire()
+        {
+            this.TimesStepped = 0;
+            this.Type = this.GetType().Name;
+        }
+
+        public override Item Clone()
+        {
+            Fire c = new Fire();
+            c.Type = this.Type;
+            return c;
+        }
+
+        public override void PickupEffect(Player p)
+        {
+            this.TimesStepped += 1;
         }
     }
 }

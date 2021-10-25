@@ -61,5 +61,20 @@ namespace Client
         {
             this.currentItem = this.Inventory.Find(this.currentItem).Next != null ? this.Inventory.Find(this.currentItem).Next.Value : this.Inventory.Last.Value;
         }
+
+        public void Addpoints(int pts)
+        {
+            this.Points += pts;
+        }
+
+        public void AddDamage(int hp)
+        {
+            this.Health -= hp;
+        }
+
+        public void AddHealth(int hp)
+        {
+            this.Health += hp;
+        }
     }
 }

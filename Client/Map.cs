@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using Client.Decorator;
 
 namespace Client
 {
@@ -65,6 +66,25 @@ namespace Client
                                 break;
                             case "InVisibleTrap":
                                 item1 = new InVisibleTrap();
+                                break;
+                            case "Fire":
+                                int timesStepped = Int32.Parse((string)pj["map"][i][j]["Loot"]["TimesStepped"]);
+                                if (timesStepped == 0)
+                                {
+                                    item1 = new HighFireDecorator(new Fire(timesStepped++));
+                                }
+                                else if (timesStepped == 1)
+                                {
+                                    item1 = new MediumFireDecorator(new Fire(timesStepped++));
+                                }
+                                else if (timesStepped == 2)
+                                {
+                                    item1 = new LowFireDecorator(new Fire(timesStepped++));
+                                }
+                                else
+                                {
+                                    item1 = null;
+                                }
                                 break;
                             default:
                                 item1 = null;

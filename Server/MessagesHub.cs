@@ -114,6 +114,43 @@ namespace Server
             }
         }
 
+        public async Task ActivateTrap(Int32 map_id, Int32 x, Int32 y)
+        {
+            Room r = Program.rooms.Find(x => x.Id == map_id);
+            Player p = r.players.Find(x => x.Con_id == Context.ConnectionId);
+            if ((Math.Abs(p.X - x) + Math.Abs(p.Y - y)) < 2)
+            {
+                if ((r.map[p.Y, p.X].Loot as Trap).Activated)
+                {
+                    r.map[p.Y, p.X].Loot = new Fire();
+                }
+                else
+                {
+                    r.map[p.Y, p.X].Loot.PickupEffect(p); //activate trap
+                }
+                string json_map = r.To_Json();
+                await this.Clients.Group(map_id.ToString()).SendAsync("Set_map", json_map);
+            }
+        }
+
+        public async Task StepOnFire(Int32 map_id, Int32 x, Int32 y, Int32 stepsCount)
+        {
+            Room r = Program.rooms.Find(x => x.Id == map_id);
+            Player p = r.players.Find(x => x.Con_id == Context.ConnectionId);
+            if ((Math.Abs(p.X - x) + Math.Abs(p.Y - y)) < 2)
+            {
+                Fire f = new Fire();
+                stepsCount++;
+                for (int i = 0; i < stepsCount; i++)
+                {
+                    f.PickupEffect(p);
+                }
+                r.map[p.Y, p.X].Loot = f;
+                string json_map = r.To_Json();
+                await this.Clients.Group(map_id.ToString()).SendAsync("Set_map", json_map);
+            }
+        }
+
         public async Task lootItem(Int32 map_id)
         {
             Room r = Program.rooms.Find(x => x.Id == map_id);

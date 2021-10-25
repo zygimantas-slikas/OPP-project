@@ -21,7 +21,7 @@ namespace Server
             this.Con_id = id;
             this.Health = 100;
         }
-        public Player(string id, string name)
+        public Player(string id, string name, int x)
         {
             this.X = 0;
             this.Y = 0;

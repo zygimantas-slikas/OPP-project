@@ -39,7 +39,8 @@ namespace Server
         }
         public void Add_player(string con_id, string name)
         {
-            Player p = new Player(con_id, name);
+            LinkedList<Item> inv = new LinkedList<Item>();
+            Player p = new Player(con_id, name, 0, 0, inv);
             if (this.map[0, 0].Player_Standing == null) {
                 this.map[0, 0].Player_Standing = name;
                 p.X = 0;

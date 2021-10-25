@@ -27,10 +27,21 @@ namespace Client
         {
             return "json";
         }
+        abstract public void PickupEffect(Player p);
+        abstract public int GetNumber();
     }
     abstract public class Berry : Item
     {
         public virtual int Points { get; protected set; }
+        public override void PickupEffect(Player p)
+        {
+            p.Addpoints(this.Points);
+        }
+
+        public override int GetNumber()
+        {
+            throw new NotImplementedException();
+        }
     }
     class BlueBerry : Berry
     {
@@ -49,6 +60,7 @@ namespace Client
             this.Points = 200;
             this.Type = this.GetType().Name;
         }
+
     }
     class RedBerry : Berry
     {
@@ -71,6 +83,14 @@ namespace Client
     abstract class MedicKit : Item
     {
         public virtual int Heal { get; protected set; }
+        public override void PickupEffect(Player p)
+        {
+            p.AddHealth(this.Heal);
+        }
+        public override int GetNumber()
+        {
+            throw new NotImplementedException();
+        }
     }
     class BlueMedicKit : MedicKit
     {
@@ -112,10 +132,18 @@ namespace Client
     {
         public virtual int Damage { get; protected set; }
         public virtual int Ammo { get; protected set; }
+        public override void PickupEffect(Player p)
+        {
 
+        }
+
+        public override int GetNumber()
+        {
+            throw new NotImplementedException();
+        }
     }
-    class BlueGun : Gun
-    {
+        class BlueGun : Gun
+        {
         public override Rectangle get_view()
         {
             Rectangle img = new Rectangle();
@@ -156,6 +184,15 @@ namespace Client
     abstract public class Trap : Item
     {
         public virtual int Damage { get; protected set; }
+        public override void PickupEffect(Player p)
+        {
+            p.AddDamage(this.Damage);
+        }
+
+        public override int GetNumber()
+        {
+            throw new NotImplementedException();
+        }
     }
     class VisibleTrap : Trap
     {
@@ -193,6 +230,31 @@ namespace Client
         {
             this.Damage = 35;
             this.Type = this.GetType().Name;
+        }
+    }
+
+    public class Fire : Item
+    {
+        public virtual int TimesStepped { get; protected set; }
+        public Fire(int timesStepped)
+        {
+            this.TimesStepped = timesStepped;
+            this.Type = this.GetType().Name;
+        }
+
+        public override Rectangle get_view()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void PickupEffect(Player p)
+        {
+            this.TimesStepped++;
+        }
+
+        public override int GetNumber()
+        {
+            return TimesStepped;
         }
     }
 }

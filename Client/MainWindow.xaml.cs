@@ -17,6 +17,7 @@ using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Client.Strategy;
 using System.Windows.Media.Animation;
+using Client.Decorator;
 
 namespace Client
 {
@@ -368,6 +369,12 @@ namespace Client
             //    Object[] args = new Object[3] { mapId, action};
             //    await this.connection.SendCoreAsync("Action", args);
             //}
+            if (e.Key == Key.W || e.Key == Key.A || e.Key == Key.S || e.Key == Key.D)
+            {
+                Check_step_on_fire();
+                Check_step_on_trap();
+
+            }
 
             if (e.Key == Key.W)
             {
@@ -378,6 +385,7 @@ namespace Client
                     changed = true;
                     canvas_scrollbar.ScrollToVerticalOffset(current_Player.Y*50+5 - canvas_scrollbar.ActualHeight/2);
                     settings.moved();
+
                     if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
                     {
                         current_Player.setStrategy(new MoveOnWater());
@@ -406,6 +414,8 @@ namespace Client
                     changed = true;
                     canvas_scrollbar.ScrollToHorizontalOffset(current_Player.X * 50 + 5 - canvas_scrollbar.ActualWidth / 2);
                     settings.moved();
+
+
                     if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
                     {
                         current_Player.setStrategy(new MoveOnWater());
@@ -434,6 +444,7 @@ namespace Client
                     changed = true;
                     canvas_scrollbar.ScrollToVerticalOffset(current_Player.Y * 50 + 5 - canvas_scrollbar.ActualHeight/2);
                     settings.moved();
+
                     if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
                     {
                         current_Player.setStrategy(new MoveOnWater());
@@ -462,6 +473,7 @@ namespace Client
                     changed = true;
                     canvas_scrollbar.ScrollToHorizontalOffset(current_Player.X * 50 + 5 - canvas_scrollbar.ActualWidth / 2);
                     settings.moved();
+
                     if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
                     {
                         current_Player.setStrategy(new MoveOnWater());
@@ -485,6 +497,45 @@ namespace Client
             {
                 Object[] args = new Object[3] { mapId, current_Player.X, current_Player.Y };
                 await this.connection.SendCoreAsync("Move", args);
+            }
+        }
+
+        private async void Check_step_on_trap()
+        {
+            if (map1.map[current_Player.Y, current_Player.X].Loot != null)
+            {
+                if (map1.map[current_Player.Y, current_Player.X].Loot.Type == new VisibleTrap().Type ||
+                    map1.map[current_Player.Y, current_Player.X].Loot.Type == new InVisibleTrap().Type)
+                {
+                    Object[] args = new Object[3] { mapId, current_Player.X, current_Player.Y };
+                    await this.connection.SendCoreAsync("ActivateTrap", args);
+                }
+            }
+        }
+
+        private async void Check_step_on_fire()
+        {
+            if (map1.map[current_Player.Y, current_Player.X].Loot != null)
+            {
+                int stepsCount = 0;
+                if (map1.map[current_Player.Y, current_Player.X].Loot.Type == new HighFireDecorator(new Fire(0)).Type)
+                {
+                    stepsCount = (map1.map[current_Player.Y, current_Player.X].Loot as HighFireDecorator).GetNumber();
+                    Object[] args = new Object[4] { mapId, current_Player.X, current_Player.Y, stepsCount };
+                    await this.connection.SendCoreAsync("StepOnFire", args);
+                }
+                else if (map1.map[current_Player.Y, current_Player.X].Loot.Type == new MediumFireDecorator(new Fire(0)).Type) {
+                    stepsCount = (map1.map[current_Player.Y, current_Player.X].Loot as MediumFireDecorator).GetNumber();
+                    Object[] args = new Object[4] { mapId, current_Player.X, current_Player.Y, stepsCount };
+                    await this.connection.SendCoreAsync("StepOnFire", args);
+                }
+                else if (map1.map[current_Player.Y, current_Player.X].Loot.Type == new LowFireDecorator(new Fire(0)).Type)
+                {
+                    stepsCount = (map1.map[current_Player.Y, current_Player.X].Loot as LowFireDecorator).GetNumber();
+                    Object[] args = new Object[4] { mapId, current_Player.X, current_Player.Y, stepsCount };
+                    await this.connection.SendCoreAsync("StepOnFire", args);
+                }
+
             }
         }
 
