@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json.Serialization;
 using Client.Strategy;
+using Client.Observer;
 
 namespace Client
 {
@@ -60,6 +61,23 @@ namespace Client
         public void unSwitchItem()
         {
             this.currentItem = this.Inventory.Find(this.currentItem).Next != null ? this.Inventory.Find(this.currentItem).Next.Value : this.Inventory.Last.Value;
+        }
+
+        private List<IScore> scoreObservers = new List<IScore>();
+        public void Attach(IScore observer)
+        {
+            scoreObservers.Add(observer);
+        }
+        public void Detach(IScore observer)
+        {
+            scoreObservers.Remove(observer);
+        }
+        public void Notify(List<Player> player, int health, int points)
+        {
+            foreach (IScore observer in scoreObservers)
+            {
+                observer.Update(player, health, points);
+            }
         }
 
         public void Addpoints(int pts)
