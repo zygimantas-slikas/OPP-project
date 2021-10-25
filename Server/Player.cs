@@ -35,6 +35,20 @@ namespace Server
         {
             this.Inventory.AddLast(item);
         }
+        public void Addpoints(int pts)
+        {
+            this.Points += pts;
+        }
+
+        public void AddDamage(int hp)
+        {
+            this.Health -= hp;
+        }
+
+        public void AddHealth(int hp)
+        {
+            this.Health += hp;
+        }
     }
 
 }
