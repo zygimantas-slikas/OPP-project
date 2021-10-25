@@ -17,6 +17,7 @@ using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Client.Strategy;
 using System.Windows.Media.Animation;
+using Client.Observer;
 
 namespace Client
 {
@@ -33,6 +34,7 @@ namespace Client
         protected Int32 mapId;
         protected GameSettings settings = GameSettings.GetInstance();
         protected HubConnection connection;
+        private Score ScoreTracking = new Score();
         public MainWindow()
         {
             InitializeComponent();
@@ -311,6 +313,8 @@ namespace Client
                     Canvas.SetLeft(players_gui[new1], players1.Find(x => x.Name == new1).X * 50 +5);
                 }
             }
+            current_Player.Attach(ScoreTracking);
+            current_Player.Notify(players1, 200, 200);
         }
         private void DataWindow_Closing(object sender, EventArgs e)
         {
@@ -354,6 +358,8 @@ namespace Client
             }
             else if (e.Key == Key.K)
             {
+                //current_Player.Attach(ScoreTracking);
+                current_Player.Notify(players1, 200, 200);
                 //TODO: use item
                 //action = item.use();
             }
