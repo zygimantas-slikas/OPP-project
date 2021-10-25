@@ -36,7 +36,7 @@
         <Canvas Name="canvas0" Grid.Row="1" Height="Auto" Width="Auto" Grid.ColumnSpan="2" >
 
 
-            <Grid x:Name="Setting_menu" Width="{Binding ActualWidth, ElementName=canvas0}" Height="{Binding ActualHeight, ElementName=canvas0}" Canvas.Left="0" Canvas.Top="0" >
+            <Grid x:Name="Setting_menu" Width="{Binding ActualWidth, ElementName=canvas0}" Height="{Binding ActualHeight, ElementName=canvas0}" Canvas.Left="0" Canvas.Top="0" d:IsHidden="True" >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="3*"/>
                     <RowDefinition Height="1*"/>
@@ -234,16 +234,18 @@
                 </Border>
             </Grid>
 
-            <DockPanel x:Name="Game" Width="{Binding ActualWidth, ElementName=canvas0}" Height="{Binding ActualHeight, ElementName=canvas0}" Canvas.Left="0" Canvas.Top="0" LastChildFill="True" Visibility="Visible" d:IsHidden="True">
+            <DockPanel x:Name="Game" Width="{Binding ActualWidth, ElementName=canvas0}" Height="{Binding ActualHeight, ElementName=canvas0}" Canvas.Left="0" Canvas.Top="0" LastChildFill="True" Visibility="Visible">
                 <Border DockPanel.Dock="Right" BorderBrush="#FF18E79D" BorderThickness="1">
                     <ScrollViewer  Width="300" VerticalScrollBarVisibility="Hidden" >
                         <StackPanel x:Name="players_scrollbar"/>
                     </ScrollViewer>
                 </Border>
                 <Border DockPanel.Dock="Bottom" BorderBrush="#FF18E79D" BorderThickness="1">
-                    <WrapPanel Height="100">
+                    <ScrollViewer Height="100" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Visible" >
+                        <WrapPanel Name="items_scrollbar">
 
-                    </WrapPanel>
+                        </WrapPanel>
+                    </ScrollViewer>
                 </Border>
                 <Border DockPanel.Dock="Top" BorderBrush="#FF18E79D" BorderThickness="1">
                     <ScrollViewer Margin="5" x:Name="canvas_scrollbar" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden" KeyDown="Key_pressed">

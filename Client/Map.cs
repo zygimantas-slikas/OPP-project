@@ -77,7 +77,7 @@ namespace Client
                 }
             }
         }
-        public void Json_update (string json)
+        public void Json_update (int y, int x, string text)
         {
 
         }
