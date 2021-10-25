@@ -14,6 +14,11 @@ namespace Client
     {
         abstract public Rectangle get_view();
         public string Type { get; protected set; }
+        public Item() { }
+        public Item(string type)
+        {
+            this.Type = type;
+        }
         public string take(Player p, Tile[,] map)
         {
             return "json";

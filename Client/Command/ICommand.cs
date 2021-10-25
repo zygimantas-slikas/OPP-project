@@ -10,46 +10,52 @@ namespace Client.Command
     {
         public abstract void Execute();
         public abstract void Undo();
+        public Player _player;
     }
 
-    public class TakeCommand : ICommand
+    public class SwitchCommand : ICommand
     {
-        private readonly Item _item;
-        private List<string> _itemList;
 
-        public TakeCommand(Item item, List<string> itemlist)
+        public SwitchCommand(Player player)
         {
-            _item = item;
-            _itemList = itemlist;
+            _player = player;
         }
 
         public override void Execute()
         {
-            _itemList.Add(_item.ToString());
+            _player.switchItem();
         }
 
         public override void Undo()
         {
-            _itemList.Remove(_item.ToString());
+            _player.unSwitchItem();
         }
-
-
     }
 
     public class Invoker
     {
-        private readonly List<ICommand> _commands;
+        private Dictionary<string, ICommand> _commands;
         private ICommand _command;
         public Invoker()
         {
-            _commands = new List<ICommand>();
+            _commands = new Dictionary<string, ICommand>();
         }
         public void SetCommand(ICommand command) => _command = command;
         public void Invoke()
         {
-            _commands.Add(_command);
+            _commands[_command._player.Name] = _command;
             _command.Execute();
-            _command.Undo();
+            _command = null;
+        }
+        public void undo(string playerId)
+        {
+            ICommand command = _commands.ContainsKey(playerId) ? _commands[playerId] : null;
+
+            if (command != null)
+            {
+                command.Undo();
+                _commands.Remove(playerId);
+            }
         }
     }
 

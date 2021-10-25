@@ -266,7 +266,7 @@ namespace Client
                 Label points= new Label();
                 points.Content = "Points: " + players1[i].Points;
                 Label items = new Label();
-                items.Content = "Items";
+                items.Content = "Items" + players1[i].Inventory ;
                 Label position = new Label();
                 position.Content = String.Format("X:{0}, Y:{1}", players1[i].X, players1[i].Y);
                 p1.Children.Add(name);
@@ -321,6 +321,7 @@ namespace Client
         }
         private async void Key_pressed(object sender, KeyEventArgs e)
         {
+            bool changed = false;
             string action = "";
             if (e.Key == Key.L)
             {
@@ -334,6 +335,15 @@ namespace Client
             }
             if (e.Key == Key.E)
             {
+                Object[] args = new Object[1] { mapId };
+                await this.connection.SendCoreAsync("lootItem", args);
+                //Item item = map1.map[current_Player.Y, current_Player.X].Loot;
+                //if (item != null)
+                //{
+                //    current_Player.addItem(item);
+                //    map1.map[current_Player.Y, current_Player.X].Loot = null;
+                //    changed = true;
+                //}
                 //TODO: take
                 //action = TakeCommand.Execute();
             }
@@ -358,7 +368,7 @@ namespace Client
             //    Object[] args = new Object[3] { mapId, action};
             //    await this.connection.SendCoreAsync("Action", args);
             //}
-            bool changed = false;
+
             if (e.Key == Key.W)
             {
                 if (!settings.Delay.IsCompleted) return;

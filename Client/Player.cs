@@ -15,10 +15,11 @@ namespace Client
         public int Health { get; set; }
         public int Points { get; set; }
         public string Name { get; protected set; }
-        public List<Item> Inventory { get; set; }
+        public LinkedList<Item> Inventory { get; set; }
+        public Item currentItem { get; private set; }
         private IMovementStrategy strategy;
         [JsonConstructor]
-        public Player(int Health, string Name, int X, int Y, List<Item> Inventory)
+        public Player(int Health, string Name, int X, int Y, LinkedList<Item> Inventory)
         {
             this.X = X;
             this.Y = Y;
@@ -31,7 +32,7 @@ namespace Client
             this.X = 0;
             this.Y = 0;
             this.Name = name;
-            Inventory = new List<Item>();
+            Inventory = new LinkedList<Item>();
             this.Health = 100;
         }
         public void setStrategy(IMovementStrategy strategy)
@@ -41,6 +42,24 @@ namespace Client
         public void move()
         {
             this.strategy.Move();
+        }
+
+        public void addItem(Item item)
+        {
+            this.Inventory.AddLast(item);
+            if(this.Inventory.Count() == 1)
+            {
+                this.currentItem = item;
+            }
+        }
+
+        public void switchItem()
+        {
+            this.currentItem = this.Inventory.Find(this.currentItem).Next != null ? this.Inventory.Find(this.currentItem).Next.Value : this.Inventory.First.Value;
+        }
+        public void unSwitchItem()
+        {
+            this.currentItem = this.Inventory.Find(this.currentItem).Next != null ? this.Inventory.Find(this.currentItem).Next.Value : this.Inventory.Last.Value;
         }
     }
 }
