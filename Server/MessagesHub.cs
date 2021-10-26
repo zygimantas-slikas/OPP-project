@@ -41,6 +41,7 @@ namespace Server
         public async Task Join_map(Int32 id, string name)
         {
             // TODO: check if map isn't full already
+            // TODO: check if name is free
             int index = Program.rooms.FindIndex(x => x.Id == id);
             Program.rooms[index].Add_player(Context.ConnectionId.ToString(), name);
             await Groups.AddToGroupAsync(Context.ConnectionId, id.ToString());
@@ -85,14 +86,28 @@ namespace Server
                 r.map[p.Y, p.X].Player_Standing = p.Name;
                 string json_players = r.Players_to_Json();
                 await this.Clients.Group(map_id.ToString()).SendAsync("Set_players", json_players);
-                //TODO: update map state
+                //TODO: update map state if changed
             }
         }
-        public async Task Action(Int32 map_id, string action)
+        public async Task Action(Int32 map_id, Int32 y, Int32 x, string action, string info)
         {
-
+            Room r = Program.rooms.Find(x => x.Id == map_id);
+            Player p = r.players.Find(x => x.Con_id == Context.ConnectionId);
+            string map_change = "";
+            if (action == "take")
+            {
+                map_change = "remove;";
+                r.map[y, x].Loot.PickupEffect(p);
+                if (r.map[y, x].Loot is not Berry)
+                {
+                    p.Inventory.Add(r.map[y, x].Loot);
+                }
+                r.map[y, x].Loot = null;
+            }
+            string json_players = r.Players_to_Json();
+            await this.Clients.Group(map_id.ToString()).SendAsync("Update_map_state", y, x, map_change);
+            await this.Clients.Group(map_id.ToString()).SendAsync("Set_players", json_players);
         }
-
         public async Task DropTrap(Int32 map_id, Int32 x, Int32 y)
         {
             Room r = Program.rooms.Find(x => x.Id == map_id);

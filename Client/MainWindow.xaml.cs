@@ -19,6 +19,7 @@ using Client.Strategy;
 using System.Windows.Media.Animation;
 using Client.Observer;
 using Client.Decorator;
+using Newtonsoft.Json.Linq;
 
 namespace Client
 {
@@ -82,7 +83,7 @@ namespace Client
             connection.On<string[]>("Show_maps_options", this.Show_maps_options);
             connection.On<string>("Set_map", this.Set_map);
             connection.On<string>("Set_players", this.Set_players);
-            connection.On<string>("Update_map_state", this.Update_map_state);
+            connection.On<Int32, Int32, string>("Update_map_state", this.Update_map_state);
             //===============================
             connection.StartAsync();
             connection.SendAsync("Connect");
@@ -176,17 +177,19 @@ namespace Client
             t1.Wait();
             DrawMap();
         }
+        private void Update_map_state(Int32 y, Int32 x, string text)
+        {
+            string[] parts1 = text.Split(';');
+            if (parts1[0] == "remove")
+            {
+                canvas1.Children.Remove(this.map1.map[y, x].Icon);
+                this.map1.map[y, x].Icon = null;
+                this.map1.map[y, x].Loot = null;
+            }
+            else if (parts1[0] == "create")
+            {
 
-        private void Update_map_state(string json_text)
-        {//TODO: map update from short json
-            //if (this.map1 != null && this.current_Player != null)
-            //{
-            //    var serializerSettings = new JsonSerializerSettings { PreserveReferencesHandling = PreserveReferencesHandling.Objects };
-            //    this.map1 = JsonConvert.DeserializeObject<Map>(json_text, serializerSettings);
-            //    this.debug_list.Items.Add(json_text);
-
-            //    DrawMap();
-            //}
+            }
         }
         private void DrawMap()
         {
@@ -244,12 +247,51 @@ namespace Client
                 canvas1.Children.Remove(el);
                 canvas1.Children.Add(el);
                 Canvas.SetZIndex(el, 10);
-            } 
+            }
         }
         private void Set_players(string json_text)
         {
-            players1 = System.Text.Json.JsonSerializer.Deserialize<List<Player>>(json_text);
+            JArray json_players = JArray.Parse(json_text);
+            players1 = new List<Player>();
+            for (int i = 0; i < json_players.Count; i++)
+            {
+                List<Item> item_list = new List<Item>(); 
+                JArray loot_items= (JArray)json_players[i]["Inventory"];
+                for (int j = 0; j < loot_items.Count; j++)
+                {
+                    switch ((string)loot_items[j]["Type"])
+                    {
+                        case "BlueBerry":
+                            item_list.Add(new BlueBerry()); 
+                            break;
+                        case "RedBerry":
+                            item_list.Add(new RedBerry());
+                            break;
+                        case "BlueGun":
+                            item_list.Add(new BlueGun());
+                            break;
+                        case "RedGun":
+                            item_list.Add(new RedGun());
+                            break;
+                        case "BlueMedicKit":
+                            item_list.Add(new BlueMedicKit());
+                            break;
+                        case "RedMedicKit":
+                            item_list.Add(new RedMedicKit());
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                players1.Add(new Player((int)json_players[i]["Health"], (string)json_players[i]["Name"],
+                    (int)json_players[i]["X"], (int)json_players[i]["Y"],(int)json_players[i]["Points"], item_list));
+            }
             current_Player = players1.Find(x => x.Name == current_player_name);
+            items_scrollbar.Children.Clear();
+            for (int i =0; i < current_Player.Inventory.Count; i++)
+            {
+                items_scrollbar.Children.Add(current_Player.Inventory[i].get_view());
+            }
             this.Update_players_objects();
             players_scrollbar.Children.Clear();
             for (int i = 0; i < players1.Count; i++)
@@ -268,15 +310,15 @@ namespace Client
                 health.Content = "Health: " + players1[i].Health;
                 Label points= new Label();
                 points.Content = "Points: " + players1[i].Points;
-                Label items = new Label();
-                items.Content = "Items" + players1[i].Inventory ;
+                //Label items = new Label();
+                //items.Content = "Items";
                 Label position = new Label();
                 position.Content = String.Format("X:{0}, Y:{1}", players1[i].X, players1[i].Y);
                 p1.Children.Add(name);
                 p1.Children.Add(health);
                 p1.Children.Add(points);
                 p1.Children.Add(position);
-                p1.Children.Add(items);
+                //p1.Children.Add(items);
                 players_scrollbar.Children.Add(p1);
             }
         }
@@ -314,8 +356,6 @@ namespace Client
                     Canvas.SetLeft(players_gui[new1], players1.Find(x => x.Name == new1).X * 50 +5);
                 }
             }
-            current_Player.Attach(ScoreTracking);
-            current_Player.Notify(players1, 200, 200);
         }
         private void DataWindow_Closing(object sender, EventArgs e)
         {
@@ -326,8 +366,8 @@ namespace Client
         }
         private async void Key_pressed(object sender, KeyEventArgs e)
         {
-            bool changed = false;
             string action = "";
+            string info = "";
             if (e.Key == Key.L)
             {
                 //TODO: switch to next item
@@ -340,27 +380,22 @@ namespace Client
             }
             if (e.Key == Key.E)
             {
-                Object[] args = new Object[1] { mapId };
-                await this.connection.SendCoreAsync("lootItem", args);
-                //Item item = map1.map[current_Player.Y, current_Player.X].Loot;
-                //if (item != null)
-                //{
-                //    current_Player.addItem(item);
-                //    map1.map[current_Player.Y, current_Player.X].Loot = null;
-                //    changed = true;
-                //}
-                //TODO: take
+                if (map1.map[current_Player.Y, current_Player.X].Loot != null)
+                {
+                    action = "take";
+                }
                 //action = TakeCommand.Execute();
             }
             else if (e.Key == Key.Q)
             {
-                //TODO: drop
+                //if (map1.map[current_Player.Y, current_Player.X].Loot == null)
+                //{
+                //    action = "take";
+                //}
                 //action = TakeCommand.Undo();
             }
             else if (e.Key == Key.K)
             {
-                //current_Player.Attach(ScoreTracking);
-                current_Player.Notify(players1, 200, 200);
                 //TODO: use item
                 //action = item.use();
             }
@@ -370,18 +405,19 @@ namespace Client
                 Object[] args = new Object[3] { mapId, current_Player.X, current_Player.Y };
                 await this.connection.SendCoreAsync("DropTrap", args);
             }
-            //if (action != true)
-            //{
-            //    Object[] args = new Object[3] { mapId, action};
-            //    await this.connection.SendCoreAsync("Action", args);
-            //}
+            if (action != "")
+            {
+                Object[] args = new Object[5] { mapId, current_Player.Y, current_Player.X, action, info};
+                await this.connection.SendCoreAsync("Action", args);
+            }
+
             if (e.Key == Key.W || e.Key == Key.A || e.Key == Key.S || e.Key == Key.D)
             {
                 Check_step_on_fire();
                 Check_step_on_trap();
 
             }
-
+            bool changed = false;
             if (e.Key == Key.W)
             {
                 if (!settings.Delay.IsCompleted) return;
@@ -391,7 +427,6 @@ namespace Client
                     changed = true;
                     canvas_scrollbar.ScrollToVerticalOffset(current_Player.Y*50+5 - canvas_scrollbar.ActualHeight/2);
                     settings.moved();
-
                     if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
                     {
                         current_Player.setStrategy(new MoveOnWater());
@@ -420,8 +455,6 @@ namespace Client
                     changed = true;
                     canvas_scrollbar.ScrollToHorizontalOffset(current_Player.X * 50 + 5 - canvas_scrollbar.ActualWidth / 2);
                     settings.moved();
-
-
                     if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
                     {
                         current_Player.setStrategy(new MoveOnWater());
@@ -450,7 +483,6 @@ namespace Client
                     changed = true;
                     canvas_scrollbar.ScrollToVerticalOffset(current_Player.Y * 50 + 5 - canvas_scrollbar.ActualHeight/2);
                     settings.moved();
-
                     if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
                     {
                         current_Player.setStrategy(new MoveOnWater());
@@ -479,7 +511,6 @@ namespace Client
                     changed = true;
                     canvas_scrollbar.ScrollToHorizontalOffset(current_Player.X * 50 + 5 - canvas_scrollbar.ActualWidth / 2);
                     settings.moved();
-
                     if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
                     {
                         current_Player.setStrategy(new MoveOnWater());
@@ -563,7 +594,6 @@ namespace Client
             rooms_for_join.Visibility = Visibility.Visible;
             maps_list_menu.Visibility = Visibility.Visible;
         }
-
         private void Show_create_map_options(object sender, RoutedEventArgs e)
         {
             BrushConverter bc = new BrushConverter();
@@ -578,7 +608,6 @@ namespace Client
             maps_list_menu.Visibility = Visibility.Hidden;
             create_map_panel.Visibility = Visibility.Visible;
         }
-
         private void Back_to_login(object sender, RoutedEventArgs e)
         {
             BrushConverter bc = new BrushConverter();
@@ -595,13 +624,11 @@ namespace Client
             Game.Visibility = Visibility.Hidden;
             Setting_menu.Visibility = Visibility.Hidden;
         }
-
         private void Show_settings_menu(object sender, RoutedEventArgs e)
         {
             Login.Visibility = Visibility.Hidden;
             Setting_menu.Visibility = Visibility.Visible;
         }
-
         private void Show_game_tab(object sender, RoutedEventArgs e)
         {
             BrushConverter bc = new BrushConverter();

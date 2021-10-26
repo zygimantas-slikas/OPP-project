@@ -20,11 +20,12 @@ namespace Client
         public Item currentItem { get; private set; }
         private IMovementStrategy strategy;
         [JsonConstructor]
-        public Player(int Health, string Name, int X, int Y, LinkedList<Item> Inventory)
+        public Player(int Health, string Name, int X, int Y, int points, List<Item> Inventory)
         {
             this.X = X;
             this.Y = Y;
             this.Name = Name;
+            this.Points = points;
             this.Inventory = Inventory;
             this.Health = Health;
         }
