@@ -549,7 +549,6 @@ namespace Client
                 }
             }
         }
-
         private async void Check_step_on_fire()
         {
             if (map1.map[current_Player.Y, current_Player.X].Loot != null)

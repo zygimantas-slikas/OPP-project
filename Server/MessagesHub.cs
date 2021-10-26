@@ -108,6 +108,7 @@ namespace Server
             await this.Clients.Group(map_id.ToString()).SendAsync("Update_map_state", y, x, map_change);
             await this.Clients.Group(map_id.ToString()).SendAsync("Set_players", json_players);
         }
+        //=============================================================
         public async Task DropTrap(Int32 map_id, Int32 x, Int32 y)
         {
             Room r = Program.rooms.Find(x => x.Id == map_id);

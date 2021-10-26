@@ -16,8 +16,8 @@ namespace Client
         public int Health { get; set; }
         public int Points { get; set; }
         public string Name { get; protected set; }
-        public LinkedList<Item> Inventory { get; set; }
-        public Item currentItem { get; private set; }
+        public List<Item> Inventory { get; set; }
+        public int currentItem { get; private set; }
         private IMovementStrategy strategy;
         [JsonConstructor]
         public Player(int Health, string Name, int X, int Y, int points, List<Item> Inventory)
@@ -28,13 +28,15 @@ namespace Client
             this.Points = points;
             this.Inventory = Inventory;
             this.Health = Health;
+            this.currentItem = -1;
         }
         public Player(string name)
         {
+            this.currentItem = -1;
             this.X = 0;
             this.Y = 0;
             this.Name = name;
-            Inventory = new LinkedList<Item>();
+            this.Inventory = new List<Item>();
             this.Health = 100;
         }
         public void setStrategy(IMovementStrategy strategy)
@@ -48,20 +50,22 @@ namespace Client
 
         public void addItem(Item item)
         {
-            this.Inventory.AddLast(item);
-            if(this.Inventory.Count() == 1)
-            {
-                this.currentItem = item;
-            }
+            this.Inventory.Add(item);
+            //if(this.Inventory.Count() == 1)
+            //{
+            //    this.currentItem = item;
+            //}
         }
 
         public void switchItem()
         {
-            this.currentItem = this.Inventory.Find(this.currentItem).Next != null ? this.Inventory.Find(this.currentItem).Next.Value : this.Inventory.First.Value;
+            this.currentItem = (++this.currentItem) % this.Inventory.Count;
+            //this.currentItem = this.Inventory.Find(this.currentItem).Next != null ? this.Inventory.Find(this.currentItem).Next.Value : this.Inventory.First.Value;
         }
         public void unSwitchItem()
         {
-            this.currentItem = this.Inventory.Find(this.currentItem).Next != null ? this.Inventory.Find(this.currentItem).Next.Value : this.Inventory.Last.Value;
+            this.currentItem = (--this.currentItem + this.Inventory.Count) % this.Inventory.Count;
+            //this.currentItem = this.Inventory.Find(this.currentItem).Next != null ? this.Inventory.Find(this.currentItem).Next.Value : this.Inventory.Last.Value;
         }
 
         private List<IScore> scoreObservers = new List<IScore>();
