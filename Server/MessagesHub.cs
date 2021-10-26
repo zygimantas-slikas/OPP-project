@@ -104,6 +104,20 @@ namespace Server
                 }
                 r.map[y, x].Loot = null;
             }
+            else if (action == "drop")
+            {
+                Item it1 = p.Inventory.Find(x => x.Type == info);
+                if (it1 != null)
+                {
+                    map_change = "create;" + it1.Type;
+                    r.map[y, x].Loot = it1;
+                    p.Inventory.Remove(it1);
+                }
+            }
+            else if (action == "use_item")
+            {
+
+            }
             string json_players = r.Players_to_Json();
             await this.Clients.Group(map_id.ToString()).SendAsync("Update_map_state", y, x, map_change);
             await this.Clients.Group(map_id.ToString()).SendAsync("Set_players", json_players);

@@ -242,7 +242,7 @@
                 </Border>
                 <Border DockPanel.Dock="Bottom" BorderBrush="#FF18E79D" BorderThickness="1">
                     <ScrollViewer Height="100" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Visible" >
-                        <WrapPanel Name="items_scrollbar">
+                        <WrapPanel Name="items_scrollbar" VerticalAlignment="Center">
 
                         </WrapPanel>
                     </ScrollViewer>

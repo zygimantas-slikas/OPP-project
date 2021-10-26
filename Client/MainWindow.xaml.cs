@@ -33,10 +33,11 @@ namespace Client
         protected Dictionary<String, Shape> players_gui;
         protected String current_player_name;
         protected Player current_Player;
+        protected List<Border> inventory_items_gui;
         protected Int32 mapId;
         protected GameSettings settings = GameSettings.GetInstance();
         protected HubConnection connection;
-        private Score ScoreTracking = new Score();
+        protected Score ScoreTracking = new Score();
         public MainWindow()
         {
             InitializeComponent();
@@ -153,6 +154,7 @@ namespace Client
             this.connection.SendCoreAsync("Join_map", args);
             this.Show_game_tab(sender, e);
             this.players_gui = new Dictionary<String, Shape>();
+            this.inventory_items_gui = new List<Border>();
         }
         private void Show_maps_options(string[] list)
         {
@@ -188,7 +190,31 @@ namespace Client
             }
             else if (parts1[0] == "create")
             {
-
+                Item it1;
+                switch (parts1[1])
+                {
+                    case "BlueGun":
+                        it1 = new BlueGun();
+                        break;
+                    case "RedGun":
+                        it1 = new RedGun();
+                        break;
+                    case "BlueMedicKit":
+                        it1 = new BlueMedicKit();
+                        break;
+                    case "RedMedicKit":
+                        it1 = new RedMedicKit();
+                        break;
+                    default:
+                        it1 = null;
+                        break;
+                }
+                this.map1.map[y, x].Loot = it1;
+                this.map1.map[y, x].Icon = it1.get_view();
+                canvas1.Children.Add(this.map1.map[y, x].Icon);
+                Canvas.SetTop   (map1.map[y, x].Icon, y * 50 + 5);
+                Canvas.SetLeft  (map1.map[y, x].Icon, x * 50 + 5);
+                Canvas.SetZIndex(map1.map[y, x].Icon, 1);
             }
         }
         private void DrawMap()
@@ -288,9 +314,23 @@ namespace Client
             }
             current_Player = players1.Find(x => x.Name == current_player_name);
             items_scrollbar.Children.Clear();
-            for (int i =0; i < current_Player.Inventory.Count; i++)
+            inventory_items_gui.Clear();
+            for (int i = 0; i < current_Player.Inventory.Count; i++)
             {
-                items_scrollbar.Children.Add(current_Player.Inventory[i].get_view());
+                Border b = new Border();
+                b.Child = current_Player.Inventory[i].get_view();
+                b.Margin = new Thickness(5);
+                b.BorderThickness = new Thickness(3);
+                b.Width = 50;
+                if (this.current_Player.currentItem == i)
+                {
+                    BrushConverter bc = new BrushConverter();
+                    Brush brush = (Brush)bc.ConvertFrom("#FF18E79D");
+                    brush.Freeze();
+                    b.BorderBrush= brush;
+                }
+                this.inventory_items_gui.Add(b);
+                items_scrollbar.Children.Add(b);
             }
             this.Update_players_objects();
             players_scrollbar.Children.Clear();
@@ -310,15 +350,12 @@ namespace Client
                 health.Content = "Health: " + players1[i].Health;
                 Label points= new Label();
                 points.Content = "Points: " + players1[i].Points;
-                //Label items = new Label();
-                //items.Content = "Items";
                 Label position = new Label();
                 position.Content = String.Format("X:{0}, Y:{1}", players1[i].X, players1[i].Y);
                 p1.Children.Add(name);
                 p1.Children.Add(health);
                 p1.Children.Add(points);
                 p1.Children.Add(position);
-                //p1.Children.Add(items);
                 players_scrollbar.Children.Add(p1);
             }
         }
@@ -370,13 +407,43 @@ namespace Client
             string info = "";
             if (e.Key == Key.L)
             {
-                //TODO: switch to next item
-                //switchCommand.undo();
+                BrushConverter bc;
+                Brush brush;
+                if (current_Player.currentItem >= 0)
+                {
+                    bc = new BrushConverter();
+                    brush = (Brush)bc.ConvertFrom("#FF333337");
+                    brush.Freeze();
+                    inventory_items_gui[current_Player.currentItem].BorderBrush = brush;
+                }
+                current_Player.switchItem();
+                if (current_Player.currentItem >= 0)
+                {
+                    bc = new BrushConverter();
+                    brush = (Brush)bc.ConvertFrom("#FF18E79D");
+                    brush.Freeze();
+                    inventory_items_gui[current_Player.currentItem].BorderBrush = brush;
+                }
             }
             else if (e.Key == Key.J)
             {
-                //TODO: switch to previous item
-                //switchCommand.execute();
+                BrushConverter bc;
+                Brush brush;
+                if (current_Player.currentItem >= 0)
+                {
+                    bc = new BrushConverter();
+                    brush = (Brush)bc.ConvertFrom("#FF333337");
+                    brush.Freeze();
+                    inventory_items_gui[current_Player.currentItem].BorderBrush = brush;
+                }
+                current_Player.unSwitchItem();
+                if (current_Player.currentItem >= 0)
+                {
+                    bc = new BrushConverter();
+                    brush = (Brush)bc.ConvertFrom("#FF18E79D");
+                    brush.Freeze();
+                    inventory_items_gui[current_Player.currentItem].BorderBrush = brush;
+                }
             }
             if (e.Key == Key.E)
             {
@@ -388,16 +455,20 @@ namespace Client
             }
             else if (e.Key == Key.Q)
             {
-                //if (map1.map[current_Player.Y, current_Player.X].Loot == null)
-                //{
-                //    action = "take";
-                //}
+                if (map1.map[current_Player.Y, current_Player.X].Loot == null)
+                {
+                    action = "drop";
+                    info = current_Player.Inventory[current_Player.currentItem].Type;
+                }
                 //action = TakeCommand.Undo();
             }
             else if (e.Key == Key.K)
             {
-                //TODO: use item
-                //action = item.use();
+                if (current_Player.currentItem >= 0)
+                {
+                    action = "use_item";
+                    info = current_Player.Inventory[current_Player.currentItem].Type;
+                }
             }
             else if (e.Key == Key.B)
             {
@@ -571,7 +642,6 @@ namespace Client
                     Object[] args = new Object[4] { mapId, current_Player.X, current_Player.Y, stepsCount };
                     await this.connection.SendCoreAsync("StepOnFire", args);
                 }
-
             }
         }
 

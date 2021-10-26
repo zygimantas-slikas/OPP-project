@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Client.Observer
 {
-    class Score : IScore
+    public class Score : IScore
     {
         public void Update(List<Player> player, int health, int points)
         {
