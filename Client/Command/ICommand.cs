@@ -11,6 +11,7 @@ namespace Client.Command
         public abstract void Execute();
         public abstract void Undo();
         public Player _player;
+        public string _action;
     }
 
     public class SwitchCommand : ICommand
@@ -32,6 +33,24 @@ namespace Client.Command
         }
     }
 
+    public class TakeDropCommand : ICommand
+    {
+        public TakeDropCommand(string action) 
+        {
+            _action = action;
+        }
+        
+        public override void Execute()
+        {
+            _action = "take";
+        }
+
+        public override void Undo()
+        {
+            _action = "drop";
+        }
+    }
+
     public class Invoker
     {
         private Dictionary<string, ICommand> _commands;
@@ -41,10 +60,28 @@ namespace Client.Command
             _commands = new Dictionary<string, ICommand>();
         }
         public void SetCommand(ICommand command) => _command = command;
-        public void Invoke()
+        public void InvokeSwitch()
         {
             _commands[_command._player.Name] = _command;
             _command.Execute();
+            _command = null;
+        }
+        public void InvokeUnSwitch()
+        {
+            _commands[_command._player.Name] = _command;
+            _command.Undo();
+            _command = null;
+        }
+        public void InvokeTake()
+        {
+            _commands[_command._action] = _command;
+            _command.Execute();
+            _command = null;
+        }
+        public void InvokeDrop()
+        {
+            _commands[_command._action] = _command;
+            _command.Undo();
             _command = null;
         }
         public void undo(string playerId)

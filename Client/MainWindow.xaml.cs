@@ -19,6 +19,7 @@ using Client.Strategy;
 using System.Windows.Media.Animation;
 using Client.Observer;
 using Client.Decorator;
+using Client.Command;
 using Newtonsoft.Json.Linq;
 
 namespace Client
@@ -405,6 +406,11 @@ namespace Client
         {
             string action = "";
             string info = "";
+            Invoker invoker = new Invoker();
+            if (e.Key == Key.U)
+            {
+                invoker.undo(current_Player.Name);
+            }
             if (e.Key == Key.L)
             {
                 BrushConverter bc;
@@ -416,7 +422,8 @@ namespace Client
                     brush.Freeze();
                     inventory_items_gui[current_Player.currentItem].BorderBrush = brush;
                 }
-                current_Player.switchItem();
+                invoker.SetCommand(new SwitchCommand(current_Player));
+                invoker.InvokeSwitch();
                 if (current_Player.currentItem >= 0)
                 {
                     bc = new BrushConverter();
@@ -436,7 +443,8 @@ namespace Client
                     brush.Freeze();
                     inventory_items_gui[current_Player.currentItem].BorderBrush = brush;
                 }
-                current_Player.unSwitchItem();
+                invoker.SetCommand(new SwitchCommand(current_Player));
+                invoker.InvokeUnSwitch();
                 if (current_Player.currentItem >= 0)
                 {
                     bc = new BrushConverter();
@@ -449,18 +457,18 @@ namespace Client
             {
                 if (map1.map[current_Player.Y, current_Player.X].Loot != null)
                 {
-                    action = "take";
+                    invoker.SetCommand(new TakeDropCommand(action = "take"));
+                    invoker.InvokeTake();
                 }
-                //action = TakeCommand.Execute();
             }
             else if (e.Key == Key.Q)
             {
                 if (map1.map[current_Player.Y, current_Player.X].Loot == null)
                 {
-                    action = "drop";
+                    invoker.SetCommand(new TakeDropCommand(action = "drop"));
+                    invoker.InvokeDrop();
                     info = current_Player.Inventory[current_Player.currentItem].Type;
                 }
-                //action = TakeCommand.Undo();
             }
             else if (e.Key == Key.K)
             {
