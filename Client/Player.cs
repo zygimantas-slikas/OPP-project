@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Text.Json.Serialization;
 using Client.Strategy;
 using Client.Observer;
+using System.Windows.Shapes;
+using System.Windows.Controls;
 
 namespace Client
 {
@@ -77,11 +79,11 @@ namespace Client
         {
             scoreObservers.Remove(observer);
         }
-        public void Notify(List<Player> player, int health, int points)
+        public void Notify(IEnumerable<string> names, IEnumerable<string> created, List<Player> players1, Dictionary<String, Shape> players_gui, Canvas canvas1)
         {
             foreach (IScore observer in scoreObservers)
             {
-                observer.Update(player, health, points);
+                observer.Update(names, created, players1, players_gui, canvas1);
             }
         }
 

@@ -340,7 +340,7 @@ namespace Client
                 this.inventory_items_gui.Add(b);
                 items_scrollbar.Children.Add(b);
             }
-            facade.Update_players_objects(players1, players_gui, canvas1);
+            facade.Update_players_objects(players1, players_gui, canvas1, current_Player);
             players_scrollbar.Children.Clear();
             for (int i = 0; i < players1.Count; i++)
             {

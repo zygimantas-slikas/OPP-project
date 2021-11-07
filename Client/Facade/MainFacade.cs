@@ -373,40 +373,13 @@ namespace Client.Facade
                 Convert.ToInt32(map_size.Text), level, map_type};
             connection.SendCoreAsync("Create_map", args);
         }
-        public void Update_players_objects(List<Player> players1, Dictionary<String, Shape> players_gui, Canvas canvas1)
-        {
+        public void Update_players_objects(List<Player> players1, Dictionary<String, Shape> players_gui, Canvas canvas1, Player current_Player)
+        {       
             IEnumerable<string> names = from Player p in players1 select p.Name;
+            Score ScoreTracking = new Score();
             IEnumerable<string> created = players_gui.Keys.ToList();
-            foreach (var existing in created)
-            {
-                if (!names.Contains(existing))//delete old
-                {
-                    canvas1.Children.Remove(players_gui[existing]);
-                    players_gui.Remove(existing);
-                }
-            }
-            foreach (var new1 in names)
-            {
-                if (!created.Contains(new1))
-                {
-                    Ellipse playerSprite = new Ellipse();
-                    playerSprite.Width = 40;
-                    playerSprite.Height = 40;
-                    ImageBrush myBrush = new ImageBrush();
-                    myBrush.ImageSource = new BitmapImage(new Uri(@"..\..\..\..\Sprites\png-clipart-knight-free-content-school-uniform-cartoon-fictional-character.png", UriKind.RelativeOrAbsolute));
-                    playerSprite.Fill = myBrush;
-                    players_gui.Add(new1, playerSprite);
-                    canvas1.Children.Add(playerSprite);
-                    Canvas.SetZIndex(playerSprite, 10);
-                    Canvas.SetTop(playerSprite, players1.Find(x => x.Name == new1).Y * 50 + 5);
-                    Canvas.SetLeft(playerSprite, players1.Find(x => x.Name == new1).X * 50 + 5);
-                }
-                else
-                {
-                    Canvas.SetTop(players_gui[new1], players1.Find(x => x.Name == new1).Y * 50 + 5);
-                    Canvas.SetLeft(players_gui[new1], players1.Find(x => x.Name == new1).X * 50 + 5);
-                }
-            }
+            current_Player.Attach(ScoreTracking);
+            current_Player.Notify(names, created, players1, players_gui, canvas1);
         }
     }
 }
