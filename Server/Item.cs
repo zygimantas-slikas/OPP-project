@@ -26,7 +26,7 @@ namespace Server
         public override Berry Clone()
         {
             Berry c = new Berry();
-            c.Type = this.Type;
+            c.Type = new string(this.Type);
             c.Points = this.Points;
             return c;
         }
@@ -41,7 +41,7 @@ namespace Server
         public BlueBerry()
         {
             this.Points = 200;
-            this.Type = this.GetType().Name;
+            this.Type = new string(this.GetType().Name);
         }
     }
     class RedBerry : Berry
@@ -49,7 +49,7 @@ namespace Server
         public RedBerry()
         {
             this.Points = 100;
-            this.Type = this.GetType().Name;
+            this.Type = new string(this.GetType().Name);
         }
     }
     public class MedicKit : Item
@@ -73,7 +73,7 @@ namespace Server
         public BlueMedicKit()
         {
             this.Heal = 20;
-            this.Type = this.GetType().Name;
+            this.Type = new string(this.GetType().Name);
         }
     }
     class RedMedicKit : MedicKit
@@ -81,7 +81,7 @@ namespace Server
         public RedMedicKit()
         {
             this.Heal = 10;
-            this.Type = this.GetType().Name;
+            this.Type = new string(this.GetType().Name);
         }
     }
     public class Gun : Item
@@ -108,7 +108,7 @@ namespace Server
         {
             this.Damage = 10;
             this.Ammo = 12;
-            this.Type = this.GetType().Name;
+            this.Type = new string(this.GetType().Name);
         }
     }
     class RedGun : Gun
@@ -117,7 +117,7 @@ namespace Server
         {
             this.Damage = 30;
             this.Ammo = 6;
-            this.Type = this.GetType().Name;
+            this.Type = new string(this.GetType().Name);
         }
     }
     public class Trap : Item

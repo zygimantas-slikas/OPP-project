@@ -17,7 +17,7 @@ namespace Server
         {
             Tile c = new Tile();
             c.Surface = this.Surface;
-            c.Player_Standing = this.Player_Standing;
+            c.Player_Standing = new String(this.Player_Standing);
             if (this.Loot != null)
             {
                 c.Loot = this.Loot.Clone();
