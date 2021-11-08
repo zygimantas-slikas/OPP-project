@@ -25,8 +25,7 @@ namespace Server
             MapBuilder builder;
             if (type == 1) builder = new MapBuilder1(map_size, level); 
             else builder = new MapBuilder2(map_size, level);
-            Director director = new Director(builder);
-            var t = Task.Run(() => director.Construct());
+            var t = Task.Run(() => this.Construct(builder));
             this.level = level;
             this.map_size = map_size;
             this.Id = id;
@@ -36,6 +35,14 @@ namespace Server
             this.state = Room_satate.empty;
             t.Wait();
             map = builder.Get_result();
+        }
+        public void Construct(MapBuilder build)
+        {
+            build.add_lakes();
+            build.add_bushes();
+            build.add_lava();
+            build.add_walls();
+            build.fill_grass();
         }
         public void Add_player(string con_id, string name)
         {

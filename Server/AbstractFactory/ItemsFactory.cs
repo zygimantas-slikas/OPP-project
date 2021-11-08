@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Server.AbstractFactory
 {
-    abstract class ItemsFactory
+     public abstract class ItemsFactory
     {
         abstract public Berry Create_berry();
         abstract public Gun Create_gun();

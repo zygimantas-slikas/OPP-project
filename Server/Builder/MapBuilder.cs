@@ -7,23 +7,7 @@ using Server.AbstractFactory;
 
 namespace Server.Builder
 {
-    class Director
-    {
-        protected MapBuilder build;
-        public Director(MapBuilder b)
-        {
-            this.build = b;
-        }
-        public void Construct()
-        {
-            build.add_lakes();
-            build.add_bushes();
-            build.add_lava();
-            build.add_walls();
-            build.fill_grass();
-        }
-    }
-    abstract class MapBuilder
+    public abstract class MapBuilder
     {
         protected Tile[,] map;
         protected int map_size;

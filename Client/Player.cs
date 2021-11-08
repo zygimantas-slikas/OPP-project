@@ -30,11 +30,11 @@ namespace Client
             this.Points = points;
             this.Inventory = Inventory;
             this.Health = Health;
-            this.currentItem = -1;
+            this.currentItem = 0;
         }
         public Player(string name)
         {
-            this.currentItem = -1;
+            this.currentItem = 0;
             this.X = 0;
             this.Y = 0;
             this.Name = name;
