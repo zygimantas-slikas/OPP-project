@@ -19,7 +19,7 @@ namespace Server.Builder
             {
                 int x = rand.Next(0, map_size);
                 int y = rand.Next(0, map_size);
-                Tile t = this.prototype.Clone();
+                Tile t = (Tile)this.prototype.Clone();
                 t.Surface = Tile.Tile_type.water;
                 map[x, y] = t;
             }
@@ -31,7 +31,7 @@ namespace Server.Builder
             {
                 int x = rand.Next(0, map_size);
                 int y = rand.Next(0, map_size);
-                Tile t = this.prototype.Clone();
+                Tile t = (Tile)this.prototype.Clone();
                 t.Surface = Tile.Tile_type.bush;
                 map[x, y] = t;
             }
@@ -43,7 +43,7 @@ namespace Server.Builder
             {
                 int x = rand.Next(0, map_size);
                 int y = rand.Next(0, map_size);
-                Tile t = this.prototype.Clone();
+                Tile t = (Tile)this.prototype.Clone();
                 t.Surface = Tile.Tile_type.lava;
                 map[x, y] = t;
             }
@@ -61,7 +61,7 @@ namespace Server.Builder
                 {
                     for (int j = x - lenght / 2; j < (x + lenght / 2); j++)
                     {
-                        Tile t = this.prototype.Clone();
+                        Tile t = (Tile)this.prototype.Clone();
                         t.Surface = Tile.Tile_type.wall;
                         map[j, y] = t;
                     }
@@ -70,7 +70,7 @@ namespace Server.Builder
                 {
                     for (int j = x - lenght / 2; j < (x + lenght / 2); j++)
                     {
-                        Tile t = this.prototype.Clone();
+                        Tile t = (Tile)this.prototype.Clone();
                         t.Surface = Tile.Tile_type.wall;
                         map[x, j] = t;
                     }
@@ -87,7 +87,7 @@ namespace Server.Builder
                     if (map[i, j] == null)
                     {
                         int prob = rand.Next(0, 100);
-                        Tile t = this.prototype.Clone();
+                        Tile t = (Tile)this.prototype.Clone();
                         t.Surface = Tile.Tile_type.grass;
                         if (0 <= prob && prob <= 5)
                         {

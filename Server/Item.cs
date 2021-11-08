@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Server;
 
 namespace Server
 {
-    abstract public class Item
+    public abstract class Item : Cloneable
     {
         public string Type { get; protected set; }
         public string take(Player p, Tile[,] map)
@@ -17,13 +18,13 @@ namespace Server
         {
             return "json";
         }
-        abstract public Item Clone();
-        abstract public void PickupEffect(Player p);
+        public abstract Cloneable Clone();
+        public abstract void PickupEffect(Player p);
     }
     public class Berry : Item
     {
         public virtual int Points { get; protected set; }
-        public override Berry Clone()
+        public override Cloneable Clone()
         {
             Berry c = new Berry();
             c.Type = new string(this.Type);
@@ -55,7 +56,7 @@ namespace Server
     public class MedicKit : Item
     {
         public virtual int Heal { get; protected set; }
-        public override MedicKit Clone()
+        public override Cloneable Clone()
         {
             MedicKit c = new MedicKit();
             c.Type = this.Type;
@@ -88,7 +89,7 @@ namespace Server
     {
         public virtual int Damage { get; protected set; }
         public virtual int Ammo { get; protected set; }
-        public override Gun Clone()
+        public override Cloneable Clone()
         {
             Gun c = new Gun();
             c.Type = this.Type;
@@ -124,7 +125,7 @@ namespace Server
     {
         public virtual int Damage { get; protected set; }
         public virtual bool Activated { get; protected set; }
-        public override Trap Clone()
+        public override Cloneable Clone()
         {
             Trap c = new Trap();
             c.Type = this.Type;
@@ -167,7 +168,7 @@ namespace Server
             this.Type = this.GetType().Name;
         }
 
-        public override Item Clone()
+        public override Cloneable Clone()
         {
             Fire c = new Fire();
             c.Type = this.Type;

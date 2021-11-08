@@ -10,9 +10,9 @@ using System.Windows.Media;
 
 namespace Client
 {
-    abstract public class Item
+    public abstract class Item
     {
-        abstract public Rectangle get_view();
+        public abstract Rectangle get_view();
         public string Type { get; protected set; }
         public Item() { }
         public Item(string type)
@@ -27,10 +27,10 @@ namespace Client
         {
             return "json";
         }
-        abstract public void PickupEffect(Player p);
-        abstract public int GetNumber();
+        public abstract void PickupEffect(Player p);
+        public abstract int GetNumber();
     }
-    abstract public class Berry : Item
+    public abstract class Berry : Item
     {
         public virtual int Points { get; protected set; }
         public override void PickupEffect(Player p)
@@ -128,7 +128,7 @@ namespace Client
             this.Type = this.GetType().Name;
         }
     }
-    abstract public class Gun : Item
+    public abstract class Gun : Item
     {
         public virtual int Damage { get; protected set; }
         public virtual int Ammo { get; protected set; }
@@ -181,7 +181,7 @@ namespace Client
         }
     }
 
-    abstract public class Trap : Item
+    public abstract class Trap : Item
     {
         public virtual int Damage { get; protected set; }
         public override void PickupEffect(Player p)

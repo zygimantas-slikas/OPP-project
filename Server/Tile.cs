@@ -2,7 +2,7 @@
 
 namespace Server
 {
-    public class Tile
+    public class Tile : Cloneable
     {
         public enum Tile_type{ grass, water, wall, lava, bush};
         public Tile_type Surface { get; set; }
@@ -13,14 +13,14 @@ namespace Server
             this.Surface = t;
             Player_Standing = null;
         }
-        public Tile Clone()
+        public Cloneable Clone()
         {
             Tile c = new Tile();
             c.Surface = this.Surface;
             c.Player_Standing = new String(this.Player_Standing);
             if (this.Loot != null)
             {
-                c.Loot = this.Loot.Clone();
+                c.Loot = (Item)this.Loot.Clone();
             }
             else
             {

@@ -8,10 +8,10 @@ namespace Server.AbstractFactory
 {
      public abstract class ItemsFactory
     {
-        abstract public Berry Create_berry();
-        abstract public Gun Create_gun();
-        abstract public MedicKit Create_medic();
-        abstract public Trap Create_trap();
+        public abstract Berry Create_berry();
+        public abstract Gun Create_gun();
+        public abstract MedicKit Create_medic();
+        public abstract Trap Create_trap();
     }
     class Level1Factory : ItemsFactory
     {

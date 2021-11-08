@@ -28,19 +28,19 @@ namespace Server.Builder
             this.prototype = new Tile(Tile.Tile_type.grass);
             //this.prototype.Loot = new RedBerry();
         }
-        virtual public void add_lakes()
+        public virtual void add_lakes()
         {
         }
-        virtual public void add_bushes()
+        public virtual void add_bushes()
         {
         }
-        virtual public void add_lava()
+        public virtual void add_lava()
         {
         }
-        virtual public void add_walls()
+        public virtual void add_walls()
         {
         }
-        virtual public void fill_grass()
+        public virtual void fill_grass()
         {
         }
         public Tile[,] Get_result()
