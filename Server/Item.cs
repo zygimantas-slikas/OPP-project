@@ -36,7 +36,7 @@ namespace Server
             p.Addpoints(this.Points);
         }
     }
-    class BlueBerry : Berry
+    public class BlueBerry : Berry
     {
         public BlueBerry()
         {
@@ -52,7 +52,7 @@ namespace Server
             this.Type = this.GetType().Name;
         }
     }
-    class MedicKit : Item
+    public class MedicKit : Item
     {
         public virtual int Heal { get; protected set; }
         public override MedicKit Clone()
@@ -65,7 +65,7 @@ namespace Server
 
         public override void PickupEffect(Player p)
         {
-            //p.AddHealth(this.Heal);
+            p.AddHealth(this.Heal);
         }
     }
     class BlueMedicKit : MedicKit
@@ -88,7 +88,7 @@ namespace Server
     {
         public virtual int Damage { get; protected set; }
         public virtual int Ammo { get; protected set; }
-        public override Item Clone()
+        public override Gun Clone()
         {
             Gun c = new Gun();
             c.Type = this.Type;
@@ -124,7 +124,7 @@ namespace Server
     {
         public virtual int Damage { get; protected set; }
         public virtual bool Activated { get; protected set; }
-        public override Item Clone()
+        public override Trap Clone()
         {
             Trap c = new Trap();
             c.Type = this.Type;
