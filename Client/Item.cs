@@ -7,6 +7,7 @@ using System.Windows.Shapes;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
+using Client.Factory;
 
 namespace Client
 {
@@ -45,13 +46,18 @@ namespace Client
     }
     class BlueBerry : Berry
     {
+        private static IFactory<BitmapImage> bitmapimage;
         public override Rectangle get_view()
         {
+            bitmapimage = new BlueBerries();
+            string[] blueberries = { "BlueBerry1", "BlueBerry2"};
+            Random rand = new Random();
+            int index = rand.Next(blueberries.Length);
             Rectangle img = new Rectangle();
             img.Width = 40;
             img.Height = 40;
             ImageBrush myBrush = new ImageBrush();
-            myBrush.ImageSource = new BitmapImage(new Uri(@"..\..\..\..\Sprites\blueberry.jpg", UriKind.RelativeOrAbsolute));
+            myBrush.ImageSource = bitmapimage.FactoryMethod(blueberries[index]);
             img.Fill = myBrush;
             return img;
         }
@@ -196,13 +202,15 @@ namespace Client
     }
     class VisibleTrap : Trap
     {
+        private static IFactory<BitmapImage> bitmapimage;
         public override Rectangle get_view()
         {
+            bitmapimage = new Traps();
             Rectangle img = new Rectangle();
             img.Width = 40;
             img.Height = 40;
             ImageBrush myBrush = new ImageBrush();
-            myBrush.ImageSource = new BitmapImage(new Uri(@"..\..\..\..\Sprites\trap.png", UriKind.RelativeOrAbsolute));
+            myBrush.ImageSource = bitmapimage.FactoryMethod("Trap3");
             img.Fill = myBrush;
             return img;
         }

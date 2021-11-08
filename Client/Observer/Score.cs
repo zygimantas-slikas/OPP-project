@@ -7,11 +7,13 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Client.Factory;
 
 namespace Client.Observer
 {
     public class Score : IScore
     {
+        private static IFactory<BitmapImage> bitmapimage;
         public void Update(IEnumerable<string> names, IEnumerable<string> created, List<Player> players1, Dictionary<String, Shape> players_gui, Canvas canvas1)
         {
             foreach (var existing in created)
@@ -27,11 +29,15 @@ namespace Client.Observer
             {
                 if (!created.Contains(new1))
                 {
+                    bitmapimage = new Knight();
+                    string[] knights = { "OrangeKnight", "RedKnight", "BlueKnight" };
+                    Random rand = new Random();
+                    int index = rand.Next(knights.Length);
                     Ellipse playerSprite = new Ellipse();
                     playerSprite.Width = 40;
                     playerSprite.Height = 40;
                     ImageBrush myBrush = new ImageBrush();
-                    myBrush.ImageSource = new BitmapImage(new Uri(@"..\..\..\..\Sprites\png-clipart-knight-free-content-school-uniform-cartoon-fictional-character.png", UriKind.RelativeOrAbsolute));
+                    myBrush.ImageSource = bitmapimage.FactoryMethod(knights[index]);
                     playerSprite.Fill = myBrush;
                     players_gui.Add(new1, playerSprite);
                     canvas1.Children.Add(playerSprite);
@@ -45,7 +51,6 @@ namespace Client.Observer
                     Canvas.SetLeft(players_gui[new1], players1.Find(x => x.Name == new1).X * 50 + 5);
                 }
             }
-            
         }
     }
 }
