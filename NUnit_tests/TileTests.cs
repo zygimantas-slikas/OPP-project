@@ -13,11 +13,11 @@ namespace NUnit_tests
             var tile = new Tile(Tile.Tile_type.grass);
 
             // Act
-            var result = tile.Clone();
+            var result = (Tile)tile.Clone();
 
             // Assert
-            //Assert.AreEqual(result.Surface, tile.Surface);
-            //Assert.AreNotEqual(result.GetHashCode(), tile.GetHashCode());
+            Assert.AreEqual(result.Surface, tile.Surface);
+            Assert.AreNotEqual(result.GetHashCode(), tile.GetHashCode());
         }
     }
 }

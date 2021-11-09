@@ -21,7 +21,7 @@ namespace Client
         {
             this.PlayerDelaySpeed = newSpeed;
         }
-        private GameSettings()
+        public GameSettings()
         {
             this.Player_direction = 0;
             this.PlayerDelaySpeed = 100;

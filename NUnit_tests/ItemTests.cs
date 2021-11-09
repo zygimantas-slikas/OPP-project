@@ -17,24 +17,24 @@ namespace NUnit_tests
             Trap trap = new Trap();
 
             // Act
-            var result_berry = berry.Clone();
-            var result_medickit = medickit.Clone();
-            var result_gun = gun.Clone();
-            var result_trap = trap.Clone();
+            var result_berry = (Berry)berry.Clone();
+            var result_medickit = (MedicKit)medickit.Clone();
+            var result_gun = (Gun)gun.Clone();
+            var result_trap = (Trap)trap.Clone();
 
-            // Assert
-        //    Assert.AreEqual(result_berry.Points, berry.Points);
-        //    Assert.AreNotEqual(result_berry.GetHashCode(), berry.GetHashCode());
+            
+            Assert.AreEqual(result_berry.Points, berry.Points);
+            Assert.AreNotEqual(result_berry.GetHashCode(), berry.GetHashCode());
 
-        //    Assert.AreEqual(result_medickit.Heal, medickit.Heal);
-        //    Assert.AreNotEqual(result_medickit.GetHashCode(), medickit.GetHashCode());
+            Assert.AreEqual(result_medickit.Heal, medickit.Heal);
+            Assert.AreNotEqual(result_medickit.GetHashCode(), medickit.GetHashCode());
 
-        //    Assert.AreEqual(result_gun.Damage, gun.Damage);
-        //    Assert.AreEqual(result_gun.Ammo, gun.Ammo);
-        //    Assert.AreNotEqual(result_gun.GetHashCode(), gun.GetHashCode());
+            Assert.AreEqual(result_gun.Damage, gun.Damage);
+            Assert.AreEqual(result_gun.Ammo, gun.Ammo);
+            Assert.AreNotEqual(result_gun.GetHashCode(), gun.GetHashCode());
 
-        //    Assert.AreEqual(result_trap.Damage, trap.Damage);
-        //    Assert.AreNotEqual(result_trap.GetHashCode(), trap.GetHashCode());
+            Assert.AreEqual(result_trap.Damage, trap.Damage);
+            Assert.AreNotEqual(result_trap.GetHashCode(), trap.GetHashCode());
         }
         [Test]
         public void PickUpEffect_StateUnderTest_ExpectedBehavior()
@@ -50,6 +50,17 @@ namespace NUnit_tests
 
             // Assert
             Assert.AreNotEqual(player2.Points, player.Points);
+        }
+        [Test]
+        public void PickUpEffectHealth_StateUnderTest_ExpectedBehavior()
+        {
+            List<Item> items = new List<Item>();
+            BlueMedicKit medickit = new BlueMedicKit();
+            int health = 120;
+            var player = new Player("1", "player1", 10, 10, items);
+
+            medickit.PickupEffect(player);
+            Assert.AreEqual(player.Health, health);
         }
     }
 }

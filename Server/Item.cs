@@ -69,7 +69,7 @@ namespace Server
             p.AddHealth(this.Heal);
         }
     }
-    class BlueMedicKit : MedicKit
+    public class BlueMedicKit : MedicKit
     {
         public BlueMedicKit()
         {
