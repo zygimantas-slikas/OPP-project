@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,6 +27,7 @@ namespace Client
             this.PlayerDelaySpeed = 100;
             Delay = Task.Delay(this.PlayerDelaySpeed);
         }
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public static GameSettings GetInstance()
         {
             {

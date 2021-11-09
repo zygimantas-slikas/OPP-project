@@ -86,7 +86,10 @@ namespace Client
                 observer.Update(names, created, players1, players_gui, canvas1);
             }
         }
-
+        public int getObserverCount()
+        {
+            return scoreObservers.Count;
+        }
         public void Addpoints(int pts)
         {
             this.Points += pts;

@@ -379,7 +379,8 @@ namespace Client.Facade
             IEnumerable<string> names = from Player p in players1 select p.Name;
             Score ScoreTracking = new Score();
             IEnumerable<string> created = players_gui.Keys.ToList();
-            current_Player.Attach(ScoreTracking);
+            if (current_Player.getObserverCount() == 0)
+                current_Player.Attach(ScoreTracking);
             current_Player.Notify(names, created, players1, players_gui, canvas1);
         }
     }
