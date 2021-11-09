@@ -51,5 +51,16 @@ namespace NUnit_tests
             // Assert
             Assert.AreNotEqual(player2.Points, player.Points);
         }
+        [Test]
+        public void PickUpEffectHealth_StateUnderTest_ExpectedBehavior()
+        {
+            List<Item> items = new List<Item>();
+            BlueMedicKit medickit = new BlueMedicKit();
+            int health = 120;
+            var player = new Player("1", "player1", 10, 10, items);
+
+            medickit.PickupEffect(player);
+            Assert.AreEqual(player.Health, health);
+        }
     }
 }
