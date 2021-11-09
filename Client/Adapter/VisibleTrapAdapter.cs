@@ -7,7 +7,7 @@ using System.Windows.Shapes;
 
 namespace Client.Adapter
 {
-    class VisibleTrapAdapter : Item
+    public class VisibleTrapAdapter : Item
     {
         private readonly VisibleTrap _adaptee;
         public int Damage;

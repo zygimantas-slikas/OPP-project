@@ -10,7 +10,7 @@ using System.Windows.Shapes;
 
 namespace Client.Decorator
 {
-    class HighFireDecorator : Decorator
+    public class HighFireDecorator : Decorator
     {
         public virtual int Damage { get; protected set; }
 

@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace Client.Strategy
 {
-    class MoveOnBush : IMovementStrategy
+    public class MoveOnBush : IMovementStrategy
     {
         public override void Move()
         {

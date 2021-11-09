@@ -10,7 +10,7 @@ using System.Windows.Shapes;
 
 namespace Client.Adapter
 {
-    class VisibleTrap
+    public class VisibleTrap
     {
         private static IFactory<BitmapImage> bitmapimage;
         public int Damage = 30;

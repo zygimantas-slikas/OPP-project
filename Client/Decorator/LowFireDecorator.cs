@@ -10,7 +10,7 @@ using System.Windows.Shapes;
 
 namespace Client.Decorator
 {
-    class LowFireDecorator : Decorator
+    public class LowFireDecorator : Decorator
     {
         public virtual int Damage { get; protected set; }
 
@@ -35,11 +35,6 @@ namespace Client.Decorator
             myBrush.ImageSource = new BitmapImage(new Uri(@"..\..\..\..\Sprites\lowfire.png", UriKind.RelativeOrAbsolute));
             img.Fill = myBrush;
             return img;
-        }
-
-        public override int GetNumber()
-        {
-            return base.GetNumber();
         }
     }
 }

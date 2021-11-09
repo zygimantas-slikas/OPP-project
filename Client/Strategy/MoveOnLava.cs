@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace Client.Strategy
 {
-    class MoveOnLava : IMovementStrategy
+    public class MoveOnLava : IMovementStrategy
     {
         public override void Move()
         {
