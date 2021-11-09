@@ -8,7 +8,7 @@ namespace NUnit_tests
     {
         Room r1;
         /// <summary>
-        /// before avery test
+        /// before every test
         /// </summary>
         [SetUp]
         public void Setup()

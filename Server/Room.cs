@@ -48,22 +48,22 @@ namespace Server
         {
             List<Item> inv = new List<Item>();
             Player p = new Player(con_id, name, 0, 0, inv);
-            if (this.map[0, 0].Player_Standing == null) {
+            if (this.map[0, 0].Player_Standing == "") {
                 this.map[0, 0].Player_Standing = name;
                 p.X = 0;
                 p.Y = 0;
             }
-            else if (this.map[0, map_size - 1].Player_Standing == null) {
+            else if (this.map[0, map_size - 1].Player_Standing == "") {
                 this.map[0, map_size - 1].Player_Standing = name;
                 p.X = 0;
                 p.Y = map_size - 1;
             }
-            else if (this.map[map_size - 1, 0].Player_Standing == null) {
+            else if (this.map[map_size - 1, 0].Player_Standing == "") {
                 this.map[map_size - 1, 0].Player_Standing = name;
                 p.X = map_size - 1;
                 p.Y = 0;
             }
-            else if (this.map[map_size - 1, map_size - 1].Player_Standing == null) {
+            else if (this.map[map_size - 1, map_size - 1].Player_Standing == "") {
                 this.map[map_size - 1, map_size - 1].Player_Standing = name;
                 p.X = map_size - 1;
                 p.Y = map_size - 1;
@@ -82,6 +82,12 @@ namespace Server
         {
             var serializerSettings = new JsonSerializerSettings { PreserveReferencesHandling = PreserveReferencesHandling.Objects };
             string json = JsonConvert.SerializeObject(this, Formatting.Indented, serializerSettings);
+            Regex re = new Regex("\"Con_id\": \"[^\"]+\",");
+            MatchCollection matches = re.Matches(json);
+            for (int i = matches.Count - 1; i >= 0; i--)
+            {
+                json = json.Remove(matches[i].Index, matches[i].Length);
+            }
             return json;//"[" + JsonSerializer.Serialize(map_size) + "," + JsonSerializer.Serialize(tiles) + "]";
         }
         public string Players_to_Json()
