@@ -9,7 +9,7 @@ using System.Windows.Shapes;
 
 namespace Client.Adapter
 {
-    class InvisibleTrapAdapter : Item
+    public class InvisibleTrapAdapter : Item
     {
         private readonly InvisibleTrap _adaptee;
         public int Damage;

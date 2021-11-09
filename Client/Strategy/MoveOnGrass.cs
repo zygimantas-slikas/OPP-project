@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace Client.Strategy
 {
-    class MoveOnGrass : IMovementStrategy
+    public class MoveOnGrass : IMovementStrategy
     {
         public override void Move()
         {
