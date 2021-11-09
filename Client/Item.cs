@@ -200,46 +200,46 @@ namespace Client
             throw new NotImplementedException();
         }
     }
-    class VisibleTrap : Trap
-    {
-        private static IFactory<BitmapImage> bitmapimage;
-        public override Rectangle get_view()
-        {
-            bitmapimage = new Traps();
-            Rectangle img = new Rectangle();
-            img.Width = 40;
-            img.Height = 40;
-            ImageBrush myBrush = new ImageBrush();
-            myBrush.ImageSource = bitmapimage.FactoryMethod("Trap3");
-            img.Fill = myBrush;
-            return img;
-        }
+    //class VisibleTrap : Trap
+    //{
+    //    private static IFactory<BitmapImage> bitmapimage;
+    //    public override Rectangle get_view()
+    //    {
+    //        bitmapimage = new Traps();
+    //        Rectangle img = new Rectangle();
+    //        img.Width = 40;
+    //        img.Height = 40;
+    //        ImageBrush myBrush = new ImageBrush();
+    //        myBrush.ImageSource = bitmapimage.FactoryMethod("Trap3");
+    //        img.Fill = myBrush;
+    //        return img;
+    //    }
 
-        public VisibleTrap()
-        {
-            this.Damage = 30;
-            this.Type = this.GetType().Name;
-        }
-    }
-    class InVisibleTrap : Trap
-    {
-        public override Rectangle get_view()
-        {
-            Rectangle img = new Rectangle();
-            img.Width = 40;
-            img.Height = 40;
-            ImageBrush myBrush = new ImageBrush();
-            myBrush.ImageSource = new BitmapImage(new Uri(@"..\..\..\..\Sprites\invisibletrap.png", UriKind.RelativeOrAbsolute));
-            img.Fill = myBrush;
-            return img;
-        }
+    //    public VisibleTrap()
+    //    {
+    //        this.Damage = 30;
+    //        this.Type = this.GetType().Name;
+    //    }
+    //}
+    //class InVisibleTrap : Trap
+    //{
+    //    public override Rectangle get_view()
+    //    {
+    //        Rectangle img = new Rectangle();
+    //        img.Width = 40;
+    //        img.Height = 40;
+    //        ImageBrush myBrush = new ImageBrush();
+    //        myBrush.ImageSource = new BitmapImage(new Uri(@"..\..\..\..\Sprites\invisibletrap.png", UriKind.RelativeOrAbsolute));
+    //        img.Fill = myBrush;
+    //        return img;
+    //    }
 
-        public InVisibleTrap()
-        {
-            this.Damage = 35;
-            this.Type = this.GetType().Name;
-        }
-    }
+    //    public InVisibleTrap()
+    //    {
+    //        this.Damage = 35;
+    //        this.Type = this.GetType().Name;
+    //    }
+    //}
 
     public class Fire : Item
     {

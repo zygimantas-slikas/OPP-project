@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Client.Decorator;
+using Client.Adapter;
 
 namespace Client
 {
@@ -62,10 +63,12 @@ namespace Client
                                 item1 = new RedMedicKit();
                                 break;
                             case "VisibleTrap":
-                                item1 = new VisibleTrap();
+                                VisibleTrap visibleTrap = new VisibleTrap();
+                                item1 = new VisibleTrapAdapter(visibleTrap);
                                 break;
                             case "InVisibleTrap":
-                                item1 = new InVisibleTrap();
+                                InvisibleTrap invisibleTrap = new InvisibleTrap();
+                                item1 = new InvisibleTrapAdapter(invisibleTrap);
                                 break;
                             case "Fire":
                                 int timesStepped = Int32.Parse((string)pj["map"][i][j]["Loot"]["TimesStepped"]);

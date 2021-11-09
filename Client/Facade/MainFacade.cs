@@ -22,6 +22,7 @@ using Client.Decorator;
 using Client.Command;
 using Client.Facade;
 using Newtonsoft.Json.Linq;
+using Client.Adapter;
 
 namespace Client.Facade
 {
@@ -252,8 +253,8 @@ namespace Client.Facade
         {
             if (map1.map[current_Player.Y, current_Player.X].Loot != null)
             {
-                if (map1.map[current_Player.Y, current_Player.X].Loot.Type == new VisibleTrap().Type ||
-                    map1.map[current_Player.Y, current_Player.X].Loot.Type == new InVisibleTrap().Type)
+                if (map1.map[current_Player.Y, current_Player.X].Loot.Type == new VisibleTrapAdapter(new VisibleTrap()).Type ||
+                    map1.map[current_Player.Y, current_Player.X].Loot.Type == new InvisibleTrapAdapter(new InvisibleTrap()).Type)
                 {
                     Object[] args = new Object[3] { mapId, current_Player.X, current_Player.Y };
                     await connection.SendCoreAsync("ActivateTrap", args);
