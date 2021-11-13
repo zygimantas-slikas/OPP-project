@@ -44,6 +44,47 @@ namespace Server
             build.add_walls();
             build.fill_grass();
         }
+        public int Check_players_helath()
+        {
+            int found = 0;
+            foreach(Player player_1 in this.players)
+            {
+                if (player_1.Health <= 0)
+                {
+                    found++;
+                }
+            }
+            return found;
+        }
+        public void Add_player(Player p)
+        {
+            if (this.map[0, 0].Player_Standing == "")
+            {
+                this.map[0, 0].Player_Standing = p.Name;
+                p.X = 0;
+                p.Y = 0;
+            }
+            else if (this.map[0, map_size - 1].Player_Standing == "")
+            {
+                this.map[0, map_size - 1].Player_Standing = p.Name;
+                p.X = 0;
+                p.Y = map_size - 1;
+            }
+            else if (this.map[map_size - 1, 0].Player_Standing == "")
+            {
+                this.map[map_size - 1, 0].Player_Standing = p.Name;
+                p.X = map_size - 1;
+                p.Y = 0;
+            }
+            else if (this.map[map_size - 1, map_size - 1].Player_Standing == "")
+            {
+                this.map[map_size - 1, map_size - 1].Player_Standing = p.Name;
+                p.X = map_size - 1;
+                p.Y = map_size - 1;
+            }
+            players.Add(p);
+            this.current_players++;
+        }
         public void Add_player(string con_id, string name)
         {
             List<Item> inv = new List<Item>();

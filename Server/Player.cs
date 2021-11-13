@@ -6,8 +6,8 @@ namespace Server
     {
         public int X { get; set; }
         public int Y { get; set; } 
-        public string Con_id { get; }
-        public int Health { get; protected set; }
+        public virtual string Con_id { get; }
+        public virtual int Health { get; protected set; }
         public int Points { get; protected set; }
         public string Name { get; }
         public List<Item> Inventory { get; set; }
@@ -21,7 +21,7 @@ namespace Server
             this.Con_id = id;
             this.Health = 100;
         }
-        public Player(string id, string name, int x)
+        public Player(string id, string name)
         {
             this.X = 0;
             this.Y = 0;

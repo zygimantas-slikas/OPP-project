@@ -29,7 +29,7 @@ namespace NUnit_tests
         public void Addpoints_StateUnderTest_ExpectedBehavior()
         {
             // Arrange
-            var player = new Player("1", "player1", 10);
+            var player = new Player("1", "player1");
             int pts = 150;
 
             // Act
@@ -44,7 +44,7 @@ namespace NUnit_tests
         public void AddDamage_StateUnderTest_ExpectedBehavior()
         {
             // Arrange
-            var player = new Player("1", "player1", 10);
+            var player = new Player("1", "player1");
             int hp = 30;
 
             // Act
@@ -59,7 +59,7 @@ namespace NUnit_tests
         public void AddHealth_StateUnderTest_ExpectedBehavior()
         {
             // Arrange
-            var player = new Player("1", "player1", 10);
+            var player = new Player("1", "player1");
             int hp = 100;
 
             // Act

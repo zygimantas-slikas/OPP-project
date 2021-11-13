@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using Server;
 
+
 namespace NUnit_tests
 {
     [TestFixture]
@@ -130,6 +131,19 @@ namespace NUnit_tests
             r1.Add_player("connection_id_1", "name");
             string json = r1.Players_to_Json();
             Assert.That(json, Does.Not.Match("\"Con_id\":"));
+        }
+        /// <summary>
+        /// I map ideda nauja zaideja naudojant jo moka
+        /// </summary>
+        [Test]
+        public void Add_player_moq_test()
+        {
+            var player_mock = new Moq.Mock<Player>("connection_1", "name_1");
+            player_mock.Setup(p => p.Health).Returns(-50);
+            r1.Add_player(player_mock.Object);
+            Assert.AreEqual(r1.Check_players_helath(), 1);
+            player_mock.Verify(p => p.Health, Moq.Times.Once());
+
         }
         /// <summary>
         /// Resursų atlaisvinimas po kiekvieno testo

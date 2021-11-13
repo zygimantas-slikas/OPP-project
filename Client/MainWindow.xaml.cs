@@ -58,7 +58,7 @@ namespace Client
             join_tab_button.BorderBrush = brush2;
             game_tab_button.BorderBrush = brush2;
         }
-        private void Connect_to_server(object sender, RoutedEventArgs e)
+        protected void Connect_to_server(object sender, RoutedEventArgs e)
         {
             if (this.connection != null)
             {
@@ -409,7 +409,7 @@ namespace Client
                 this.connection.DisposeAsync();
             }
         }
-        private void Key_pressed(object sender, KeyEventArgs e)
+        protected void Key_pressed(object sender, KeyEventArgs e)
         {
             facade.Move_player(map1, current_Player, settings, canvas_scrollbar, e, connection, mapId);
             facade.Check_if_steped_on_trap(map1, current_Player, connection, mapId, e);
