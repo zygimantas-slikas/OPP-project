@@ -19,8 +19,15 @@ namespace Server
         static void Main(string[] args)
         {
             rooms = new List<Room>();
-            Console.Write("Type in your ip address: ");
-            ip = Console.ReadLine();
+            if (args.GetLength(0) >= 1)
+            {
+                ip = args[0];
+            }
+            else
+            {
+                Console.Write("Type in your ip address: ");
+                ip = Console.ReadLine();
+            }
             ip = "http://" + ip + ":5000";
             CreateHostBuilder(args).Build().Run();
         }

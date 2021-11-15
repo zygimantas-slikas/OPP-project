@@ -22,6 +22,7 @@ using Client.Decorator;
 using Client.Command;
 using Client.Facade;
 using Newtonsoft.Json.Linq;
+using System.Runtime.InteropServices;
 
 namespace Client
 {
@@ -41,6 +42,7 @@ namespace Client
         protected HubConnection connection;
         protected Score ScoreTracking = new Score();
         private MainFacade facade = new MainFacade();
+        protected string[] rooms_data_from_server;
         public MainWindow()
         {
             InitializeComponent();
@@ -94,7 +96,7 @@ namespace Client
         }
         private void Create_new_room(object sender, RoutedEventArgs e)
         {
-            facade.Create_new_room(connection, players_count, game_mode_easy, map_type_1, map_size, game_mode_hard, map_type_2);
+            facade.Create_new_room(connection, players_count, game_mode_easy, map_type_1, map_size, game_mode_hard, map_type_2, this);
             //facade.Show_settings_menu(sender, e, Login, Setting_menu);
             //facade.DataWindow_Closing(connection);
             //if (connection == null || connection.State != HubConnectionState.Connected)
@@ -169,6 +171,7 @@ namespace Client
                 return;
             }
             this.rooms_for_join.Items.Clear();
+            this.rooms_data_from_server = list;
             foreach (string line1 in list)
             {
                 string[] data = line1.Split(',');
@@ -689,6 +692,7 @@ namespace Client
         }
         private void Show_create_map_options(object sender, RoutedEventArgs e)
         {
+            new_map_notification.Visibility = Visibility.Hidden;
             BrushConverter bc = new BrushConverter();
             Brush brush1 = (Brush)bc.ConvertFrom("#FF18E79D");
             brush1.Freeze();
@@ -697,6 +701,7 @@ namespace Client
             login_tab_button.BorderBrush = brush2;
             join_tab_button.BorderBrush = brush1;
             game_tab_button.BorderBrush = brush2;
+            settings_tab_button.BorderBrush = brush2;
             Join.Visibility = Visibility.Visible;
             maps_list_menu.Visibility = Visibility.Hidden;
             create_map_panel.Visibility = Visibility.Visible;
@@ -711,6 +716,7 @@ namespace Client
             login_tab_button.BorderBrush = brush1;
             join_tab_button.BorderBrush = brush2;
             game_tab_button.BorderBrush = brush2;
+            settings_tab_button.BorderBrush = brush2;
             Login.Visibility = Visibility.Visible;
             Join.Visibility = Visibility.Hidden;
             create_map_panel.Visibility = Visibility.Hidden;
@@ -721,6 +727,15 @@ namespace Client
         {
             Login.Visibility = Visibility.Hidden;
             Setting_menu.Visibility = Visibility.Visible;
+            BrushConverter bc = new BrushConverter();
+            Brush brush1 = (Brush)bc.ConvertFrom("#FF18E79D");
+            brush1.Freeze();
+            Brush brush2 = (Brush)bc.ConvertFrom("#FF131B3C");
+            brush2.Freeze();
+            login_tab_button.BorderBrush = brush2;
+            join_tab_button.BorderBrush = brush2;
+            game_tab_button.BorderBrush = brush2;
+            settings_tab_button.BorderBrush = brush1;
         }
         private void Show_game_tab(object sender, RoutedEventArgs e)
         {
@@ -732,11 +747,51 @@ namespace Client
             login_tab_button.BorderBrush = brush2;
             join_tab_button.BorderBrush = brush2;
             game_tab_button.BorderBrush = brush1;
+            settings_tab_button.BorderBrush = brush2;
             Login.Visibility = Visibility.Hidden;
             Join.Visibility = Visibility.Hidden;
             create_map_panel.Visibility = Visibility.Hidden;
             Game.Visibility = Visibility.Visible;
             Setting_menu.Visibility = Visibility.Hidden;
+        }
+        unsafe protected void Settings_changed(object sender, TextChangedEventArgs e)
+        {
+            List<TextBox> fields = new List<TextBox> { this.Move_up_key, this.Move_down_key,
+                this.Move_left_key, this.Move_right_key, this.Take_item_key, this.Drop_item_key,
+                this.Switch_left_key, this.Switch_right_key, this.Use_item_key, this.Put_bomb_key};
+            if (fields.Contains(null))
+            {
+                return;
+            }
+            fixed (Key* k1 = &GameSettings.GetInstance().Move_up_key)
+            {
+                [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+                static extern short VkKeyScan(char ch);
+                for (int i = 0; i < fields.Count; i++)
+                {
+                    if (fields[i].Text.Length > 0)
+                    {
+                        char ch = fields[i].Text[0];
+                        int v_key = VkKeyScan(ch) & 0xff;
+                        *(k1 + i) = KeyInterop.KeyFromVirtualKey(v_key);
+                    }
+                }
+            }
+        }
+        private void Map_selected(object sender, SelectionChangedEventArgs e)
+        {
+            if (rooms_for_join.SelectedItem == null)
+            {
+                return;
+            }
+            string map_id_1 = ((Rooms_list_view_obj)rooms_for_join.SelectedItem).map_id;
+            string line1 = rooms_data_from_server.ToList<string>().Find(x => x.Split(',')[0].Split(':')[1] == map_id_1);
+            string[] data = line1.Split(',');
+            map_id_text_box.Text =         data[0].Split(new char[] { ':' })[1];
+            players_online_text_box.Text = data[1].Split(new char[] { ':' })[1];
+            map_size_text_box.Text =       data[2].Split(new char[] { ':' })[1];
+            level_text_box.Text =          data[3].Split(new char[] { ':' })[1];
+            map_state_text_box.Text =      data[4].Split(new char[] { ':' })[1];
         }
     }
 }

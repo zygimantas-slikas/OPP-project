@@ -31,7 +31,7 @@ namespace Client.Facade
         public async void Move_player(Map map1, Player current_Player, GameSettings settings, ScrollViewer canvas_scrollbar, KeyEventArgs e, HubConnection connection, Int32 mapId)
         {
             bool changed = false;
-            if (e.Key == Key.W)
+            if (e.Key == GameSettings.GetInstance().Move_up_key)
             {
                 if (!settings.Delay.IsCompleted) return;
                 else if (current_Player.Y > 0 && map1.map[current_Player.Y - 1, current_Player.X].Surface != Tile.Tile_type.wall)
@@ -59,7 +59,7 @@ namespace Client.Facade
                     current_Player.move();
                 }
             }
-            else if (e.Key == Key.A)
+            else if (e.Key == GameSettings.GetInstance().Move_left_key)
             {
                 if (!settings.Delay.IsCompleted) return;
                 else if (current_Player.X > 0 && map1.map[current_Player.Y, current_Player.X - 1].Surface != Tile.Tile_type.wall)
@@ -87,7 +87,7 @@ namespace Client.Facade
                     current_Player.move();
                 }
             }
-            else if (e.Key == Key.S)
+            else if (e.Key == GameSettings.GetInstance().Move_down_key)
             {
                 if (!settings.Delay.IsCompleted) return;
                 else if (current_Player.Y < map1.map_size - 1 && map1.map[current_Player.Y + 1, current_Player.X].Surface != Tile.Tile_type.wall)
@@ -115,7 +115,7 @@ namespace Client.Facade
                     current_Player.move();
                 }
             }
-            else if (e.Key == Key.D)
+            else if (e.Key == GameSettings.GetInstance().Move_right_key)
             {
                 if (!settings.Delay.IsCompleted) return;
                 else if (current_Player.X < map1.map_size - 1 && map1.map[current_Player.Y, current_Player.X + 1].Surface != Tile.Tile_type.wall)
@@ -158,7 +158,7 @@ namespace Client.Facade
             {
                 invoker.undo(current_Player.Name);
             }
-            if (e.Key == Key.L)
+            if (e.Key == GameSettings.GetInstance().Switch_right_key)
             {
                 BrushConverter bc;
                 Brush brush;
@@ -179,7 +179,7 @@ namespace Client.Facade
                     inventory_items_gui[current_Player.currentItem].BorderBrush = brush;
                 }
             }
-            else if (e.Key == Key.J)
+            else if (e.Key == GameSettings.GetInstance().Switch_left_key)
             {
                 BrushConverter bc;
                 Brush brush;
@@ -200,7 +200,7 @@ namespace Client.Facade
                     inventory_items_gui[current_Player.currentItem].BorderBrush = brush;
                 }
             }
-            if (e.Key == Key.E)
+            if (e.Key == GameSettings.GetInstance().Take_item_key)
             {
                 if (map1.map[current_Player.Y, current_Player.X].Loot != null)
                 {
@@ -208,16 +208,19 @@ namespace Client.Facade
                     invoker.InvokeTake();
                 }
             }
-            else if (e.Key == Key.Q)
+            else if (e.Key == GameSettings.GetInstance().Drop_item_key)
             {
                 if (map1.map[current_Player.Y, current_Player.X].Loot == null)
                 {
-                    invoker.SetCommand(new TakeDropCommand(action = "drop"));
-                    invoker.InvokeDrop();
-                    info = current_Player.Inventory[current_Player.currentItem].Type;
+                    if (current_Player.Inventory.Count > current_Player.currentItem)
+                    {
+                        invoker.SetCommand(new TakeDropCommand(action = "drop"));
+                        invoker.InvokeDrop();
+                        info = current_Player.Inventory[current_Player.currentItem].Type;
+                    }
                 }
             }
-            else if (e.Key == Key.K)
+            else if (e.Key == GameSettings.GetInstance().Use_item_key)
             {
                 if (current_Player.currentItem >= 0)
                 {
@@ -233,7 +236,7 @@ namespace Client.Facade
         }
         public async void Drop_trap(Player current_Player, HubConnection connection, Int32 mapId, KeyEventArgs e)
         {
-            if (e.Key == Key.B)
+            if (e.Key == GameSettings.GetInstance().Put_bomb_key)
             {
                 //TODO: drop a trap
                 Object[] args = new Object[3] { mapId, current_Player.X, current_Player.Y };
@@ -243,7 +246,10 @@ namespace Client.Facade
 
         public void Check_if_steped_on_trap(Map map1, Player current_Player, HubConnection connection, Int32 mapId, KeyEventArgs e)
         {
-            if (e.Key == Key.W || e.Key == Key.A || e.Key == Key.S || e.Key == Key.D)
+            if (e.Key == GameSettings.GetInstance().Move_up_key || 
+                e.Key == GameSettings.GetInstance().Move_left_key || 
+                e.Key == GameSettings.GetInstance().Move_down_key || 
+                e.Key == GameSettings.GetInstance().Move_right_key)
             {
                 Check_step_on_fire(map1, current_Player, connection, mapId);
                 Check_step_on_trap(map1, current_Player, connection, mapId);
@@ -346,7 +352,7 @@ namespace Client.Facade
                 Canvas.SetZIndex(el, 10);
             }
         }
-        public void Create_new_room(HubConnection connection, TextBox players_count, RadioButton game_mode_easy, RadioButton map_type_1, TextBox map_size, RadioButton game_mode_hard, RadioButton map_type_2)
+        public void Create_new_room(HubConnection connection, TextBox players_count, RadioButton game_mode_easy, RadioButton map_type_1, TextBox map_size, RadioButton game_mode_hard, RadioButton map_type_2, MainWindow window)
         {
             if (connection == null || connection.State != HubConnectionState.Connected)
             {
@@ -373,6 +379,7 @@ namespace Client.Facade
             Object[] args = new Object[4]{ Convert.ToInt32(players_count.Text),
                 Convert.ToInt32(map_size.Text), level, map_type};
             connection.SendCoreAsync("Create_map", args);
+            window.new_map_notification.Visibility = Visibility.Visible;
         }
         public void Update_players_objects(List<Player> players1, Dictionary<String, Shape> players_gui, Canvas canvas1, Player current_Player)
         {       

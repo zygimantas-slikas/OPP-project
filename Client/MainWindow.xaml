@@ -29,9 +29,16 @@
             <ColumnDefinition Width="33*"/>
         </Grid.ColumnDefinitions>
         <Grid Grid.Row="0" Width="{Binding ActualWidth, ElementName=main_window}" Background="#FF333337" Grid.ColumnSpan="2" >
-            <Button Name="login_tab_button" Content="Login" Margin="20,0,20,0" HorizontalAlignment="Left"  Width="90" Click="Back_to_login"/>
-            <Button Name="join_tab_button" Content="Join" Margin="20,0,20,0" HorizontalAlignment="Center" Width="90" Click="Show_maps_list"/>
-            <Button Name="game_tab_button" Content="Game" Margin="20,0,20,0" HorizontalAlignment="Right"  Width="90" Click="Show_game_tab" />
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Name="settings_tab_button" Content="Settings" Margin="20,0,20,0" HorizontalAlignment="Left"  Width="90" Click="Show_settings_menu"/>
+            <Button Grid.Column="1" Name="login_tab_button" Content="Login" Margin="20,0,20,0" HorizontalAlignment="Left"  Width="90" Click="Back_to_login"/>
+            <Button Grid.Column="2" Name="join_tab_button" Content="Join" Margin="20,0,20,0" HorizontalAlignment="Center" Width="90" Click="Show_maps_list"/>
+            <Button Grid.Column="3" Name="game_tab_button" Content="Game" Margin="20,0,20,0" HorizontalAlignment="Right"  Width="90" Click="Show_game_tab" />
         </Grid>
         <Canvas Name="canvas0" Grid.Row="1" Height="Auto" Width="Auto" Grid.ColumnSpan="2" >
 
@@ -48,32 +55,32 @@
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Row="0" Grid.Column="0">
                     <Label Content="Movement" HorizontalAlignment="Center"/>
-                    <Label Content="Move_up_key"/>
-                    <TextBox x:Name="Move_up_key" Width="100" HorizontalAlignment="Left" Text="W"/>
-                    <Label Content="Move_down_key"/>
-                    <TextBox x:Name="Move_down_key" Width="100" HorizontalAlignment="Left" Text="S"/>
-                    <Label Content="Move_left_key"/>
-                    <TextBox x:Name="Move_left_key" Width="100" HorizontalAlignment="Left" Text="A"/>
-                    <Label Content="Move_right_key"/>
-                    <TextBox x:Name="Move_right_key" Width="100" HorizontalAlignment="Left" Text="D"/>
+                    <Label Content="_Move_up_key"/>
+                    <TextBox x:Name="Move_up_key" Width="100" HorizontalAlignment="Left" Text="W" TextChanged="Settings_changed"/>
+                    <Label Content="_Move_down_key"/>
+                    <TextBox x:Name="Move_down_key" Width="100" HorizontalAlignment="Left" Text="S" TextChanged="Settings_changed"/>
+                    <Label Content="_Move_left_key"/>
+                    <TextBox x:Name="Move_left_key" Width="100" HorizontalAlignment="Left" Text="A" TextChanged="Settings_changed"/>
+                    <Label Content="_Move_right_key"/>
+                    <TextBox x:Name="Move_right_key" Width="100" HorizontalAlignment="Left" Text="D" TextChanged="Settings_changed"/>
                 </StackPanel>
                 <StackPanel Grid.Row="0" Grid.Column="1">
                     <Label Content="Items control" HorizontalAlignment="Center"/>
-                    <Label Content="Take_item_key"/>
-                    <TextBox x:Name="Take_item_key" Width="100" HorizontalAlignment="Left" Text="E"/>
-                    <Label Content="Drop_item_key"/>
-                    <TextBox x:Name="Drop_item_key" Width="100" HorizontalAlignment="Left" Text="Q"/>
-                    <Label Content="Switch_left_key"/>
-                    <TextBox x:Name="Switch_left_key" Width="100" HorizontalAlignment="Left" Text="J"/>
-                    <Label Content="Switch_right_key"/>
-                    <TextBox x:Name="Switch_right_key" Width="100" HorizontalAlignment="Left" Text="L"/>
+                    <Label Content="_Take_item_key"/>
+                    <TextBox x:Name="Take_item_key" Width="100" HorizontalAlignment="Left" Text="E" TextChanged="Settings_changed"/>
+                    <Label Content="_Drop_item_key"/>
+                    <TextBox x:Name="Drop_item_key" Width="100" HorizontalAlignment="Left" Text="Q" TextChanged="Settings_changed"/>
+                    <Label Content="_Switch_left_key"/>
+                    <TextBox x:Name="Switch_left_key" Width="100" HorizontalAlignment="Left" Text="J" TextChanged="Settings_changed"/>
+                    <Label Content="_Switch_right_key"/>
+                    <TextBox x:Name="Switch_right_key" Width="100" HorizontalAlignment="Left" Text="L" TextChanged="Settings_changed"/>
                 </StackPanel>
                 <StackPanel Grid.Row="0" Grid.Column="2">
                     <Label Content="Items usage" HorizontalAlignment="Center"/>
-                    <Label Content="Use_item_key"/>
-                    <TextBox x:Name="Use_item_key" Width="100" HorizontalAlignment="Left" Text="K"/>
-                    <Label Content="Put_bomb_key"/>
-                    <TextBox x:Name="Put_bomb_key" Width="100" HorizontalAlignment="Left" Text="B"/>
+                    <Label Content="_Use_item_key"/>
+                    <TextBox x:Name="Use_item_key" Width="100" HorizontalAlignment="Left" Text="K" TextChanged="Settings_changed"/>
+                    <Label Content="_Put_bomb_key"/>
+                    <TextBox x:Name="Put_bomb_key" Width="100" HorizontalAlignment="Left" Text="B" TextChanged="Settings_changed"/>
                 </StackPanel>
             </Grid>
 
@@ -109,7 +116,7 @@
                 </Button>
             </Grid>
 
-            <Grid x:Name="Join" Width="{Binding ActualWidth, ElementName=canvas0}" Height="{Binding ActualHeight, ElementName=canvas0}" Canvas.Left="0" Canvas.Top="0" Visibility="Visible" d:IsHidden="True" >
+            <Grid x:Name="Join" Width="{Binding ActualWidth, ElementName=canvas0}" Height="{Binding ActualHeight, ElementName=canvas0}" Canvas.Left="0" Canvas.Top="0" Visibility="Visible" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="120"/>
                     <ColumnDefinition Width="*"/>
@@ -157,7 +164,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <ListView x:Name="rooms_for_join" Grid.Column="0" Grid.Row="0" Background="#FF333337" BorderBrush="#FF18E79D">
+                    <ListView x:Name="rooms_for_join" Grid.Column="0" Grid.Row="0" Background="#FF333337" BorderBrush="#FF18E79D" SelectionChanged="Map_selected">
                         <ListView.View>
                             <GridView AllowsColumnReorder="true" >
                                 <GridViewColumn DisplayMemberBinding="{Binding Path=map_id}" Header="Map Id" Width="100" />
@@ -187,6 +194,19 @@
                                     <ComboBox x:Name="rooms_select" Margin="10,20,10,10" Width="200" Height="30" />
                                 </StackPanel>
                             </WrapPanel>-->
+                            <StackPanel Margin="10">
+                                <Label Content="Map infromation" HorizontalAlignment="Center"/>
+                                <Label Content="Map Id"/>
+                                <TextBox x:Name="map_id_text_box" Width="100" HorizontalAlignment="Left"/>
+                                <Label Content="Map size"/>
+                                <TextBox x:Name="map_size_text_box" Width="100" HorizontalAlignment="Left"/>
+                                <Label Content="Players online"/>
+                                <TextBox x:Name="players_online_text_box" Width="100" HorizontalAlignment="Left"/>
+                                <Label Content="Level"/>
+                                <TextBox x:Name="level_text_box" Width="100" HorizontalAlignment="Left"/>
+                                <Label Content="Map State"/>
+                                <TextBox x:Name="map_state_text_box" Width="100" HorizontalAlignment="Left"/>
+                            </StackPanel>
                             <WrapPanel Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center">
                                 <StackPanel  Width="200" >
                                     <Label Content="User name"/>
@@ -209,32 +229,74 @@
                 </Grid>
 
                 <Border x:Name="create_map_panel" Grid.Column="1" BorderBrush="#FF18E79D" BorderThickness="1" d:IsHidden="True">
-                    <Grid   d:IsHidden="True" Height="Auto" Width="Auto">
-                        <Label HorizontalAlignment="Center" Content="Create"/>
-                        <WrapPanel HorizontalAlignment="Center">
-                            <StackPanel>
-                                <Label Content="Players count"/>
-                                <TextBox x:Name="players_count" Width="150" Margin="10,0,10,10"/>
-                                <Label Content="Map size"/>
-                                <TextBox x:Name="map_size" Width="150" Margin="10,0,10,10"/>
-                                <Label Content="Difficulty"/>
-                                <WrapPanel Margin="10,0,10,10">
-                                    <RadioButton x:Name="game_mode_easy" Margin="10" IsChecked="True" GroupName="difficulty_button" Content="Blue"/>
-                                    <RadioButton x:Name="game_mode_hard" Margin="10" GroupName="difficulty_button" Content="Red"/>
-                                </WrapPanel>
-                                <Label Content="Map type"/>
-                                <WrapPanel Margin="10,0,10,10">
-                                    <RadioButton x:Name="map_type_1" Margin="10" IsChecked="True" GroupName="map_type_button" Content="Type 1"/>
-                                    <RadioButton x:Name="map_type_2" Margin="10" GroupName="map_type_button" Content="Type 2"/>
-                                </WrapPanel>
-                            </StackPanel>
-                            <Button Content="Create" Click="Create_new_room" Margin="20" Width="80" Height="30"/>
-                        </WrapPanel>
+                    <Grid Height="Auto" Width="Auto" d:IsLocked="True">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="5*"/>
+                            <RowDefinition Height="5*"/>
+                            <RowDefinition Height="3*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label HorizontalAlignment="Center" FontWeight="Bold" Content="New map creation" Grid.Column="1" Grid.Row="0"/>
+                        <StackPanel Grid.Column="0" Grid.Row="1">
+                            <Label Content="Map size"/>
+                            <TextBox x:Name="map_size" Width="150" Margin="10,0,10,10" HorizontalAlignment="Left"/>
+                            <Border CornerRadius="10" BorderBrush="GOld" BorderThickness="1" Margin="5">
+                                <StackPanel>
+                                    <Label Content="Determines new map's size in tiles" />
+                                    <Label Content="Size x Size" />
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Grid.Row="1">
+                            <Label Content="Players count"/>
+                            <TextBox x:Name="players_count" Width="150" Margin="10,0,10,10" HorizontalAlignment="Left"/>
+                            <Border CornerRadius="10" BorderBrush="GOld" BorderThickness="1" Margin="5">
+                                <StackPanel>
+                                    <Label Content="Sets maxinum number of players that " />
+                                    <Label Content="can connect to this map." />
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                        <StackPanel Grid.Column="0" Grid.Row="2">
+                            <Label Content="Map type"/>
+                            <WrapPanel Margin="0">
+                                <RadioButton x:Name="map_type_1" Margin="10" IsChecked="True" GroupName="map_type_button" Content="Type 1"/>
+                                <RadioButton x:Name="map_type_2" Margin="10" GroupName="map_type_button" Content="Type 2"/>
+                            </WrapPanel>
+                            <Border CornerRadius="10" BorderBrush="GOld" BorderThickness="1" Margin="5">
+                                <StackPanel>
+                                    <Label Content="Determines amount of non grass" />
+                                    <Label Content="squares: 1- little, 2- more" />
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Grid.Row="2">
+                            <Label Content="Difficulty"/>
+                            <WrapPanel Margin="0">
+                                <RadioButton x:Name="game_mode_easy" Margin="10" IsChecked="True" GroupName="difficulty_button" Content="Blue"/>
+                                <RadioButton x:Name="game_mode_hard" Margin="10" GroupName="difficulty_button" Content="Red"/>
+                            </WrapPanel>
+                            <Border CornerRadius="10" BorderBrush="GOld" BorderThickness="1" Margin="5">
+                                <StackPanel>
+                                    <Label Content="Determines what color object" />
+                                    <Label Content="will be created." />
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                        <Button Content="Create" Click="Create_new_room" Margin="20" Width="80" Height="30" Grid.Column="1" Grid.Row="3"/>
+                        <Border Width="210" Height="30" CornerRadius="10" BorderBrush="GOld" BorderThickness="1" Margin="5" Grid.Column="2" Grid.Row="3" Visibility="Hidden" Name="new_map_notification">
+                            <Label Content="New map created successfully!" />
+                        </Border>
                     </Grid>
                 </Border>
             </Grid>
 
-            <DockPanel x:Name="Game" Width="{Binding ActualWidth, ElementName=canvas0}" Height="{Binding ActualHeight, ElementName=canvas0}" Canvas.Left="0" Canvas.Top="0" LastChildFill="True" Visibility="Visible">
+            <DockPanel x:Name="Game" Width="{Binding ActualWidth, ElementName=canvas0}" Height="{Binding ActualHeight, ElementName=canvas0}" Canvas.Left="0" Canvas.Top="0" LastChildFill="True" Visibility="Visible" d:IsHidden="True">
                 <Border DockPanel.Dock="Right" BorderBrush="#FF18E79D" BorderThickness="1">
                     <ScrollViewer  Width="300" VerticalScrollBarVisibility="Hidden" >
                         <StackPanel x:Name="players_scrollbar"/>
