@@ -40,10 +40,17 @@ namespace Server
         }
         public async Task Join_map(Int32 id, string name)
         {
-            // TODO: check if map isn't full already
-            // TODO: check if name is free
             int index = Program.rooms.FindIndex(x => x.Id == id);
-            Program.rooms[index].Add_player(Context.ConnectionId.ToString(), name);
+            if (Program.rooms[index].current_players < Program.rooms[index].max_players &&
+                Program.rooms[index].players.Find(x => x.Name == name) == null)
+            {
+                Program.rooms[index].Add_player(Context.ConnectionId.ToString(), name);
+            }
+            else
+            {
+                return;
+                //TODO: notify client about error
+            }
             await Groups.AddToGroupAsync(Context.ConnectionId, id.ToString());
             string json_map = Program.rooms[index].To_Json();
             string json_players = Program.rooms[index].Players_to_Json();
@@ -86,7 +93,6 @@ namespace Server
                 r.map[p.Y, p.X].Player_Standing = p.Name;
                 string json_players = r.Players_to_Json();
                 await this.Clients.Group(map_id.ToString()).SendAsync("Set_players", json_players);
-                //TODO: update map state if changed
             }
         }
         public async Task Action(Int32 map_id, Int32 y, Int32 x, string action, string info)

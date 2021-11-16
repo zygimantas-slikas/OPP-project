@@ -166,7 +166,7 @@ namespace Client
         }
         private void Show_maps_options(string[] list)
         {
-            if (list[0][0] == 'N') //TODO: finish
+            if (list[0][0] == 'N')
             {
                 return;
             }
@@ -497,7 +497,7 @@ namespace Client
                 //}
                 //else if (e.Key == Key.B)
                 //{
-                //    //TODO: drop a trap
+                //    
                 //    Object[] args = new Object[3] { mapId, current_Player.X, current_Player.Y };
                 //    await this.connection.SendCoreAsync("DropTrap", args);
                 //}
@@ -682,6 +682,7 @@ namespace Client
             login_tab_button.BorderBrush = brush2;
             join_tab_button.BorderBrush = brush1;
             game_tab_button.BorderBrush = brush2;
+            settings_tab_button.BorderBrush = brush2;
             Join.Visibility = Visibility.Visible;
             Login.Visibility = Visibility.Hidden;
             Setting_menu.Visibility = Visibility.Hidden;
@@ -727,6 +728,9 @@ namespace Client
         {
             Login.Visibility = Visibility.Hidden;
             Setting_menu.Visibility = Visibility.Visible;
+            Join.Visibility = Visibility.Hidden;
+            create_map_panel.Visibility = Visibility.Hidden;
+            Game.Visibility = Visibility.Hidden;
             BrushConverter bc = new BrushConverter();
             Brush brush1 = (Brush)bc.ConvertFrom("#FF18E79D");
             brush1.Freeze();

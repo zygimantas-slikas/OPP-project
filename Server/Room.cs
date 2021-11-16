@@ -14,9 +14,9 @@ namespace Server
         public enum Room_satate { empty, waiting, full };
         public int Id { get; }
         public int max_players { get; }
-        public int current_players { get; set; }
+        public int current_players { get; protected set; }
         public int map_size { get; }
-        public Room_satate state { get; }
+        public Room_satate state { get; protected set; }
         public int level { get; }
         public List<Player> players;
         public Tile[,] map;
@@ -84,6 +84,12 @@ namespace Server
             }
             players.Add(p);
             this.current_players++;
+            state = Room_satate.waiting;
+            if (current_players == max_players)
+            {
+                state = Room_satate.full;
+            }
+
         }
         public void Add_player(string con_id, string name)
         {
@@ -111,6 +117,11 @@ namespace Server
             }
             players.Add(p);
             this.current_players++;
+            state = Room_satate.waiting;
+            if (current_players == max_players)
+            {
+                state = Room_satate.full;
+            }
         }
         public void Remove_player(string con_id)
         {
