@@ -70,6 +70,7 @@ namespace Client
             //transition_login_to_join.Begin();
             //var keys = main_window.Resources;
             //var story = main_window.Resources.Values.GetEnumerator();
+
             Join.Visibility = Visibility.Visible;
             Login.Visibility = Visibility.Hidden;
             create_map_panel.Visibility = Visibility.Hidden;
@@ -83,7 +84,6 @@ namespace Client
             join_tab_button.BorderBrush = brush1;
             game_tab_button.BorderBrush = brush2;
 
-            //debug_list.Items.Add(server_addr.Text + "/messageHub");
             this.connection = new HubConnectionBuilder().WithUrl(server_addr.Text + "/messageHub").Build();
             //add functions==================
             connection.On<string[]>("Show_maps_options", this.Show_maps_options);
@@ -94,7 +94,7 @@ namespace Client
             connection.StartAsync();
             connection.SendAsync("Connect");
         }
-        private void Create_new_room(object sender, RoutedEventArgs e)
+        protected void Create_new_room(object sender, RoutedEventArgs e)
         {
             facade.Create_new_room(connection, players_count, game_mode_easy, map_type_1, map_size, game_mode_hard, map_type_2, this);
             //facade.Show_settings_menu(sender, e, Login, Setting_menu);
@@ -125,7 +125,7 @@ namespace Client
             //    Convert.ToInt32(this.map_size.Text), level, map_type};
             //this.connection.SendCoreAsync("Create_map", args);
         }
-        private void Join_room(object sender, RoutedEventArgs e)
+        protected void Join_room(object sender, RoutedEventArgs e)
         {
             if (connection == null || connection.State != HubConnectionState.Connected)
             {
@@ -782,7 +782,7 @@ namespace Client
                 }
             }
         }
-        private void Map_selected(object sender, SelectionChangedEventArgs e)
+        protected void Map_selected(object sender, SelectionChangedEventArgs e)
         {
             if (rooms_for_join.SelectedItem == null)
             {

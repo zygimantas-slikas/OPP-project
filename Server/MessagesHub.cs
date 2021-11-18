@@ -191,7 +191,9 @@ namespace Server
         {
             Room r = Program.rooms.Find(x => x.Id == map_id);
             Player p = r.players.Find(x => x.Con_id == Context.ConnectionId);
+#pragma warning disable CS0168 // The variable 'item' is declared but never used
             Item item;
+#pragma warning restore CS0168 // The variable 'item' is declared but never used
 
             if (r.map[p.Y, p.X].Loot != null)
             {
