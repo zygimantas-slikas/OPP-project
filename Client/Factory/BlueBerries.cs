@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Media.Imaging;
+using Client.Flyweight;
 
 namespace Client.Factory
 {

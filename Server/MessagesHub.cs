@@ -186,22 +186,5 @@ namespace Server
                 await this.Clients.Group(map_id.ToString()).SendAsync("Set_map", json_map);
             }
         }
-
-        public async Task lootItem(Int32 map_id)
-        {
-            Room r = Program.rooms.Find(x => x.Id == map_id);
-            Player p = r.players.Find(x => x.Con_id == Context.ConnectionId);
-#pragma warning disable CS0168 // The variable 'item' is declared but never used
-            Item item;
-#pragma warning restore CS0168 // The variable 'item' is declared but never used
-
-            if (r.map[p.Y, p.X].Loot != null)
-            {
-                p.addItem(r.map[p.Y, p.X].Loot);
-                r.map[p.Y, p.X].Loot = null;
-            }
-            string json_map = r.To_Json();
-            await this.Clients.Group(map_id.ToString()).SendAsync("Set_map", json_map);
-        }
     }
 }

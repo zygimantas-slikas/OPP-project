@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
 using Client.Factory;
+using Client.Flyweight;
 
 namespace Client
 {
@@ -56,9 +57,9 @@ namespace Client
             Rectangle img = new Rectangle();
             img.Width = 40;
             img.Height = 40;
-            ImageBrush myBrush = new ImageBrush();
-            myBrush.ImageSource = bitmapimage.FactoryMethod(blueberries[index]);
-            img.Fill = myBrush;
+            //ImageBrush myBrush = new ImageBrush();
+            //myBrush.ImageSource = bitmapimage.FactoryMethod(blueberries[index]);
+            img.Fill = Image_brush_factory.Get_image_brush("BlueBerry1");
             return img;
         }
         public BlueBerry()
@@ -75,9 +76,7 @@ namespace Client
             Rectangle img = new Rectangle();
             img.Width = 40;
             img.Height = 40;
-            ImageBrush myBrush = new ImageBrush();
-            myBrush.ImageSource = new BitmapImage(new Uri(@"..\..\..\..\Sprites\redberry.jpg", UriKind.RelativeOrAbsolute));
-            img.Fill = myBrush;
+            img.Fill = Image_brush_factory.Get_image_brush("RedBerry");
             return img;
         }
         public RedBerry()
@@ -105,9 +104,7 @@ namespace Client
             Rectangle img = new Rectangle();
             img.Width = 40;
             img.Height = 40;
-            ImageBrush myBrush = new ImageBrush();
-            myBrush.ImageSource = new BitmapImage(new Uri(@"..\..\..\..\Sprites\bluemedic.png", UriKind.RelativeOrAbsolute));
-            img.Fill = myBrush;
+            img.Fill = Image_brush_factory.Get_image_brush("BlueMedicKit");
             return img;
         }
         public BlueMedicKit()
@@ -123,9 +120,7 @@ namespace Client
             Rectangle img = new Rectangle();
             img.Width = 40;
             img.Height = 40;
-            ImageBrush myBrush = new ImageBrush();
-            myBrush.ImageSource = new BitmapImage(new Uri(@"..\..\..\..\Sprites\redmedic.png", UriKind.RelativeOrAbsolute));
-            img.Fill = myBrush;
+            img.Fill = Image_brush_factory.Get_image_brush("RedMedicKit");
             return img;
         }
         public RedMedicKit()
@@ -155,9 +150,7 @@ namespace Client
             Rectangle img = new Rectangle();
             img.Width = 40;
             img.Height = 40;
-            ImageBrush myBrush = new ImageBrush();
-            myBrush.ImageSource = new BitmapImage(new Uri(@"..\..\..\..\Sprites\bluegun.png", UriKind.RelativeOrAbsolute));
-            img.Fill = myBrush;
+            img.Fill = Image_brush_factory.Get_image_brush("BlueGun");
             return img;
         }
         public BlueGun()
@@ -174,9 +167,7 @@ namespace Client
             Rectangle img = new Rectangle();
             img.Width = 40;
             img.Height = 40;
-            ImageBrush myBrush = new ImageBrush();
-            myBrush.ImageSource = new BitmapImage(new Uri(@"..\..\..\..\Sprites\redgun.png", UriKind.RelativeOrAbsolute));
-            img.Fill = myBrush;
+            img.Fill = Image_brush_factory.Get_image_brush("RedGun");
             return img;
         }
         public RedGun()

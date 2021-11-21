@@ -1,28 +1,17 @@
-﻿using System;
+﻿using Client.Facade;
+using Client.Observer;
+using Microsoft.AspNetCore.SignalR.Client;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Microsoft.AspNetCore.SignalR.Client;
-using System.Text.RegularExpressions;
-using Newtonsoft.Json;
-using Client.Strategy;
-using System.Windows.Media.Animation;
-using Client.Observer;
-using Client.Decorator;
-using Client.Command;
-using Client.Facade;
-using Newtonsoft.Json.Linq;
-using System.Runtime.InteropServices;
 
 namespace Client
 {
@@ -147,14 +136,6 @@ namespace Client
             {
                 Rooms_list_view_obj obj = (Rooms_list_view_obj)rooms_for_join.SelectedItem;
                 id = int.Parse(obj.map_id);
-                //string room_text = rooms_select.SelectedItem.ToString();
-                //Regex re = new Regex(@"\d+");
-                //Match match = re.Match(room_text);
-                //if (!int.TryParse(match.ToString(), out id))
-                //{
-                //    MessageBox.Show("Choose a map!");
-                //    return;
-                //}
             }
             mapId = id;
             current_player_name = player_name.Text;
