@@ -49,6 +49,7 @@ namespace Client.Observer
                 {
                     Canvas.SetTop(players_gui[new1], players1.Find(x => x.Name == new1).Y * 50 + 5);
                     Canvas.SetLeft(players_gui[new1], players1.Find(x => x.Name == new1).X * 50 + 5);
+                    Canvas.SetZIndex(players_gui[new1], 3);
                 }
             }
         }

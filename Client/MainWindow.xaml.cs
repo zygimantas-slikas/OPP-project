@@ -1,5 +1,6 @@
 ﻿using Client.Facade;
 using Client.Observer;
+using Client.Proxy;
 using Microsoft.AspNetCore.SignalR.Client;
 using Newtonsoft.Json.Linq;
 using System;
@@ -32,6 +33,7 @@ namespace Client
         protected Score ScoreTracking = new Score();
         private MainFacade facade = new MainFacade();
         protected string[] rooms_data_from_server;
+        protected IMapControl map_drawer;
         public MainWindow()
         {
             InitializeComponent();
@@ -48,6 +50,7 @@ namespace Client
             login_tab_button.BorderBrush = brush1;
             join_tab_button.BorderBrush = brush2;
             game_tab_button.BorderBrush = brush2;
+            this.map_drawer = new MapDrawProxy(this.canvas_scrollbar, current_Player);
         }
         protected void Connect_to_server(object sender, RoutedEventArgs e)
         {
@@ -167,7 +170,7 @@ namespace Client
             this.map1 = new Map();
             var t1 = Task.Run(() => map1.From_json(json_text));
             t1.Wait();
-            facade.DrawMap(map1, players_gui, canvas1);
+            this.map_drawer.DrawMap(map1, players_gui, canvas1);
         }
         private void Update_map_state(Int32 y, Int32 x, string text)
         {
@@ -305,6 +308,8 @@ namespace Client
                     (int)json_players[i]["X"], (int)json_players[i]["Y"],(int)json_players[i]["Points"], item_list));
             }
             current_Player = players1.Find(x => x.Name == current_player_name);
+
+            this.map_drawer.current = current_Player;
             items_scrollbar.Children.Clear();
             inventory_items_gui.Clear();
             for (int i = 0; i < current_Player.Inventory.Count; i++)
@@ -395,7 +400,7 @@ namespace Client
         }
         protected void Key_pressed(object sender, KeyEventArgs e)
         {
-            facade.Move_player(map1, current_Player, settings, canvas_scrollbar, e, connection, mapId);
+            facade.Move_player(map1, current_Player, settings, map_drawer, e, connection, mapId);
             facade.Check_if_steped_on_trap(map1, current_Player, connection, mapId, e);
             facade.Drop_trap(current_Player, connection, mapId, e);
             facade.Actions_with_items(map1, current_Player, connection, mapId, e, inventory_items_gui);

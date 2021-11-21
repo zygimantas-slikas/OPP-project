@@ -23,12 +23,13 @@ using Client.Command;
 using Client.Facade;
 using Newtonsoft.Json.Linq;
 using Client.Adapter;
+using Client.Proxy;
 
 namespace Client.Facade
 {
     class MainFacade
     {
-        public async void Move_player(Map map1, Player current_Player, GameSettings settings, ScrollViewer canvas_scrollbar, KeyEventArgs e, HubConnection connection, Int32 mapId)
+        public async void Move_player(Map map1, Player current_Player, GameSettings settings, IMapControl map_controler, KeyEventArgs e, HubConnection connection, Int32 mapId)
         {
             bool changed = false;
             if (e.Key == GameSettings.GetInstance().Move_up_key)
@@ -38,7 +39,8 @@ namespace Client.Facade
                 {
                     current_Player.Y -= 1;
                     changed = true;
-                    canvas_scrollbar.ScrollToVerticalOffset(current_Player.Y * 50 + 5 - canvas_scrollbar.ActualHeight / 2);
+                    //canvas_scrollbar.ScrollToVerticalOffset(current_Player.Y * 50 + 5 - canvas_scrollbar.ActualHeight / 2);
+                    map_controler.SetScrollBar();
                     settings.moved();
                     if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
                     {
@@ -66,7 +68,8 @@ namespace Client.Facade
                 {
                     current_Player.X -= 1;
                     changed = true;
-                    canvas_scrollbar.ScrollToHorizontalOffset(current_Player.X * 50 + 5 - canvas_scrollbar.ActualWidth / 2);
+                    //canvas_scrollbar.ScrollToHorizontalOffset(current_Player.X * 50 + 5 - canvas_scrollbar.ActualWidth / 2);
+                    map_controler.SetScrollBar();
                     settings.moved();
                     if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
                     {
@@ -94,7 +97,8 @@ namespace Client.Facade
                 {
                     current_Player.Y += 1;
                     changed = true;
-                    canvas_scrollbar.ScrollToVerticalOffset(current_Player.Y * 50 + 5 - canvas_scrollbar.ActualHeight / 2);
+                    //canvas_scrollbar.ScrollToVerticalOffset(current_Player.Y * 50 + 5 - canvas_scrollbar.ActualHeight / 2);
+                    map_controler.SetScrollBar();
                     settings.moved();
                     if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
                     {
@@ -122,7 +126,8 @@ namespace Client.Facade
                 {
                     current_Player.X += 1;
                     changed = true;
-                    canvas_scrollbar.ScrollToHorizontalOffset(current_Player.X * 50 + 5 - canvas_scrollbar.ActualWidth / 2);
+                    //canvas_scrollbar.ScrollToHorizontalOffset(current_Player.X * 50 + 5 - canvas_scrollbar.ActualWidth / 2);
+                    map_controler.SetScrollBar();
                     settings.moved();
                     if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
                     {
@@ -294,64 +299,68 @@ namespace Client.Facade
             }
         }
         
-        public void DrawMap(Map map1, Dictionary<String, Shape> players_gui, Canvas canvas1)
-        {
-            int pos_x = 0, pos_y = 0;
-            canvas1.Children.Clear();
-            canvas1.Height = Convert.ToInt32(map1.map_size) * 50 + 20;
-            canvas1.Width = Convert.ToInt32(map1.map_size) * 50 + 20;
-            for (int i = 0; i < Convert.ToInt32(map1.map_size); i++)
-            {
-                pos_x = 0;
-                for (int j = 0; j < Convert.ToInt32(map1.map_size); j++)
-                {
-                    Rectangle myRect = new System.Windows.Shapes.Rectangle();
-                    myRect.Stroke = System.Windows.Media.Brushes.Black;
-                    if (map1.map[i, j].Surface == Tile.Tile_type.grass)
-                    {
-                        myRect.Fill = System.Windows.Media.Brushes.LightGreen;
-                    }
-                    else if (map1.map[i, j].Surface == Tile.Tile_type.wall)
-                    {
-                        myRect.Fill = System.Windows.Media.Brushes.Gray;
-                    }
-                    else if (map1.map[i, j].Surface == Tile.Tile_type.water)
-                    {
-                        myRect.Fill = System.Windows.Media.Brushes.Blue;
-                    }
-                    else if (map1.map[i, j].Surface == Tile.Tile_type.lava)
-                    {
-                        myRect.Fill = System.Windows.Media.Brushes.OrangeRed;
-                    }
-                    else if (map1.map[i, j].Surface == Tile.Tile_type.bush)
-                    {
-                        myRect.Fill = System.Windows.Media.Brushes.DarkGreen;
-                    }
-                    myRect.Height = 50;
-                    myRect.Width = 50;
-                    canvas1.Children.Add(myRect);
-                    Canvas.SetTop(myRect, pos_y);
-                    Canvas.SetLeft(myRect, pos_x);
-                    Canvas.SetZIndex(myRect, 0);
-                    if (map1.map[i, j].Loot != null)
-                    {
-                        map1.map[i, j].Icon = map1.map[i, j].Loot.get_view();
-                        canvas1.Children.Add(map1.map[i, j].Icon);
-                        Canvas.SetTop(map1.map[i, j].Icon, pos_y + 5);
-                        Canvas.SetLeft(map1.map[i, j].Icon, pos_x + 5);
-                        Canvas.SetZIndex(map1.map[i, j].Icon, 1);
-                    }
-                    pos_x += 50;
-                }
-                pos_y += 50;
-            }
-            foreach (var el in players_gui.Values)
-            {
-                canvas1.Children.Remove(el);
-                canvas1.Children.Add(el);
-                Canvas.SetZIndex(el, 10);
-            }
-        }
+        //public void DrawMap(Map map1, Dictionary<String, Shape> players_gui, Canvas canvas1)
+        //{
+        //    int pos_x = 0, pos_y = 0;
+        //    canvas1.Children.Clear();
+        //    canvas1.Height = Convert.ToInt32(map1.map_size) * 50 + 20;
+        //    canvas1.Width = Convert.ToInt32(map1.map_size) * 50 + 20;
+        //    for (int i = 0; i < Convert.ToInt32(map1.map_size); i++)
+        //    {
+        //        pos_x = 0;
+        //        for (int j = 0; j < Convert.ToInt32(map1.map_size); j++)
+        //        {
+        //            Rectangle myRect = new System.Windows.Shapes.Rectangle();
+        //            myRect.Stroke = System.Windows.Media.Brushes.Black;
+        //            if (map1.map[i, j].Surface == Tile.Tile_type.grass)
+        //            {
+        //                myRect.Fill = System.Windows.Media.Brushes.LightGreen;
+        //            }
+        //            else if (map1.map[i, j].Surface == Tile.Tile_type.wall)
+        //            {
+        //                myRect.Fill = System.Windows.Media.Brushes.Gray;
+        //            }
+        //            else if (map1.map[i, j].Surface == Tile.Tile_type.water)
+        //            {
+        //                myRect.Fill = System.Windows.Media.Brushes.Blue;
+        //            }
+        //            else if (map1.map[i, j].Surface == Tile.Tile_type.lava)
+        //            {
+        //                myRect.Fill = System.Windows.Media.Brushes.OrangeRed;
+        //            }
+        //            else if (map1.map[i, j].Surface == Tile.Tile_type.bush)
+        //            {
+        //                myRect.Fill = System.Windows.Media.Brushes.DarkGreen;
+        //            }
+        //            myRect.Height = 50;
+        //            myRect.Width = 50;
+        //            canvas1.Children.Add(myRect);
+        //            Canvas.SetTop(myRect, pos_y);
+        //            Canvas.SetLeft(myRect, pos_x);
+        //            Canvas.SetZIndex(myRect, 0);
+        //            if(map1.map[i,j].Surface == Tile.Tile_type.bush)
+        //            {
+        //                Canvas.SetZIndex(myRect, 4);
+        //            }
+        //            if (map1.map[i, j].Loot != null)
+        //            {
+        //                map1.map[i, j].Icon = map1.map[i, j].Loot.get_view();
+        //                canvas1.Children.Add(map1.map[i, j].Icon);
+        //                Canvas.SetTop(map1.map[i, j].Icon, pos_y + 5);
+        //                Canvas.SetLeft(map1.map[i, j].Icon, pos_x + 5);
+        //                Canvas.SetZIndex(map1.map[i, j].Icon, 2);
+        //            }
+        //            pos_x += 50;
+        //        }
+        //        pos_y += 50;
+        //    }
+        //    foreach (var el in players_gui.Values)
+        //    {
+        //        canvas1.Children.Remove(el);
+        //        canvas1.Children.Add(el);
+        //        Canvas.SetZIndex(el, 3);
+        //    }
+        //}
         public void Create_new_room(HubConnection connection, TextBox players_count, RadioButton game_mode_easy, RadioButton map_type_1, TextBox map_size, RadioButton game_mode_hard, RadioButton map_type_2, MainWindow window)
         {
             if (connection == null || connection.State != HubConnectionState.Connected)
