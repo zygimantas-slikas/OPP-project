@@ -28,24 +28,29 @@ namespace Server.Builder
             this.prototype = new Tile(Tile.Tile_type.grass);
             //this.prototype.Loot = new RedBerry();
         }
-        public virtual void add_lakes()
+        protected virtual void add_lakes()
         {
         }
-        public virtual void add_bushes()
+        protected virtual void add_bushes()
         {
         }
-        public virtual void add_lava()
+        protected virtual void add_lava()
         {
         }
-        public virtual void add_walls()
+        protected virtual void add_walls()
         {
         }
-        public virtual void fill_grass()
+        protected virtual void fill_grass()
         {
         }
+        protected abstract bool isAdded();
         public Tile[,] Get_result()
         {
             return map;
+        }
+
+        public virtual void TemplateAdd()
+        {
         }
     }
 }

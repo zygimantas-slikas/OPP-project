@@ -12,7 +12,7 @@ namespace Server.Builder
         public MapBuilder2(int map_size, int level) : base(map_size, level)
         {
         }
-        public override void add_lakes()
+        protected override void add_lakes()
         {
             var rand = new Random();
             for (int i = 0; i < map_size / 4; i++)
@@ -34,7 +34,7 @@ namespace Server.Builder
                 map[x + 2, y + 2].Surface = Tile.Tile_type.grass;
             }
         }
-        public override void add_bushes()
+        protected override void add_bushes()
         {
             var rand = new Random();
             for (int i = 0; i < map_size / 2; i++)
@@ -59,7 +59,7 @@ namespace Server.Builder
                 map[x, y+1] = t;
             }
         }
-        public override void add_lava()
+        protected override void add_lava()
         {
             var rand = new Random();
             for (int i = 0; i < map_size / 2; i++)
@@ -77,7 +77,7 @@ namespace Server.Builder
                 }
             }
         }
-        public override void add_walls()
+        protected override void add_walls()
         {
             int lenght = 6;
             var rand = new Random();
@@ -106,7 +106,7 @@ namespace Server.Builder
                 }
             }
         }
-        public override void fill_grass()
+        protected override void fill_grass()
         {
             var rand = new Random();
             for (int i = 0; i < map_size; i++)
@@ -133,6 +133,32 @@ namespace Server.Builder
                         map[i, j] = t;
                     }
                 }
+            }
+        }
+        protected override bool isAdded()
+        {
+            var rand = new Random();
+            for (int i = 0; i < map_size; i++)
+            {
+                for (int j = 0; j < map_size; j++)
+                {
+                    if (map[i, j] == null)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return false;
+        }
+        public override sealed void TemplateAdd()
+        {
+            if (!isAdded())
+            {
+                add_lakes();
+                add_bushes();
+                add_lava();
+                add_walls();
+                fill_grass();
             }
         }
     }

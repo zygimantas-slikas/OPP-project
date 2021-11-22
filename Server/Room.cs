@@ -38,11 +38,12 @@ namespace Server
         }
         public void Construct(MapBuilder build)
         {
-            build.add_lakes();
-            build.add_bushes();
-            build.add_lava();
-            build.add_walls();
-            build.fill_grass();
+            //build.add_lakes();
+            //build.add_bushes();
+            //build.add_lava();
+            //build.add_walls();
+            //build.fill_grass();
+            build.TemplateAdd();
         }
         public int Check_players_helath()
         {
