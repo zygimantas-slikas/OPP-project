@@ -400,7 +400,7 @@ namespace Client
         }
         protected void Key_pressed(object sender, KeyEventArgs e)
         {
-            facade.Move_player(map1, current_Player, settings, map_drawer, e, connection, mapId);
+            facade.Move_player(map1, current_Player, settings, map_drawer, e, connection, mapId, players_scrollbar);
             facade.Check_if_steped_on_trap(map1, current_Player, connection, mapId, e);
             facade.Drop_trap(current_Player, connection, mapId, e);
             facade.Actions_with_items(map1, current_Player, connection, mapId, e, inventory_items_gui);
