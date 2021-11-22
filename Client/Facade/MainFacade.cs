@@ -30,37 +30,26 @@ namespace Client.Facade
 {
     class MainFacade
     {
-        StateContext gamestate = new StateContext();
-        //gamestate.setState(new PreparationState(gamestate));
-        public async void Move_player(Map map1, Player current_Player, GameSettings settings, IMapControl map_controler, KeyEventArgs e, HubConnection connection, Int32 mapId, StackPanel players_scrollbar)
+        public async void Move_player(Map map1, Player current_Player, GameSettings settings, IMapControl map_controler, KeyEventArgs e, HubConnection connection, Int32 mapId, StackPanel players_scrollbar, StateContext gamestate)
         {
-
-            StackPanel p1 = new StackPanel();
-            p1.Margin = new Thickness(10);
-            Border b1 = new Border();
-            b1.Width = 1;
-            BrushConverter bc = new BrushConverter();
-            Brush brush = (Brush)bc.ConvertFrom("#FF131B3C");
-            brush.Freeze();
-            p1.Background = brush;
-            Label state = new Label();
-            state.Content = "State: " + gamestate.message;
-            //p1.Children.Add(state);
-            //players_scrollbar.Children.Add(p1);
             bool changed = false;
-            if (e.Key == Key.I)
-            {
-                gamestate.setState(new PreparationState(gamestate));
-                p1.Children.Add(state);
-                players_scrollbar.Children.Add(p1);
-            }
             if (e.Key == Key.P)
             {
-                gamestate.NextState();
-                p1.Children.Add(state);
-                players_scrollbar.Children.Add(p1);
+                if (gamestate.message == null)
+                {
+                    gamestate.setState(new PreparationState(gamestate));
+                    Label state = new Label();
+                    state.Content = "State: " + gamestate.message;
+                    players_scrollbar.Children.Add(state);
+                }
+                else
+                {
+                    gamestate.NextState();
+                    Label state = new Label();
+                    state.Content = "State: " + gamestate.message;
+                    players_scrollbar.Children.Add(state);
+                }
             }
-
             if (gamestate.message == "Players playing")
             {
                 if (e.Key == GameSettings.GetInstance().Move_up_key)

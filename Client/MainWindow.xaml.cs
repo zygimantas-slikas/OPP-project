@@ -1,6 +1,7 @@
 ﻿using Client.Facade;
 using Client.Observer;
 using Client.Proxy;
+using Client.State;
 using Microsoft.AspNetCore.SignalR.Client;
 using Newtonsoft.Json.Linq;
 using System;
@@ -34,6 +35,7 @@ namespace Client
         private MainFacade facade = new MainFacade();
         protected string[] rooms_data_from_server;
         protected IMapControl map_drawer;
+        StateContext gamestate = new StateContext();
         public MainWindow()
         {
             InitializeComponent();
@@ -272,6 +274,7 @@ namespace Client
         //}
         private void Set_players(string json_text)
         {
+            //gamestate.setState(new PreparationState(gamestate));
             JArray json_players = JArray.Parse(json_text);
             players1 = new List<Player>();
             for (int i = 0; i < json_players.Count; i++)
@@ -400,11 +403,10 @@ namespace Client
         }
         protected void Key_pressed(object sender, KeyEventArgs e)
         {
-            facade.Move_player(map1, current_Player, settings, map_drawer, e, connection, mapId, players_scrollbar);
+            facade.Move_player(map1, current_Player, settings, map_drawer, e, connection, mapId, players_scrollbar, gamestate);
             facade.Check_if_steped_on_trap(map1, current_Player, connection, mapId, e);
             facade.Drop_trap(current_Player, connection, mapId, e);
             facade.Actions_with_items(map1, current_Player, connection, mapId, e, inventory_items_gui);
-
             //string action = "";
             //string info = "";
             //Invoker invoker = new Invoker();
@@ -433,193 +435,193 @@ namespace Client
             //        brush.Freeze();
             //        inventory_items_gui[current_Player.currentItem].BorderBrush = brush;
             //    }
-                //}
-                //else if (e.Key == Key.J)
-                //{
-                //    facade.NextItem(invoker, inventory_items_gui, current_Player);
-                //BrushConverter bc;
-                //Brush brush;
-                //if (current_Player.currentItem >= 0)
-                //{
-                //    bc = new BrushConverter();
-                //    brush = (Brush)bc.ConvertFrom("#FF333337");
-                //    brush.Freeze();
-                //    inventory_items_gui[current_Player.currentItem].BorderBrush = brush;
-                //}
-                //invoker.SetCommand(new SwitchCommand(current_Player));
-                //invoker.InvokeUnSwitch();
-                //if (current_Player.currentItem >= 0)
-                //{
-                //    bc = new BrushConverter();
-                //    brush = (Brush)bc.ConvertFrom("#FF18E79D");
-                //    brush.Freeze();
-                //    inventory_items_gui[current_Player.currentItem].BorderBrush = brush;
-                //}
-                //}
-                //if (e.Key == Key.E)
-                //{
-                //    if (map1.map[current_Player.Y, current_Player.X].Loot != null)
-                //    {
-                //        invoker.SetCommand(new TakeDropCommand(action = "take"));
-                //        invoker.InvokeTake();
-                //    }
-                //}
-                //else if (e.Key == Key.Q)
-                //{
-                //    if (map1.map[current_Player.Y, current_Player.X].Loot == null)
-                //    {
-                //        invoker.SetCommand(new TakeDropCommand(action = "drop"));
-                //        invoker.InvokeDrop();
-                //        info = current_Player.Inventory[current_Player.currentItem].Type;
-                //    }
-                //}
-                //else if (e.Key == Key.K)
-                //{
-                //    if (current_Player.currentItem >= 0)
-                //    {
-                //        action = "use_item";
-                //        info = current_Player.Inventory[current_Player.currentItem].Type;
-                //    }
-                //}
-                //else if (e.Key == Key.B)
-                //{
-                //    
-                //    Object[] args = new Object[3] { mapId, current_Player.X, current_Player.Y };
-                //    await this.connection.SendCoreAsync("DropTrap", args);
-                //}
+            //}
+            //else if (e.Key == Key.J)
+            //{
+            //    facade.NextItem(invoker, inventory_items_gui, current_Player);
+            //BrushConverter bc;
+            //Brush brush;
+            //if (current_Player.currentItem >= 0)
+            //{
+            //    bc = new BrushConverter();
+            //    brush = (Brush)bc.ConvertFrom("#FF333337");
+            //    brush.Freeze();
+            //    inventory_items_gui[current_Player.currentItem].BorderBrush = brush;
+            //}
+            //invoker.SetCommand(new SwitchCommand(current_Player));
+            //invoker.InvokeUnSwitch();
+            //if (current_Player.currentItem >= 0)
+            //{
+            //    bc = new BrushConverter();
+            //    brush = (Brush)bc.ConvertFrom("#FF18E79D");
+            //    brush.Freeze();
+            //    inventory_items_gui[current_Player.currentItem].BorderBrush = brush;
+            //}
+            //}
+            //if (e.Key == Key.E)
+            //{
+            //    if (map1.map[current_Player.Y, current_Player.X].Loot != null)
+            //    {
+            //        invoker.SetCommand(new TakeDropCommand(action = "take"));
+            //        invoker.InvokeTake();
+            //    }
+            //}
+            //else if (e.Key == Key.Q)
+            //{
+            //    if (map1.map[current_Player.Y, current_Player.X].Loot == null)
+            //    {
+            //        invoker.SetCommand(new TakeDropCommand(action = "drop"));
+            //        invoker.InvokeDrop();
+            //        info = current_Player.Inventory[current_Player.currentItem].Type;
+            //    }
+            //}
+            //else if (e.Key == Key.K)
+            //{
+            //    if (current_Player.currentItem >= 0)
+            //    {
+            //        action = "use_item";
+            //        info = current_Player.Inventory[current_Player.currentItem].Type;
+            //    }
+            //}
+            //else if (e.Key == Key.B)
+            //{
+            //    
+            //    Object[] args = new Object[3] { mapId, current_Player.X, current_Player.Y };
+            //    await this.connection.SendCoreAsync("DropTrap", args);
+            //}
 
-                //if (action != "")
-                //{
-                //    Object[] args = new Object[5] { mapId, current_Player.Y, current_Player.X, action, info};
-                //    await this.connection.SendCoreAsync("Action", args);
-                //}
+            //if (action != "")
+            //{
+            //    Object[] args = new Object[5] { mapId, current_Player.Y, current_Player.X, action, info};
+            //    await this.connection.SendCoreAsync("Action", args);
+            //}
 
-                //if (e.Key == Key.W || e.Key == Key.A || e.Key == Key.S || e.Key == Key.D)
-                //{
-                //    facade.Check_step_on_fire(map1, current_Player, connection, mapId);
-                //    facade.Check_step_on_trap(map1, current_Player, connection, mapId);
+            //if (e.Key == Key.W || e.Key == Key.A || e.Key == Key.S || e.Key == Key.D)
+            //{
+            //    facade.Check_step_on_fire(map1, current_Player, connection, mapId);
+            //    facade.Check_step_on_trap(map1, current_Player, connection, mapId);
 
-                //}
-                //bool changed = false;
-                //if (e.Key == Key.W)
-                //{
-                //    if (!settings.Delay.IsCompleted) return;
-                //    else if (current_Player.Y > 0 && map1.map[current_Player.Y - 1, current_Player.X].Surface != Tile.Tile_type.wall)
-                //    {
-                //        current_Player.Y -= 1;
-                //        changed = true;
-                //        canvas_scrollbar.ScrollToVerticalOffset(current_Player.Y*50+5 - canvas_scrollbar.ActualHeight/2);
-                //        settings.moved();
-                //        if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
-                //        {
-                //            current_Player.setStrategy(new MoveOnWater());
-                //        }
-                //        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.bush)
-                //        {
-                //            current_Player.setStrategy(new MoveOnBush());
-                //        }
-                //        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.lava)
-                //        {
-                //            current_Player.setStrategy(new MoveOnLava());
-                //        }
-                //        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.grass)
-                //        {
-                //            current_Player.setStrategy(new MoveOnGrass());
-                //        }
-                //        current_Player.move();
-                //    }
-                //}
-                //else if (e.Key == Key.A)
-                //{
-                //    if (!settings.Delay.IsCompleted) return;
-                //    else if (current_Player.X > 0 && map1.map[current_Player.Y, current_Player.X - 1].Surface != Tile.Tile_type.wall)
-                //    {
-                //        current_Player.X -= 1;
-                //        changed = true;
-                //        canvas_scrollbar.ScrollToHorizontalOffset(current_Player.X * 50 + 5 - canvas_scrollbar.ActualWidth / 2);
-                //        settings.moved();
-                //        if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
-                //        {
-                //            current_Player.setStrategy(new MoveOnWater());
-                //        }
-                //        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.bush)
-                //        {
-                //            current_Player.setStrategy(new MoveOnBush());
-                //        }
-                //        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.lava)
-                //        {
-                //            current_Player.setStrategy(new MoveOnLava());
-                //        }
-                //        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.grass)
-                //        {
-                //            current_Player.setStrategy(new MoveOnGrass());
-                //        }
-                //        current_Player.move();
-                //    }
-                //}
-                //else if (e.Key == Key.S)
-                //{
-                //    if (!settings.Delay.IsCompleted) return;
-                //    else if (current_Player.Y < map1.map_size - 1 && map1.map[current_Player.Y + 1, current_Player.X].Surface != Tile.Tile_type.wall)
-                //    {
-                //        current_Player.Y += 1;
-                //        changed = true;
-                //        canvas_scrollbar.ScrollToVerticalOffset(current_Player.Y * 50 + 5 - canvas_scrollbar.ActualHeight/2);
-                //        settings.moved();
-                //        if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
-                //        {
-                //            current_Player.setStrategy(new MoveOnWater());
-                //        }
-                //        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.bush)
-                //        {
-                //            current_Player.setStrategy(new MoveOnBush());
-                //        }
-                //        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.lava)
-                //        {
-                //            current_Player.setStrategy(new MoveOnLava());
-                //        }
-                //        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.grass)
-                //        {
-                //            current_Player.setStrategy(new MoveOnGrass());
-                //        }
-                //        current_Player.move();
-                //    }
-                //}
-                //else if (e.Key == Key.D)
-                //{
-                //    if (!settings.Delay.IsCompleted) return;
-                //    else if (current_Player.X < map1.map_size - 1 && map1.map[current_Player.Y, current_Player.X + 1].Surface != Tile.Tile_type.wall)
-                //    {
-                //        current_Player.X += 1;
-                //        changed = true;
-                //        canvas_scrollbar.ScrollToHorizontalOffset(current_Player.X * 50 + 5 - canvas_scrollbar.ActualWidth / 2);
-                //        settings.moved();
-                //        if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
-                //        {
-                //            current_Player.setStrategy(new MoveOnWater());
-                //        }
-                //        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.bush)
-                //        {
-                //            current_Player.setStrategy(new MoveOnBush());
-                //        }
-                //        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.lava)
-                //        {
-                //            current_Player.setStrategy(new MoveOnLava());
-                //        }
-                //        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.grass)
-                //        {
-                //            current_Player.setStrategy(new MoveOnGrass());
-                //        }
-                //        current_Player.move();
-                //    }
-                //}
-                //if (changed == true)
-                //{
-                //    Object[] args = new Object[3] { mapId, current_Player.X, current_Player.Y };
-                //    await this.connection.SendCoreAsync("Move", args);
-                //}
+            //}
+            //bool changed = false;
+            //if (e.Key == Key.W)
+            //{
+            //    if (!settings.Delay.IsCompleted) return;
+            //    else if (current_Player.Y > 0 && map1.map[current_Player.Y - 1, current_Player.X].Surface != Tile.Tile_type.wall)
+            //    {
+            //        current_Player.Y -= 1;
+            //        changed = true;
+            //        canvas_scrollbar.ScrollToVerticalOffset(current_Player.Y*50+5 - canvas_scrollbar.ActualHeight/2);
+            //        settings.moved();
+            //        if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
+            //        {
+            //            current_Player.setStrategy(new MoveOnWater());
+            //        }
+            //        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.bush)
+            //        {
+            //            current_Player.setStrategy(new MoveOnBush());
+            //        }
+            //        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.lava)
+            //        {
+            //            current_Player.setStrategy(new MoveOnLava());
+            //        }
+            //        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.grass)
+            //        {
+            //            current_Player.setStrategy(new MoveOnGrass());
+            //        }
+            //        current_Player.move();
+            //    }
+            //}
+            //else if (e.Key == Key.A)
+            //{
+            //    if (!settings.Delay.IsCompleted) return;
+            //    else if (current_Player.X > 0 && map1.map[current_Player.Y, current_Player.X - 1].Surface != Tile.Tile_type.wall)
+            //    {
+            //        current_Player.X -= 1;
+            //        changed = true;
+            //        canvas_scrollbar.ScrollToHorizontalOffset(current_Player.X * 50 + 5 - canvas_scrollbar.ActualWidth / 2);
+            //        settings.moved();
+            //        if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
+            //        {
+            //            current_Player.setStrategy(new MoveOnWater());
+            //        }
+            //        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.bush)
+            //        {
+            //            current_Player.setStrategy(new MoveOnBush());
+            //        }
+            //        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.lava)
+            //        {
+            //            current_Player.setStrategy(new MoveOnLava());
+            //        }
+            //        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.grass)
+            //        {
+            //            current_Player.setStrategy(new MoveOnGrass());
+            //        }
+            //        current_Player.move();
+            //    }
+            //}
+            //else if (e.Key == Key.S)
+            //{
+            //    if (!settings.Delay.IsCompleted) return;
+            //    else if (current_Player.Y < map1.map_size - 1 && map1.map[current_Player.Y + 1, current_Player.X].Surface != Tile.Tile_type.wall)
+            //    {
+            //        current_Player.Y += 1;
+            //        changed = true;
+            //        canvas_scrollbar.ScrollToVerticalOffset(current_Player.Y * 50 + 5 - canvas_scrollbar.ActualHeight/2);
+            //        settings.moved();
+            //        if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
+            //        {
+            //            current_Player.setStrategy(new MoveOnWater());
+            //        }
+            //        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.bush)
+            //        {
+            //            current_Player.setStrategy(new MoveOnBush());
+            //        }
+            //        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.lava)
+            //        {
+            //            current_Player.setStrategy(new MoveOnLava());
+            //        }
+            //        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.grass)
+            //        {
+            //            current_Player.setStrategy(new MoveOnGrass());
+            //        }
+            //        current_Player.move();
+            //    }
+            //}
+            //else if (e.Key == Key.D)
+            //{
+            //    if (!settings.Delay.IsCompleted) return;
+            //    else if (current_Player.X < map1.map_size - 1 && map1.map[current_Player.Y, current_Player.X + 1].Surface != Tile.Tile_type.wall)
+            //    {
+            //        current_Player.X += 1;
+            //        changed = true;
+            //        canvas_scrollbar.ScrollToHorizontalOffset(current_Player.X * 50 + 5 - canvas_scrollbar.ActualWidth / 2);
+            //        settings.moved();
+            //        if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
+            //        {
+            //            current_Player.setStrategy(new MoveOnWater());
+            //        }
+            //        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.bush)
+            //        {
+            //            current_Player.setStrategy(new MoveOnBush());
+            //        }
+            //        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.lava)
+            //        {
+            //            current_Player.setStrategy(new MoveOnLava());
+            //        }
+            //        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.grass)
+            //        {
+            //            current_Player.setStrategy(new MoveOnGrass());
+            //        }
+            //        current_Player.move();
+            //    }
+            //}
+            //if (changed == true)
+            //{
+            //    Object[] args = new Object[3] { mapId, current_Player.X, current_Player.Y };
+            //    await this.connection.SendCoreAsync("Move", args);
+            //}
 
-            }
+        }
 
         //private async void Check_step_on_trap()
         //{
