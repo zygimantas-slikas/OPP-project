@@ -2,6 +2,8 @@
 using Server;
 using System;
 using System.Collections.Generic;
+using AutoMoq;
+using Moq;
 namespace NUnit_tests
 {
     [TestFixture]
@@ -56,11 +58,28 @@ namespace NUnit_tests
         {
             List<Item> items = new List<Item>();
             BlueMedicKit medickit = new BlueMedicKit();
-            int health = 120;
             var player = new Player("1", "player1", 10, 10, items);
+            var player2 = new Player("1", "player2", 10, 10, items);
 
             medickit.PickupEffect(player);
-            Assert.AreEqual(player.Health, health);
+            Assert.AreNotEqual(player.Health, player2.Health);
+        }
+
+        [Test]
+        public void Add_item_moq_test()
+        {
+            List<Item> items = new List<Item>();
+            BlueBerry berry = new BlueBerry();
+
+            var player = new Player("1", "player1", 10, 10, items);
+
+            berry.PickupEffect(player);
+
+            var mockPlayer = new Mock<Player>("1", "player");
+
+            mockPlayer.Object.Addpoints(200);
+
+            Assert.AreEqual(mockPlayer.Object.Points, player.Points);
         }
     }
 }

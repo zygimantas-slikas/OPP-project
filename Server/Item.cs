@@ -66,6 +66,7 @@ namespace Server
 
         public override void PickupEffect(Player p)
         {
+            p.AddHealth(this.Heal);
         }
     }
     public class BlueMedicKit : MedicKit
