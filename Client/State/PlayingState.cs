@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Client.State
 {
-    class PlayingState : IState
+    public class PlayingState : IState
     {
         string message;
         private StateContext context;

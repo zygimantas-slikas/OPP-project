@@ -143,8 +143,24 @@ namespace NUnit_tests
             r1.Add_player(player_mock.Object);
             Assert.AreEqual(r1.Check_players_helath(), 1);
             player_mock.Verify(p => p.Health, Moq.Times.Once());
-
         }
+
+        [Test]
+        public void Add_player_moq_test5()
+        {
+            var player_mock = new Moq.Mock<Player>("connection_1", "name_1");
+            var player_mock1 = new Moq.Mock<Player>("connection_2", "name_2");
+            var player_mock2 = new Moq.Mock<Player>("connection_3", "name_3");
+            var player_mock3 = new Moq.Mock<Player>("connection_4", "name_4");
+            r1.Add_player(player_mock.Object);
+            r1.Add_player(player_mock1.Object);
+            r1.Add_player(player_mock2.Object);
+            r1.Add_player(player_mock3.Object);
+            r1.Remove_player(player_mock2.Object.Con_id);
+            r1.Remove_player(player_mock3.Object.Con_id);
+            Assert.AreEqual(r1.players.Count,2);
+        }
+
         /// <summary>
         /// Resursų atlaisvinimas po kiekvieno testo
         /// </summary>

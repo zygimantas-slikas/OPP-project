@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Client.State
 {
-    class PreparationState : IState
+    public class PreparationState : IState
     {
         string message;
         private StateContext context;
