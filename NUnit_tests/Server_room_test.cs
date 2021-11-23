@@ -146,7 +146,7 @@ namespace NUnit_tests
         }
 
         [Test]
-        public void Add_player_moq_test5()
+        public void Map_player_count()
         {
             var player_mock = new Moq.Mock<Player>("connection_1", "name_1");
             var player_mock1 = new Moq.Mock<Player>("connection_2", "name_2");
@@ -156,9 +156,11 @@ namespace NUnit_tests
             r1.Add_player(player_mock1.Object);
             r1.Add_player(player_mock2.Object);
             r1.Add_player(player_mock3.Object);
-            r1.Remove_player(player_mock2.Object.Con_id);
-            r1.Remove_player(player_mock3.Object.Con_id);
-            Assert.AreEqual(r1.players.Count,2);
+            r1.Remove_player(player_mock.Object.Con_id);
+            r1.Remove_player(player_mock1.Object.Con_id);
+            Assert.AreEqual(r1.players.Count, 2);
+            Assert.AreEqual(r1.players[0].Name,"name_3");
+            Assert.AreEqual(r1.players[1].Name, "name_4");
         }
 
         /// <summary>
