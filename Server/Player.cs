@@ -6,7 +6,7 @@ namespace Server
     {
         public int X { get; set; }
         public int Y { get; set; } 
-        public virtual string Con_id { get; }
+        public /*virtual*/ string Con_id { get; set; }
         public virtual int Health { get; protected set; }
         public int Points { get; protected set; }
         public string Name { get; }
