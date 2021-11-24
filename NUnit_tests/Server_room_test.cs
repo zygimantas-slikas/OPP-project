@@ -152,14 +152,20 @@ namespace NUnit_tests
             var player_mock1 = new Moq.Mock<Player>("connection_2", "name_2");
             var player_mock2 = new Moq.Mock<Player>("connection_3", "name_3");
             var player_mock3 = new Moq.Mock<Player>("connection_4", "name_4");
+            player_mock.Setup(p => p.Health).Returns(10);
+            player_mock1.Setup(p => p.Health).Returns(20);
+            player_mock2.Setup(p => p.Health).Returns(30);
+            player_mock3.Setup(p => p.Health).Returns(40);
             r1.Add_player(player_mock.Object);
             r1.Add_player(player_mock1.Object);
             r1.Add_player(player_mock2.Object);
             r1.Add_player(player_mock3.Object);
             r1.Remove_player(player_mock.Object.Con_id);
             r1.Remove_player(player_mock1.Object.Con_id);
+            Assert.AreEqual(r1.players[0].Health, player_mock2.Object.Health);
+            Assert.AreEqual(r1.players[1].Health, player_mock3.Object.Health);
             Assert.AreEqual(r1.players.Count, 2);
-            Assert.AreEqual(r1.players[0].Name,"name_3");
+            Assert.AreEqual(r1.players[0].Name, "name_3");
             Assert.AreEqual(r1.players[1].Name, "name_4");
         }
 
