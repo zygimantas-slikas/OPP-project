@@ -41,11 +41,11 @@ namespace Client.Composite
         }
 
 
-        public override bool IsInventory() { return true; }
+        public override bool IsCrate() { return true; }
 
         public override void PickupEffect(Player p)
         {
-            throw new NotImplementedException();
+            
         }
 
 

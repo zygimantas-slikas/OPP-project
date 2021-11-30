@@ -36,17 +36,8 @@ namespace Client
         {
             return Type;
         }
-        public virtual bool IsInventory() { return false; }
+        public virtual bool IsCrate() { return false; }
 
-        public virtual void Add(Item component)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual Item Remove(Item component)
-        {
-            throw new NotImplementedException();
-        }
     }
     public abstract class Berry : Item
     {

@@ -229,7 +229,7 @@ namespace Client.Facade
                 }
                 else if (map1.map[current_Player.Y, current_Player.X].Loot != null)
                 {
-                    if (map1.map[current_Player.Y, current_Player.X].Loot.IsInventory() && current_Player.Inventory.Count > 0)
+                    if (map1.map[current_Player.Y, current_Player.X].Loot.IsCrate() && current_Player.Inventory.Count > 0)
                     {
                         //map1.map[current_Player.Y, current_Player.X].Loot.Add(current_Player.Inventory[current_Player.currentItem]);
                         invoker.SetCommand(new TakeDropCommand(action = "drop"));

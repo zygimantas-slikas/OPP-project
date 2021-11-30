@@ -103,7 +103,8 @@ namespace Server
             string map_change = "";
             if (action == "take")
             {
-                map_change = "remove;";
+                if (r.map[y, x].Loot is not Crate)
+                    map_change = "remove;";
                 r.map[y, x].Loot.PickupEffect(p);
                 if (r.map[y, x].Loot is not Berry && r.map[y, x].Loot is not Crate)
                 {
@@ -112,7 +113,11 @@ namespace Server
                 }
                 else if(r.map[y, x].Loot is Crate)
                 {
-                    p.Inventory.Add(r.map[y, x].Loot.Remove(new BlueGun(), p)); 
+                    Item loot = r.map[y, x].Loot.Remove(new BlueGun(), p);
+                    if (loot != null)
+                    {
+                        p.Inventory.Add(loot);
+                    }
                 }
             }
             else if (action == "drop")

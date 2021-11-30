@@ -21,7 +21,7 @@ namespace Server
         public abstract Cloneable Clone();
         public abstract void PickupEffect(Player p);
 
-        public virtual bool IsInventory() { return false; }
+        public virtual bool IsCrate() { return false; }
 
         public virtual void Add(Item component, Player p)
         {
