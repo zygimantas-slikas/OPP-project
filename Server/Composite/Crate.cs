@@ -45,7 +45,21 @@ namespace Client.Composite
 
         public override void PickupEffect(Player p)
         {
-            
+            int i = 0;
+            string result = "Items in Crate: (";
+
+            foreach (Item component in this.items)
+            {
+                result += component.Type;
+                if (i != this.items.Count - 1)
+                {
+                    result += "+";
+                }
+                i++;
+            }
+
+            result += ")";
+            Console.WriteLine(result);
         }
 
 
