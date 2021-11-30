@@ -26,21 +26,6 @@ namespace NUnit_tests
         }
 
         [Test]
-        public void Addpoints_StateUnderTest_ExpectedBehavior()
-        {
-            // Arrange
-            var player = new Player("1", "player1");
-            int pts = 150;
-
-            // Act
-            player.Addpoints(
-                pts);
-
-            // Assert
-            Assert.AreEqual(player.Points, 150);
-        }
-
-        [Test]
         public void AddDamage_StateUnderTest_ExpectedBehavior()
         {
             // Arrange
