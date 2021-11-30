@@ -13,6 +13,7 @@ namespace Server.AbstractFactory
         public abstract Gun Create_gun();
         public abstract MedicKit Create_medic();
         public abstract Trap Create_trap();
+        public abstract Crate Create_crate();
     }
     class Level1Factory : ItemsFactory
     {
@@ -32,6 +33,10 @@ namespace Server.AbstractFactory
         {
             return new VisibleTrap();
         }
+        public override Crate Create_crate()
+        {
+            return new Crate();
+        }
     }
     class Level2Factory : ItemsFactory
     {
@@ -50,6 +55,10 @@ namespace Server.AbstractFactory
         public override Trap Create_trap()
         {
             return new InVisibleTrap();
+        }
+        public override Crate Create_crate()
+        {
+            return new Crate();
         }
     }
 }
