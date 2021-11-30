@@ -43,6 +43,9 @@ namespace Client.Flyweight
                     case "BlueGun":
                         brush.ImageSource = new BitmapImage(new Uri(@"..\..\..\..\Sprites\bluegun.png", UriKind.RelativeOrAbsolute));
                         break;
+                    case "Crate":
+                        brush.ImageSource = new BitmapImage(new Uri(@"..\..\..\..\Sprites\crate.png", UriKind.RelativeOrAbsolute));
+                        break;
                 }
                 flyweights.Add(key, brush);
                 return brush;

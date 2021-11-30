@@ -24,6 +24,7 @@ using Client.Facade;
 using Newtonsoft.Json.Linq;
 using Client.Adapter;
 using Client.Proxy;
+using Client.Composite;
 
 namespace Client.Facade
 {
@@ -212,6 +213,7 @@ namespace Client.Facade
                     invoker.SetCommand(new TakeDropCommand(action = "take"));
                     invoker.InvokeTake();
                 }
+                
             }
             else if (e.Key == GameSettings.GetInstance().Drop_item_key)
             {
@@ -219,6 +221,17 @@ namespace Client.Facade
                 {
                     if (current_Player.Inventory.Count > current_Player.currentItem)
                     {
+                        
+                        invoker.SetCommand(new TakeDropCommand(action = "drop"));
+                        invoker.InvokeDrop();
+                        info = current_Player.Inventory[current_Player.currentItem].Type;
+                    }
+                }
+                else if (map1.map[current_Player.Y, current_Player.X].Loot != null)
+                {
+                    if (map1.map[current_Player.Y, current_Player.X].Loot.IsInventory() && current_Player.Inventory.Count > 0)
+                    {
+                        //map1.map[current_Player.Y, current_Player.X].Loot.Add(current_Player.Inventory[current_Player.currentItem]);
                         invoker.SetCommand(new TakeDropCommand(action = "drop"));
                         invoker.InvokeDrop();
                         info = current_Player.Inventory[current_Player.currentItem].Type;

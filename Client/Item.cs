@@ -9,6 +9,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media;
 using Client.Factory;
 using Client.Flyweight;
+using Client.Composite;
 
 namespace Client
 {
@@ -31,6 +32,21 @@ namespace Client
         }
         public abstract void PickupEffect(Player p);
         public abstract int GetNumber();
+        public string GetType(int index)
+        {
+            return Type;
+        }
+        public virtual bool IsInventory() { return false; }
+
+        public virtual void Add(Item component)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual Item Remove(Item component)
+        {
+            throw new NotImplementedException();
+        }
     }
     public abstract class Berry : Item
     {
