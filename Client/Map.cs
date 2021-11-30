@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Client.Decorator;
 using Client.Adapter;
+using Client.Composite;
 
 namespace Client
 {
@@ -88,6 +89,9 @@ namespace Client
                                 {
                                     item1 = null;
                                 }
+                                break;
+                            case "Crate":
+                                item1 = new Crate();
                                 break;
                             default:
                                 item1 = null;

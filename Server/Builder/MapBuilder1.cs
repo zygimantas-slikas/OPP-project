@@ -101,6 +101,10 @@ namespace Server.Builder
                         {
                             t.Loot = this.items_factory.Create_gun();
                         }
+                        else if (40 <= prob && prob <= 41)
+                        {
+                            t.Loot = this.items_factory.Create_crate();
+                        }
                         map[i, j] = t;
                     }
                 }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.SignalR;
 using System.Text.Json;
 using Server.AbstractFactory;
 using Server.Builder;
+using Client.Composite;
 
 namespace Server
 {
@@ -102,22 +103,39 @@ namespace Server
             string map_change = "";
             if (action == "take")
             {
-                map_change = "remove;";
+                if (r.map[y, x].Loot is not Crate)
+                    map_change = "remove;";
                 r.map[y, x].Loot.PickupEffect(p);
-                if (r.map[y, x].Loot is not Berry)
+                if (r.map[y, x].Loot is not Berry && r.map[y, x].Loot is not Crate)
                 {
                     p.Inventory.Add(r.map[y, x].Loot);
+                    r.map[y, x].Loot = null;
                 }
-                r.map[y, x].Loot = null;
+                else if(r.map[y, x].Loot is Crate)
+                {
+                    Item loot = r.map[y, x].Loot.Remove(new BlueGun(), p);
+                    if (loot != null)
+                    {
+                        p.Inventory.Add(loot);
+                    }
+                }
             }
             else if (action == "drop")
             {
                 Item it1 = p.Inventory.Find(x => x.Type == info);
                 if (it1 != null)
                 {
-                    map_change = "create;" + it1.Type;
-                    r.map[y, x].Loot = it1;
-                    p.Inventory.Remove(it1);
+                    if (r.map[y, x].Loot is Crate)
+                    {
+                        r.map[y, x].Loot.Add(it1, p);
+                        p.Inventory.Remove(it1);
+                    }
+                    else
+                    {
+                        map_change = "create;" + it1.Type;
+                        r.map[y, x].Loot = it1;
+                        p.Inventory.Remove(it1);
+                    }
                 }
             }
             else if (action == "use_item")

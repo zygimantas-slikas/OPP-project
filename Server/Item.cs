@@ -20,6 +20,18 @@ namespace Server
         }
         public abstract Cloneable Clone();
         public abstract void PickupEffect(Player p);
+
+        public virtual bool IsCrate() { return false; }
+
+        public virtual void Add(Item component, Player p)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual Item Remove(Item component, Player p)
+        {
+            throw new NotImplementedException();
+        }
     }
     public class Berry : Item
     {
