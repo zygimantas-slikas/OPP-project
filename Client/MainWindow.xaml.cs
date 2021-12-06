@@ -22,9 +22,8 @@ namespace Client
     /// </summary>
     public partial class MainWindow : Window
     {
-        protected Player players1 = new Player();
         protected Map map1;
-        //protected List<Player> players1.player;
+        protected List<Player> players1;
         protected Dictionary<String, Shape> players_gui;
         protected String current_player_name;
         protected Player current_Player;
@@ -277,15 +276,7 @@ namespace Client
         {
             //gamestate.setState(new PreparationState(gamestate));
             JArray json_players = JArray.Parse(json_text);
-            //Human person = new Human();
-            List<Player>
-                        //Player players1 = new();
-                        a = players1.players;
-            a = new List<Player>();
-            //int A =players1.Count();
-            //Console.WriteLine(A);
-            //Player a ;
-            //a.
+            players1 = new List<Player>();
             for (int i = 0; i < json_players.Count; i++)
             {
                 List<Item> item_list = new List<Item>(); 
@@ -316,14 +307,10 @@ namespace Client
                             break;
                     }
                 }
-                a.Add(new Player((int)json_players[i]["Health"], (string)json_players[i]["Name"],
+                players1.Add(new Player((int)json_players[i]["Health"], (string)json_players[i]["Name"],
                     (int)json_players[i]["X"], (int)json_players[i]["Y"],(int)json_players[i]["Points"], item_list));
             }
-            current_Player = a.Find(x => x.Name == current_player_name);
-            //if (current_player_name == players1.Name)
-            //{
-            //    current_Player = players1;
-            //}
+            current_Player = players1.Find(x => x.Name == current_player_name);
 
             this.map_drawer.current = current_Player;
             items_scrollbar.Children.Clear();
@@ -345,17 +332,10 @@ namespace Client
                 this.inventory_items_gui.Add(b);
                 items_scrollbar.Children.Add(b);
             }
-            facade.Update_players_objects(a, players_gui, canvas1, current_Player);
+            facade.Update_players_objects(players1, players_gui, canvas1, current_Player);
             players_scrollbar.Children.Clear();
-            var iterator = players1.GetIterator();
-            for (var o = iterator.First(); iterator.HasNext(); o = iterator.Next())
+            for (int i = 0; i < players1.Count; i++)
             {
-                
-            //}
-
-
-            //for (int i = 0; i < a.Count; i++)
-            //{
                 StackPanel p1 = new StackPanel();
                 p1.Margin = new Thickness(10);
                 Border b1 = new Border();
@@ -365,13 +345,13 @@ namespace Client
                 brush.Freeze();
                 p1.Background = brush;
                 Label name = new Label();
-                name.Content = "Name: " + o.Name;
+                name.Content = "Name: " + players1[i].Name;
                 Label health = new Label();
-                health.Content = "Health: " + o.Health;
+                health.Content = "Health: " + players1[i].Health;
                 Label points= new Label();
-                points.Content = "Points: " + o.Points;
+                points.Content = "Points: " + players1[i].Points;
                 Label position = new Label();
-                position.Content = String.Format("X:{0}, Y:{1}", o.X, o.Y);
+                position.Content = String.Format("X:{0}, Y:{1}", players1[i].X, players1[i].Y);
                 p1.Children.Add(name);
                 p1.Children.Add(health);
                 p1.Children.Add(points);

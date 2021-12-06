@@ -8,41 +8,11 @@ using Client.Strategy;
 using Client.Observer;
 using System.Windows.Shapes;
 using System.Windows.Controls;
-using Client.Iterator;
 
 namespace Client
 {
-    public class Player : IAggregate<Player>
+    public class Player
     {
-        public List<Player> players { get; set; }
-        public List<Player> players1 = new List<Player>();
-
-        public Player this[int itemIndex]
-        {
-            get => players[itemIndex];
-            set => players.Add((Player)value);
-        }
-        //public void add(Player p)
-        //{
-        //    players.Add(p);
-        //}
-        //List<object> items = new List<object>();
-        //public override Iterators CreateIterator()
-        //{
-        //    return new ConcreteIterator(this);
-        //}
-
-        //public int Count
-        //{
-        //    get { return items.Count; }
-        //}
-        //// Indexer
-        //public object this[int index]
-        //{
-        //    get { return items[index]; }
-        //    set { items.Insert(index, value); }
-        //}
-
         public int X { get; set; }
         public int Y { get; set; }
         public int Health { get; set; }
@@ -50,9 +20,6 @@ namespace Client
         public string Name { get; protected set; }
         public List<Item> Inventory { get; set; }
         public int currentItem { get; private set; }
-
-        //Player IAggregate<Player>.this[int itemIndex] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
         private IMovementStrategy strategy;
         [JsonConstructor]
         public Player(int Health, string Name, int X, int Y, int points, List<Item> Inventory)
@@ -73,16 +40,6 @@ namespace Client
             this.Name = name;
             this.Inventory = new List<Item>();
             this.Health = 100;
-        }
-        public Player(/*int Health, string Name, int X, int Y, int points, List<Item> Inventory*/)
-        {
-            //this.X = X;
-            //this.Y = Y;
-            //this.Name = Name;
-            //this.Points = points;
-            //this.Inventory = Inventory;
-            //this.Health = Health;
-            //this.currentItem = 0;
         }
         public void setStrategy(IMovementStrategy strategy)
         {
@@ -146,16 +103,6 @@ namespace Client
         public void AddHealth(int hp)
         {
             this.Health += hp;
-        }
-
-        public IIterator<Player> GetIterator()
-        {
-            return new ConcreteIterator<Player>(this);
-        }
-
-        public int Count()
-        {
-            return players.Count;
         }
     }
 }
