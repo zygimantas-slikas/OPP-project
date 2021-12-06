@@ -308,7 +308,7 @@ namespace Client
                     }
                 }
                 players1.Add(new Player((int)json_players[i]["Health"], (string)json_players[i]["Name"],
-                    (int)json_players[i]["X"], (int)json_players[i]["Y"],(int)json_players[i]["Points"], item_list));
+                    (int)json_players[i]["X"], (int)json_players[i]["Y"],(int)json_players[i]["Points"], item_list, (string)json_players[i]["Comment"]));
             }
             current_Player = players1.Find(x => x.Name == current_player_name);
 
@@ -352,10 +352,13 @@ namespace Client
                 points.Content = "Points: " + players1[i].Points;
                 Label position = new Label();
                 position.Content = String.Format("X:{0}, Y:{1}", players1[i].X, players1[i].Y);
+                Label log = new Label();
+                log.Content = "Log: " + players1[i].Comment;
                 p1.Children.Add(name);
                 p1.Children.Add(health);
                 p1.Children.Add(points);
                 p1.Children.Add(position);
+                p1.Children.Add(log);
                 players_scrollbar.Children.Add(p1);
             }
         }

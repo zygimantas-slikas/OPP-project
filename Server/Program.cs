@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Server.Interpreter;
 using System.Text.RegularExpressions;
+using Server.Chain_of_responsability;
 
 namespace Server
 {
@@ -20,6 +21,8 @@ namespace Server
         public static string ip;
         static void Main(string[] args)
         {
+            var logger = new LoggerToConsole();
+            logger.Log("Server is starting");
             rooms = new List<Room>();
             if (args.GetLength(0) >= 1)
             {

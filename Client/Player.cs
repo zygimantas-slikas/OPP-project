@@ -21,8 +21,9 @@ namespace Client
         public List<Item> Inventory { get; set; }
         public int currentItem { get; private set; }
         private IMovementStrategy strategy;
+        public string Comment { get; set; }
         [JsonConstructor]
-        public Player(int Health, string Name, int X, int Y, int points, List<Item> Inventory)
+        public Player(int Health, string Name, int X, int Y, int points, List<Item> Inventory, string comment)
         {
             this.X = X;
             this.Y = Y;
@@ -31,6 +32,7 @@ namespace Client
             this.Inventory = Inventory;
             this.Health = Health;
             this.currentItem = 0;
+            this.Comment = comment;
         }
         public Player(string name)
         {
@@ -103,6 +105,10 @@ namespace Client
         public void AddHealth(int hp)
         {
             this.Health += hp;
+        }
+        public void AddComment(string c)
+        {
+            this.Comment = c;
         }
     }
 }

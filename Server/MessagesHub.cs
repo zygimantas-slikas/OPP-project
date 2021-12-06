@@ -142,6 +142,22 @@ namespace Server
             {
 
             }
+            else if (action == "add_comment")
+            {
+                p.AddComment("moved up");
+            }
+            else if (action == "add_comment2")
+            {
+                p.AddComment("moved down");
+            }
+            else if (action == "add_comment3")
+            {
+                p.AddComment("moved left");
+            }
+            else if (action == "add_comment4")
+            {
+                p.AddComment("moved right");
+            }
             string json_players = r.Players_to_Json();
             await this.Clients.Group(map_id.ToString()).SendAsync("Update_map_state", y, x, map_change);
             await this.Clients.Group(map_id.ToString()).SendAsync("Set_players", json_players);

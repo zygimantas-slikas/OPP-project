@@ -11,6 +11,7 @@ namespace Server
         public int Points { get; protected set; }
         public string Name { get; }
         public List<Item> Inventory { get; set; }
+        public virtual string Comment { get; set; }
         public Player(string id, string name, int x, int y, List<Item> inventory)
         {
             this.X = x;
@@ -20,6 +21,7 @@ namespace Server
             this.Inventory = inventory;
             this.Con_id = id;
             this.Health = 100;
+            this.Comment = "";
         }
         public Player(string id, string name)
         {
@@ -48,6 +50,10 @@ namespace Server
         public void AddHealth(int hp)
         {
             this.Health += hp;
+        }
+        public void AddComment(string c)
+        {
+            this.Comment = c;
         }
     }
 

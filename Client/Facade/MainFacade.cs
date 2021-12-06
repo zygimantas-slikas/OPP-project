@@ -181,6 +181,23 @@ namespace Client.Facade
             string action = "";
             string info = "";
             Invoker invoker = new Invoker();
+            if (e.Key == Key.W)
+            {
+                action = "add_comment";
+            }
+            if (e.Key == Key.S)
+            {
+                action = "add_comment2";
+            }
+            if (e.Key == Key.A)
+            {
+                action = "add_comment3";
+            }
+            if (e.Key == Key.D)
+            {
+                action = "add_comment4";
+            }
+
             if (e.Key == Key.U)
             {
                 invoker.undo(current_Player.Name);
