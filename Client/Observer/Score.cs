@@ -30,14 +30,12 @@ namespace Client.Observer
                 if (!created.Contains(new1))
                 {
                     bitmapimage = new Knight();
-                    string[] knights = { "OrangeKnight", "RedKnight", "BlueKnight" };
-                    Random rand = new Random();
-                    int index = rand.Next(knights.Length);
+                    string[] knights = {"RedKnight","GreenKnight","BlueKnight","OrangeKnight"};
                     Ellipse playerSprite = new Ellipse();
                     playerSprite.Width = 40;
                     playerSprite.Height = 40;
                     ImageBrush myBrush = new ImageBrush();
-                    myBrush.ImageSource = bitmapimage.FactoryMethod(knights[index]);
+                    myBrush.ImageSource = bitmapimage.FactoryMethod(knights[players1.Find(x => x.Name == new1).Color]);
                     playerSprite.Fill = myBrush;
                     players_gui.Add(new1, playerSprite);
                     canvas1.Children.Add(playerSprite);

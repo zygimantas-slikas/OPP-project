@@ -15,6 +15,8 @@ namespace Client.Factory
                     return new BitmapImage(new Uri(@"..\..\..\..\Sprites\knight3.png", UriKind.RelativeOrAbsolute));
                 case "BlueKnight":
                     return new BitmapImage(new Uri(@"..\..\..\..\Sprites\knight2.png", UriKind.RelativeOrAbsolute));
+                case "GreenKnight":
+                    return new BitmapImage(new Uri(@"..\..\..\..\Sprites\knight4.png", UriKind.RelativeOrAbsolute));
                 default:
                     return null;
             }

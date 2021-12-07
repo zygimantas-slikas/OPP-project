@@ -307,8 +307,9 @@ namespace Client
                             break;
                     }
                 }
-                players1.Add(new Player((int)json_players[i]["Health"], (string)json_players[i]["Name"],
-                    (int)json_players[i]["X"], (int)json_players[i]["Y"],(int)json_players[i]["Points"], item_list, (string)json_players[i]["Comment"]));
+                players1.Add(new Player((int)json_players[i]["Color"], (int)json_players[i]["Health"],
+                    (string)json_players[i]["Name"],(int)json_players[i]["X"], (int)json_players[i]["Y"],
+                    (int)json_players[i]["Points"], item_list, (string)json_players[i]["Comment"]));
             }
             current_Player = players1.Find(x => x.Name == current_player_name);
 

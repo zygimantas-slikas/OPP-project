@@ -14,6 +14,7 @@ namespace Client
 {
     public class Player : IAggregate<IScore>
     {
+        public int Color { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
         public int Health { get; set; }
@@ -31,8 +32,9 @@ namespace Client
         }
 
         [JsonConstructor]
-        public Player(int Health, string Name, int X, int Y, int points, List<Item> Inventory, string comment)
+        public Player(int color, int Health, string Name, int X, int Y, int points, List<Item> Inventory, string comment)
         {
+            this.Color = color;
             this.X = X;
             this.Y = Y;
             this.Name = Name;

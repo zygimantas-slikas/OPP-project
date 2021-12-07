@@ -90,12 +90,11 @@ namespace Server
             {
                 state = Room_satate.full;
             }
-
         }
         public void Add_player(string con_id, string name)
         {
             List<Item> inv = new List<Item>();
-            Player p = new Player(con_id, name, 0, 0, inv);
+            Player p = new Player(players.Count, con_id, name, 0, 0, inv);
             if (this.map[0, 0].Player_Standing == "") {
                 this.map[0, 0].Player_Standing = name;
                 p.X = 0;

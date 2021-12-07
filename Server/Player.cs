@@ -4,6 +4,7 @@ namespace Server
 {
     public class Player
     {
+        public int Color { get; protected set; }
         public int X { get; set; }
         public int Y { get; set; } 
         public /*virtual*/ string Con_id { get; set; }
@@ -12,8 +13,9 @@ namespace Server
         public string Name { get; }
         public List<Item> Inventory { get; set; }
         public virtual string Comment { get; set; }
-        public Player(string id, string name, int x, int y, List<Item> inventory)
+        public Player(int color, string id, string name, int x, int y, List<Item> inventory)
         {
+            this.Color = color;
             this.X = x;
             this.Y = y;
             this.Name = name;
