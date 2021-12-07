@@ -10,6 +10,8 @@ namespace Server
     public abstract class Item : Cloneable
     {
         public string Type { get; protected set; }
+        public enum Crate_type { general, guns, health };
+        public virtual Crate_type Storage { get; set; }
         public string take(Player p, Tile[,] map)
         {
             return "json";
@@ -28,7 +30,7 @@ namespace Server
             throw new NotImplementedException();
         }
 
-        public virtual Item Remove(Item component, Player p)
+        public virtual Item Remove(Item component, Player p, out bool crateOfItems)
         {
             throw new NotImplementedException();
         }

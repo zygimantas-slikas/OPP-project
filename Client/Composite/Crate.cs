@@ -11,8 +11,11 @@ namespace Client.Composite
 {
     class Crate : Item
     {
-        public Crate()
+        public enum Crate_type { general, guns, health }
+        public Crate_type Storage { get; set; }
+        public Crate(Crate_type str = Crate_type.general)
         {
+            this.Storage = str;
             this.Type = this.GetType().Name;
         }
         public override bool IsCrate() { return true; }
@@ -22,7 +25,19 @@ namespace Client.Composite
             Rectangle img = new Rectangle();
             img.Width = 40;
             img.Height = 40;
-            img.Fill = Image_brush_factory.Get_image_brush("Crate");
+            if(Storage == Crate_type.guns)
+            {
+                img.Fill = Image_brush_factory.Get_image_brush("CrateGun");
+            }
+            else if(Storage == Crate_type.health)
+            {
+                img.Fill = Image_brush_factory.Get_image_brush("CrateMed");
+            }
+            else
+            {
+                img.Fill = Image_brush_factory.Get_image_brush("Crate");
+            }
+            
             return img;
         }
 

@@ -113,10 +113,20 @@ namespace Server
                 }
                 else if(r.map[y, x].Loot is Crate)
                 {
-                    Item loot = r.map[y, x].Loot.Remove(new BlueGun(), p);
+                    bool crateOfItems = false;
+                    Item loot = r.map[y, x].Loot.Remove(new BlueGun(), p, out crateOfItems);
                     if (loot != null)
                     {
-                        p.Inventory.Add(loot);
+                        if (crateOfItems)
+                        {
+                            p.Inventory.Add(r.map[y, x].Loot);
+                            map_change = "remove;";
+                        }
+                        else
+                        {
+                            p.Inventory.Add(loot);
+                        }
+                        
                     }
                 }
             }
