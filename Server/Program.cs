@@ -22,7 +22,10 @@ namespace Server
         static void Main(string[] args)
         {
             var logger = new LoggerToConsole();
-            logger.Log("Server is starting");
+            var loggerToFile = new LoggerToFile();
+            Player p = new Player();
+            logger.Log("Server is starting", "Info", p);
+            loggerToFile.Log("Server is starting", "Info", p);
             rooms = new List<Room>();
             if (args.GetLength(0) >= 1)
             {

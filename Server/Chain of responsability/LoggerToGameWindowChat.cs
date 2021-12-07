@@ -1,13 +1,13 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO;
 
 namespace Server.Chain_of_responsability
 {
-    class LoggerToGameWindow : ILogger
+    class LoggerToGameWindowChat : ILogger
     {
         private String CurrentDirectory
         {
@@ -27,10 +27,10 @@ namespace Server.Chain_of_responsability
             set;
         }
 
-        public LoggerToGameWindow()
+        public LoggerToGameWindowChat()
         {
             this.CurrentDirectory = Directory.GetCurrentDirectory();
-            this.FileName = "LogAction.txt";
+            this.FileName = "LogChat.txt";
             this.FilePath = this.CurrentDirectory + "/" + this.FileName;
 
         }
@@ -38,21 +38,21 @@ namespace Server.Chain_of_responsability
         {
             p.AddComment(Messsage);
 
-            if (args == "Movement")
+            if (args == "Chat")
             {
                 using (System.IO.StreamWriter w = System.IO.File.AppendText(this.FilePath))
                 {
-                    w.Write("\r\nLog Entry : Movement ");
+                    w.Write("\r\nLog Entry : Chat ");
                     w.WriteLine("{0} {1}", DateTime.Now.ToLongTimeString(), DateTime.Now.ToLongDateString());
                     w.WriteLine("  :{0}", Messsage);
                     w.WriteLine("-----------------------------------------------");
                 }
             }
-            else if (args == "Action")
+            else if (args == "Taunt")
             {
                 using (System.IO.StreamWriter w = System.IO.File.AppendText(this.FilePath))
                 {
-                    w.Write("\r\nLog Entry : Action ");
+                    w.Write("\r\nLog Entry : Taunt ");
                     w.WriteLine("{0} {1}", DateTime.Now.ToLongTimeString(), DateTime.Now.ToLongDateString());
                     w.WriteLine("  :{0}", Messsage);
                     w.WriteLine("-----------------------------------------------");

@@ -197,7 +197,14 @@ namespace Client.Facade
             {
                 action = "add_comment4";
             }
-
+            if (e.Key == Key.O)
+            {
+                action = "add_comment5";
+            }
+            if (e.Key == Key.I)
+            {
+                action = "add_comment6";
+            }
             if (e.Key == Key.U)
             {
                 invoker.undo(current_Player.Name);

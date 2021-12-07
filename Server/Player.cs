@@ -21,7 +21,7 @@ namespace Server
             this.Inventory = inventory;
             this.Con_id = id;
             this.Health = 100;
-            this.Comment = "";
+            this.Comment = "Connected!";
         }
         public Player(string id, string name)
         {
@@ -33,6 +33,7 @@ namespace Server
             this.Inventory = new List<Item>();
             this.Health = 100;
         }
+        public Player() { }
         public void addItem(Item item)
         {
             this.Inventory.Add(item);

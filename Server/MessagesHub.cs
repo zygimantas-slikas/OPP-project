@@ -8,6 +8,7 @@ using System.Text.Json;
 using Server.AbstractFactory;
 using Server.Builder;
 using Client.Composite;
+using Server.Chain_of_responsability;
 
 namespace Server
 {
@@ -41,6 +42,7 @@ namespace Server
         }
         public async Task Join_map(Int32 id, string name)
         {
+            var logger = new LoggerToGameWindow();
             int index = Program.rooms.FindIndex(x => x.Id == id);
             if (Program.rooms[index].current_players < Program.rooms[index].max_players &&
                 Program.rooms[index].players.Find(x => x.Name == name) == null)
@@ -101,8 +103,11 @@ namespace Server
             Room r = Program.rooms.Find(x => x.Id == map_id);
             Player p = r.players.Find(x => x.Con_id == Context.ConnectionId);
             string map_change = "";
+            var logger = new LoggerToGameWindow();
+            var loggerChat = new LoggerToGameWindowChat();
             if (action == "take")
             {
+                logger.Log("Took an item!", "Action", p);
                 if (r.map[y, x].Loot is not Crate)
                     map_change = "remove;";
                 r.map[y, x].Loot.PickupEffect(p);
@@ -122,6 +127,7 @@ namespace Server
             }
             else if (action == "drop")
             {
+                logger.Log("Dropped an item!", "Action", p);
                 Item it1 = p.Inventory.Find(x => x.Type == info);
                 if (it1 != null)
                 {
@@ -144,19 +150,27 @@ namespace Server
             }
             else if (action == "add_comment")
             {
-                p.AddComment("moved up");
+                logger.Log("Moved up!", "Movement", p);
             }
             else if (action == "add_comment2")
             {
-                p.AddComment("moved down");
+                logger.Log("Moved down!", "Movement", p);
             }
             else if (action == "add_comment3")
             {
-                p.AddComment("moved left");
+                logger.Log("Moved left!", "Movement", p);
             }
             else if (action == "add_comment4")
             {
-                p.AddComment("moved right");
+                logger.Log("Moved right!", "Movement", p);
+            }
+            else if (action == "add_comment5")
+            {
+                loggerChat.Log("Hello!", "Chat", p);
+            }
+            else if (action == "add_comment6")
+            {
+                loggerChat.Log("I am going to get you!", "Taunt", p);
             }
             string json_players = r.Players_to_Json();
             await this.Clients.Group(map_id.ToString()).SendAsync("Update_map_state", y, x, map_change);

@@ -35,17 +35,40 @@ namespace Server.Chain_of_responsability
 
         }
 
-        public override void Log(string Messsage)
+        public override void Log(string Messsage, string args, Player p)
         {
 
             System.Console.WriteLine("Logged : {0}", Messsage);
 
-            using (System.IO.StreamWriter w = System.IO.File.AppendText(this.FilePath))
+            if (args == "Info")
             {
-                w.Write("\r\nLog Entry : ");
-                w.WriteLine("{0} {1}", DateTime.Now.ToLongTimeString(), DateTime.Now.ToLongDateString());
-                w.WriteLine("  :{0}", Messsage);
-                w.WriteLine("-----------------------------------------------");
+                using (System.IO.StreamWriter w = System.IO.File.AppendText(this.FilePath))
+                {
+                    w.Write("\r\nLog Entry : Information ");
+                    w.WriteLine("{0} {1}", DateTime.Now.ToLongTimeString(), DateTime.Now.ToLongDateString());
+                    w.WriteLine("  :{0}", Messsage);
+                    w.WriteLine("-----------------------------------------------");
+                }
+            }
+            else if (args == "Warning")
+            {
+                using (System.IO.StreamWriter w = System.IO.File.AppendText(this.FilePath))
+                {
+                    w.Write("\r\nLog Entry : Warning ");
+                    w.WriteLine("{0} {1}", DateTime.Now.ToLongTimeString(), DateTime.Now.ToLongDateString());
+                    w.WriteLine("  :{0}", Messsage);
+                    w.WriteLine("-----------------------------------------------");
+                }
+            }
+            else if (args == "Error")
+            {
+                using (System.IO.StreamWriter w = System.IO.File.AppendText(this.FilePath))
+                {
+                    w.Write("\r\nLog Entry : Error ");
+                    w.WriteLine("{0} {1}", DateTime.Now.ToLongTimeString(), DateTime.Now.ToLongDateString());
+                    w.WriteLine("  :{0}", Messsage);
+                    w.WriteLine("-----------------------------------------------");
+                }
             }
         }
     }

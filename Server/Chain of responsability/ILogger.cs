@@ -10,6 +10,6 @@ namespace Server.Chain_of_responsability
 {
     public abstract class ILogger
     {
-        public abstract void Log(string Messsage);
+        public abstract void Log(string Messsage, string args, Player p);
     }
 }
