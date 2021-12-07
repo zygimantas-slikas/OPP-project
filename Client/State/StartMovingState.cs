@@ -6,20 +6,20 @@ using System.Threading.Tasks;
 
 namespace Client.State
 {
-    public class PlayingState : IState
+    public class StartMovingState : IState
     {
         string message;
-        private StateContext context;
+        private ActionState context;
 
-        public PlayingState(StateContext context)
+        public StartMovingState(ActionState context)
         {
-            this.message = "Players playing";
+            this.message = "Start moving";
             this.context = context;
         }
 
         public IState NextState()
         {
-            return new EndgameState(context);
+            return new PickingItemsState(context);
         }
 
         public string OnChange()

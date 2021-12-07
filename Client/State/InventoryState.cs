@@ -6,20 +6,20 @@ using System.Threading.Tasks;
 
 namespace Client.State
 {
-    class EndgameState : IState
+    class InventoryState : IState
     {
         string message;
-        private StateContext context;
+        private ActionState context;
 
-        public EndgameState(StateContext context)
+        public InventoryState(ActionState context)
         {
-            this.message = "Game over";
+            this.message = "Using inventory";
             this.context = context;
         }
 
         public IState NextState()
         {
-            return new EndgameState(context);
+            return new PickingItemsState(context);
         }
 
         public string OnChange()

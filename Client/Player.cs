@@ -8,10 +8,11 @@ using Client.Strategy;
 using Client.Observer;
 using System.Windows.Shapes;
 using System.Windows.Controls;
+using Client.Iterator;
 
 namespace Client
 {
-    public class Player
+    public class Player : IAggregate<IScore>
     {
         public int X { get; set; }
         public int Y { get; set; }
@@ -22,6 +23,13 @@ namespace Client
         public int currentItem { get; private set; }
         private IMovementStrategy strategy;
         public string Comment { get; set; }
+
+        public IScore this[int itemIndex]
+        {
+            get => scoreObservers[itemIndex];
+            set => scoreObservers.Add((IScore)value);
+        }
+
         [JsonConstructor]
         public Player(int Health, string Name, int X, int Y, int points, List<Item> Inventory, string comment)
         {
@@ -33,6 +41,17 @@ namespace Client
             this.Health = Health;
             this.currentItem = 0;
             this.Comment = comment;
+        }
+        public Player(/*int Health, string Name, int X, int Y, int points, List<Item> Inventory, string comment*/)
+        {
+            //this.X = X;
+            //this.Y = Y;
+            //this.Name = Name;
+            //this.Points = points;
+            //this.Inventory = Inventory;
+            //this.Health = Health;
+            //this.currentItem = 0;
+            //this.Comment = comment;
         }
         public Player(string name)
         {
@@ -81,11 +100,12 @@ namespace Client
         {
             scoreObservers.Remove(observer);
         }
-        public void Notify(IEnumerable<string> names, IEnumerable<string> created, List<Player> players1, Dictionary<String, Shape> players_gui, Canvas canvas1)
+        public void Notify(IEnumerable<string> names, IEnumerable<string> created, List<Player> players1, Dictionary<String, Shape> players_gui, Canvas canvas1, Player score)
         {
-            foreach (IScore observer in scoreObservers)
+            var iterator = score.GetIterator();
+            for (var o = iterator.First(); iterator.HasNext(); o = iterator.Next())
             {
-                observer.Update(names, created, players1, players_gui, canvas1);
+                o.Update(names, created, players1, players_gui, canvas1);
             }
         }
         public int getObserverCount()
@@ -109,6 +129,16 @@ namespace Client
         public void AddComment(string c)
         {
             this.Comment = c;
+        }
+
+        public IIterator<IScore> GetIterator()
+        {
+            return new ConcreteIterator<IScore>(this);
+        }
+
+        public int Count()
+        {
+            return scoreObservers.Count;
         }
     }
 }

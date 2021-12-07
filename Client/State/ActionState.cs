@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Client.State
 {
-    public class StateContext
+    public class ActionState
     {
         private IState state;
         public string message;
 
-        public StateContext()
+        public ActionState()
         {
             this.state = null;
         }

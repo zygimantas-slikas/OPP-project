@@ -35,7 +35,7 @@ namespace Client
         private MainFacade facade = new MainFacade();
         protected string[] rooms_data_from_server;
         protected IMapControl map_drawer;
-        StateContext gamestate = new StateContext();
+        ActionState actionState = new ActionState();
         public MainWindow()
         {
             InitializeComponent();
@@ -406,10 +406,10 @@ namespace Client
         }
         protected void Key_pressed(object sender, KeyEventArgs e)
         {
-            facade.Move_player(map1, current_Player, settings, map_drawer, e, connection, mapId, players_scrollbar, gamestate);
+            facade.Move_player(map1, current_Player, settings, map_drawer, e, connection, mapId, players_scrollbar, actionState);
             facade.Check_if_steped_on_trap(map1, current_Player, connection, mapId, e);
-            facade.Drop_trap(current_Player, connection, mapId, e);
-            facade.Actions_with_items(map1, current_Player, connection, mapId, e, inventory_items_gui);
+            facade.Drop_trap(current_Player, connection, mapId, e, actionState);
+            facade.Actions_with_items(map1, current_Player, connection, mapId, e, inventory_items_gui, actionState);
             //string action = "";
             //string info = "";
             //Invoker invoker = new Invoker();

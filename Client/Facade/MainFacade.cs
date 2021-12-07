@@ -31,14 +31,14 @@ namespace Client.Facade
 {
     class MainFacade
     {
-        public async void Move_player(Map map1, Player current_Player, GameSettings settings, IMapControl map_controler, KeyEventArgs e, HubConnection connection, Int32 mapId, StackPanel players_scrollbar, StateContext gamestate)
+        public async void Move_player(Map map1, Player current_Player, GameSettings settings, IMapControl map_controler, KeyEventArgs e, HubConnection connection, Int32 mapId, StackPanel players_scrollbar, ActionState gamestate)
         {
             bool changed = false;
             if (e.Key == Key.P)
             {
                 if (gamestate.message == null)
                 {
-                    gamestate.setState(new PreparationState(gamestate));
+                    gamestate.setState(new StartMovingState(gamestate));
                     Label state = new Label();
                     state.Content = "State: " + gamestate.message;
                     players_scrollbar.Children.Add(state);
@@ -51,152 +51,156 @@ namespace Client.Facade
                     players_scrollbar.Children.Add(state);
                 }
             }
-            if (gamestate.message == "Players playing")
+            if (gamestate.message == "Start moving" || gamestate.message == "Picking items" || gamestate.message == "Using inventory" || gamestate.message == "Dropping traps")
             {
                 if (e.Key == GameSettings.GetInstance().Move_up_key)
+            {
+                if (!settings.Delay.IsCompleted) return;
+                else if (current_Player.Y > 0 && map1.map[current_Player.Y - 1, current_Player.X].Surface != Tile.Tile_type.wall)
                 {
-                    if (!settings.Delay.IsCompleted) return;
-                    else if (current_Player.Y > 0 && map1.map[current_Player.Y - 1, current_Player.X].Surface != Tile.Tile_type.wall)
+                    current_Player.Y -= 1;
+                    changed = true;
+                    //canvas_scrollbar.ScrollToVerticalOffset(current_Player.Y * 50 + 5 - canvas_scrollbar.ActualHeight / 2);
+                    map_controler.SetScrollBar();
+                    settings.moved();
+                    if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
                     {
-                        current_Player.Y -= 1;
-                        changed = true;
-                        //canvas_scrollbar.ScrollToVerticalOffset(current_Player.Y * 50 + 5 - canvas_scrollbar.ActualHeight / 2);
-                        map_controler.SetScrollBar();
-                        settings.moved();
-                        if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
-                        {
-                            current_Player.setStrategy(new MoveOnWater());
-                        }
-                        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.bush)
-                        {
-                            current_Player.setStrategy(new MoveOnBush());
-                        }
-                        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.lava)
-                        {
-                            current_Player.setStrategy(new MoveOnLava());
-                        }
-                        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.grass)
-                        {
-                            current_Player.setStrategy(new MoveOnGrass());
-                        }
-                        current_Player.move();
+                        current_Player.setStrategy(new MoveOnWater());
                     }
-                }
-                else if (e.Key == GameSettings.GetInstance().Move_left_key)
-                {
-                    if (!settings.Delay.IsCompleted) return;
-                    else if (current_Player.X > 0 && map1.map[current_Player.Y, current_Player.X - 1].Surface != Tile.Tile_type.wall)
+                    else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.bush)
                     {
-                        current_Player.X -= 1;
-                        changed = true;
-                        //canvas_scrollbar.ScrollToHorizontalOffset(current_Player.X * 50 + 5 - canvas_scrollbar.ActualWidth / 2);
-                        map_controler.SetScrollBar();
-                        settings.moved();
-                        if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
-                        {
-                            current_Player.setStrategy(new MoveOnWater());
-                        }
-                        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.bush)
-                        {
-                            current_Player.setStrategy(new MoveOnBush());
-                        }
-                        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.lava)
-                        {
-                            current_Player.setStrategy(new MoveOnLava());
-                        }
-                        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.grass)
-                        {
-                            current_Player.setStrategy(new MoveOnGrass());
-                        }
-                        current_Player.move();
+                        current_Player.setStrategy(new MoveOnBush());
                     }
-                }
-                else if (e.Key == GameSettings.GetInstance().Move_down_key)
-                {
-                    if (!settings.Delay.IsCompleted) return;
-                    else if (current_Player.Y < map1.map_size - 1 && map1.map[current_Player.Y + 1, current_Player.X].Surface != Tile.Tile_type.wall)
+                    else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.lava)
                     {
-                        current_Player.Y += 1;
-                        changed = true;
-                        //canvas_scrollbar.ScrollToVerticalOffset(current_Player.Y * 50 + 5 - canvas_scrollbar.ActualHeight / 2);
-                        map_controler.SetScrollBar();
-                        settings.moved();
-                        if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
-                        {
-                            current_Player.setStrategy(new MoveOnWater());
-                        }
-                        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.bush)
-                        {
-                            current_Player.setStrategy(new MoveOnBush());
-                        }
-                        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.lava)
-                        {
-                            current_Player.setStrategy(new MoveOnLava());
-                        }
-                        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.grass)
-                        {
-                            current_Player.setStrategy(new MoveOnGrass());
-                        }
-                        current_Player.move();
+                        current_Player.setStrategy(new MoveOnLava());
                     }
-                }
-                else if (e.Key == GameSettings.GetInstance().Move_right_key)
-                {
-                    if (!settings.Delay.IsCompleted) return;
-                    else if (current_Player.X < map1.map_size - 1 && map1.map[current_Player.Y, current_Player.X + 1].Surface != Tile.Tile_type.wall)
+                    else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.grass)
                     {
-                        current_Player.X += 1;
-                        changed = true;
-                        //canvas_scrollbar.ScrollToHorizontalOffset(current_Player.X * 50 + 5 - canvas_scrollbar.ActualWidth / 2);
-                        map_controler.SetScrollBar();
-                        settings.moved();
-                        if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
-                        {
-                            current_Player.setStrategy(new MoveOnWater());
-                        }
-                        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.bush)
-                        {
-                            current_Player.setStrategy(new MoveOnBush());
-                        }
-                        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.lava)
-                        {
-                            current_Player.setStrategy(new MoveOnLava());
-                        }
-                        else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.grass)
-                        {
-                            current_Player.setStrategy(new MoveOnGrass());
-                        }
-                        current_Player.move();
+                        current_Player.setStrategy(new MoveOnGrass());
                     }
-                }
-                if (changed == true)
-                {
-                    Object[] args = new Object[3] { mapId, current_Player.X, current_Player.Y };
-                    await connection.SendCoreAsync("Move", args);
+                    current_Player.move();
                 }
             }
+            else if (e.Key == GameSettings.GetInstance().Move_left_key)
+            {
+                if (!settings.Delay.IsCompleted) return;
+                else if (current_Player.X > 0 && map1.map[current_Player.Y, current_Player.X - 1].Surface != Tile.Tile_type.wall)
+                {
+                    current_Player.X -= 1;
+                    changed = true;
+                    //canvas_scrollbar.ScrollToHorizontalOffset(current_Player.X * 50 + 5 - canvas_scrollbar.ActualWidth / 2);
+                    map_controler.SetScrollBar();
+                    settings.moved();
+                    if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
+                    {
+                        current_Player.setStrategy(new MoveOnWater());
+                    }
+                    else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.bush)
+                    {
+                        current_Player.setStrategy(new MoveOnBush());
+                    }
+                    else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.lava)
+                    {
+                        current_Player.setStrategy(new MoveOnLava());
+                    }
+                    else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.grass)
+                    {
+                        current_Player.setStrategy(new MoveOnGrass());
+                    }
+                    current_Player.move();
+                }
+            }
+            else if (e.Key == GameSettings.GetInstance().Move_down_key)
+            {
+                if (!settings.Delay.IsCompleted) return;
+                else if (current_Player.Y < map1.map_size - 1 && map1.map[current_Player.Y + 1, current_Player.X].Surface != Tile.Tile_type.wall)
+                {
+                    current_Player.Y += 1;
+                    changed = true;
+                    //canvas_scrollbar.ScrollToVerticalOffset(current_Player.Y * 50 + 5 - canvas_scrollbar.ActualHeight / 2);
+                    map_controler.SetScrollBar();
+                    settings.moved();
+                    if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
+                    {
+                        current_Player.setStrategy(new MoveOnWater());
+                    }
+                    else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.bush)
+                    {
+                        current_Player.setStrategy(new MoveOnBush());
+                    }
+                    else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.lava)
+                    {
+                        current_Player.setStrategy(new MoveOnLava());
+                    }
+                    else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.grass)
+                    {
+                        current_Player.setStrategy(new MoveOnGrass());
+                    }
+                    current_Player.move();
+                }
+            }
+            else if (e.Key == GameSettings.GetInstance().Move_right_key)
+            {
+                if (!settings.Delay.IsCompleted) return;
+                else if (current_Player.X < map1.map_size - 1 && map1.map[current_Player.Y, current_Player.X + 1].Surface != Tile.Tile_type.wall)
+                {
+                    current_Player.X += 1;
+                    changed = true;
+                    //canvas_scrollbar.ScrollToHorizontalOffset(current_Player.X * 50 + 5 - canvas_scrollbar.ActualWidth / 2);
+                    map_controler.SetScrollBar();
+                    settings.moved();
+                    if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
+                    {
+                        current_Player.setStrategy(new MoveOnWater());
+                    }
+                    else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.bush)
+                    {
+                        current_Player.setStrategy(new MoveOnBush());
+                    }
+                    else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.lava)
+                    {
+                        current_Player.setStrategy(new MoveOnLava());
+                    }
+                    else if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.grass)
+                    {
+                        current_Player.setStrategy(new MoveOnGrass());
+                    }
+                    current_Player.move();
+                }
+            }
+            if (changed == true)
+            {
+                Object[] args = new Object[3] { mapId, current_Player.X, current_Player.Y };
+                await connection.SendCoreAsync("Move", args);
+            }
+            }
         }
-        public async void Actions_with_items(Map map1, Player current_Player, HubConnection connection, Int32 mapId, KeyEventArgs e, List<Border> inventory_items_gui)
+        public async void Actions_with_items(Map map1, Player current_Player, HubConnection connection, Int32 mapId, KeyEventArgs e, List<Border> inventory_items_gui, ActionState actionState)
         {
             string action = "";
             string info = "";
             Invoker invoker = new Invoker();
-            if (e.Key == Key.W)
+            if (actionState.message == "Start moving" || actionState.message == "Picking items" || actionState.message == "Using inventory" || actionState.message == "Dropping traps")
             {
-                action = "add_comment";
+                if (e.Key == Key.W)
+                {
+                    action = "add_comment";
+                }
+                if (e.Key == Key.S)
+                {
+                    action = "add_comment2";
+                }
+                if (e.Key == Key.A)
+                {
+                    action = "add_comment3";
+                }
+                if (e.Key == Key.D)
+                {
+                    action = "add_comment4";
+                }
             }
-            if (e.Key == Key.S)
-            {
-                action = "add_comment2";
-            }
-            if (e.Key == Key.A)
-            {
-                action = "add_comment3";
-            }
-            if (e.Key == Key.D)
-            {
-                action = "add_comment4";
-            }
+        
             if (e.Key == Key.O)
             {
                 action = "add_comment5";
@@ -209,102 +213,168 @@ namespace Client.Facade
             {
                 invoker.undo(current_Player.Name);
             }
-            if (e.Key == GameSettings.GetInstance().Switch_right_key)
+
+
+            if (e.Key == Key.U)
             {
-                BrushConverter bc;
-                Brush brush;
-                if (current_Player.currentItem >= 0)
-                {
-                    bc = new BrushConverter();
-                    brush = (Brush)bc.ConvertFrom("#FF333337");
-                    brush.Freeze();
-                    inventory_items_gui[current_Player.currentItem].BorderBrush = brush;
-                }
-                invoker.SetCommand(new SwitchCommand(current_Player));
-                invoker.InvokeSwitch();
-                if (current_Player.currentItem >= 0)
-                {
-                    bc = new BrushConverter();
-                    brush = (Brush)bc.ConvertFrom("#FF18E79D");
-                    brush.Freeze();
-                    inventory_items_gui[current_Player.currentItem].BorderBrush = brush;
-                }
+                invoker.undo(current_Player.Name);
             }
-            else if (e.Key == GameSettings.GetInstance().Switch_left_key)
+            if (actionState.message == "Using inventory")
             {
-                BrushConverter bc;
-                Brush brush;
-                if (current_Player.currentItem >= 0)
+                if (e.Key == GameSettings.GetInstance().Switch_right_key)
                 {
-                    bc = new BrushConverter();
-                    brush = (Brush)bc.ConvertFrom("#FF333337");
-                    brush.Freeze();
-                    inventory_items_gui[current_Player.currentItem].BorderBrush = brush;
-                }
-                invoker.SetCommand(new SwitchCommand(current_Player));
-                invoker.InvokeUnSwitch();
-                if (current_Player.currentItem >= 0)
-                {
-                    bc = new BrushConverter();
-                    brush = (Brush)bc.ConvertFrom("#FF18E79D");
-                    brush.Freeze();
-                    inventory_items_gui[current_Player.currentItem].BorderBrush = brush;
-                }
-            }
-            if (e.Key == GameSettings.GetInstance().Take_item_key)
-            {
-                if (map1.map[current_Player.Y, current_Player.X].Loot != null)
-                {
-                    invoker.SetCommand(new TakeDropCommand(action = "take"));
-                    invoker.InvokeTake();
-                }
-                
-            }
-            else if (e.Key == GameSettings.GetInstance().Drop_item_key)
-            {
-                if (map1.map[current_Player.Y, current_Player.X].Loot == null)
-                {
-                    if (current_Player.Inventory.Count > current_Player.currentItem)
+                    BrushConverter bc;
+                    Brush brush;
+                    if (current_Player.currentItem >= 0)
                     {
-                        
-                        invoker.SetCommand(new TakeDropCommand(action = "drop"));
-                        invoker.InvokeDrop();
-                        info = current_Player.Inventory[current_Player.currentItem].Type;
+                        bc = new BrushConverter();
+                        brush = (Brush)bc.ConvertFrom("#FF333337");
+                        brush.Freeze();
+                        inventory_items_gui[current_Player.currentItem].BorderBrush = brush;
+                    }
+                    invoker.SetCommand(new SwitchCommand(current_Player));
+                    invoker.InvokeSwitch();
+                    if (current_Player.currentItem >= 0)
+                    {
+                        bc = new BrushConverter();
+                        brush = (Brush)bc.ConvertFrom("#FF18E79D");
+                        brush.Freeze();
+                        inventory_items_gui[current_Player.currentItem].BorderBrush = brush;
                     }
                 }
-                else if (map1.map[current_Player.Y, current_Player.X].Loot != null)
+                else if (e.Key == GameSettings.GetInstance().Switch_left_key)
                 {
-                    if (map1.map[current_Player.Y, current_Player.X].Loot.IsCrate() && current_Player.Inventory.Count > 0)
+                    BrushConverter bc;
+                    Brush brush;
+                    if (current_Player.currentItem >= 0)
                     {
-                        //map1.map[current_Player.Y, current_Player.X].Loot.Add(current_Player.Inventory[current_Player.currentItem]);
-                        invoker.SetCommand(new TakeDropCommand(action = "drop"));
-                        invoker.InvokeDrop();
+                        bc = new BrushConverter();
+                        brush = (Brush)bc.ConvertFrom("#FF333337");
+                        brush.Freeze();
+                        inventory_items_gui[current_Player.currentItem].BorderBrush = brush;
+                    }
+                    invoker.SetCommand(new SwitchCommand(current_Player));
+                    invoker.InvokeUnSwitch();
+                    if (current_Player.currentItem >= 0)
+                    {
+                        bc = new BrushConverter();
+                        brush = (Brush)bc.ConvertFrom("#FF18E79D");
+                        brush.Freeze();
+                        inventory_items_gui[current_Player.currentItem].BorderBrush = brush;
+                    }
+                }
+                else if (e.Key == GameSettings.GetInstance().Use_item_key)
+                {
+                    if (current_Player.currentItem >= 0)
+                    {
+                        action = "use_item";
                         info = current_Player.Inventory[current_Player.currentItem].Type;
                     }
                 }
             }
-            else if (e.Key == GameSettings.GetInstance().Use_item_key)
+            //if (e.Key == GameSettings.GetInstance().Switch_right_key)
+            //{
+            //    BrushConverter bc;
+            //    Brush brush;
+            //    if (current_Player.currentItem >= 0)
+            //    {
+            //        bc = new BrushConverter();
+            //        brush = (Brush)bc.ConvertFrom("#FF333337");
+            //        brush.Freeze();
+            //        inventory_items_gui[current_Player.currentItem].BorderBrush = brush;
+            //    }
+            //    invoker.SetCommand(new SwitchCommand(current_Player));
+            //    invoker.InvokeSwitch();
+            //    if (current_Player.currentItem >= 0)
+            //    {
+            //        bc = new BrushConverter();
+            //        brush = (Brush)bc.ConvertFrom("#FF18E79D");
+            //        brush.Freeze();
+            //        inventory_items_gui[current_Player.currentItem].BorderBrush = brush;
+            //    }
+            //}
+            //else if (e.Key == GameSettings.GetInstance().Switch_left_key)
+            //{
+            //    BrushConverter bc;
+            //    Brush brush;
+            //    if (current_Player.currentItem >= 0)
+            //    {
+            //        bc = new BrushConverter();
+            //        brush = (Brush)bc.ConvertFrom("#FF333337");
+            //        brush.Freeze();
+            //        inventory_items_gui[current_Player.currentItem].BorderBrush = brush;
+            //    }
+            //    invoker.SetCommand(new SwitchCommand(current_Player));
+            //    invoker.InvokeUnSwitch();
+            //    if (current_Player.currentItem >= 0)
+            //    {
+            //        bc = new BrushConverter();
+            //        brush = (Brush)bc.ConvertFrom("#FF18E79D");
+            //        brush.Freeze();
+            //        inventory_items_gui[current_Player.currentItem].BorderBrush = brush;
+            //    }
+            //}
+            if (actionState.message == "Picking items")
             {
-                if (current_Player.currentItem >= 0)
+                if (e.Key == GameSettings.GetInstance().Take_item_key)
                 {
-                    action = "use_item";
-                    info = current_Player.Inventory[current_Player.currentItem].Type;
+                    if (map1.map[current_Player.Y, current_Player.X].Loot != null)
+                    {
+                        invoker.SetCommand(new TakeDropCommand(action = "take"));
+                        invoker.InvokeTake();
+                    }
+
+                }
+                else if (e.Key == GameSettings.GetInstance().Drop_item_key)
+                {
+                    if (map1.map[current_Player.Y, current_Player.X].Loot == null)
+                    {
+                        if (current_Player.Inventory.Count > current_Player.currentItem)
+                        {
+
+                            invoker.SetCommand(new TakeDropCommand(action = "drop"));
+                            invoker.InvokeDrop();
+                            info = current_Player.Inventory[current_Player.currentItem].Type;
+                        }
+                    }
+                    else if (map1.map[current_Player.Y, current_Player.X].Loot != null)
+                    {
+                        if (map1.map[current_Player.Y, current_Player.X].Loot.IsCrate() && current_Player.Inventory.Count > 0)
+                        {
+                            //map1.map[current_Player.Y, current_Player.X].Loot.Add(current_Player.Inventory[current_Player.currentItem]);
+                            invoker.SetCommand(new TakeDropCommand(action = "drop"));
+                            invoker.InvokeDrop();
+                            info = current_Player.Inventory[current_Player.currentItem].Type;
+                        }
+                    }
                 }
             }
+            //else if (e.Key == GameSettings.GetInstance().Use_item_key)
+            //{
+            //    if (current_Player.currentItem >= 0)
+            //    {
+            //        action = "use_item";
+            //        info = current_Player.Inventory[current_Player.currentItem].Type;
+            //    }
+            //}
             if (action != "")
             {
                 Object[] args = new Object[5] { mapId, current_Player.Y, current_Player.X, action, info };
                 await connection.SendCoreAsync("Action", args);
             }
         }
-        public async void Drop_trap(Player current_Player, HubConnection connection, Int32 mapId, KeyEventArgs e)
+        public async void Drop_trap(Player current_Player, HubConnection connection, Int32 mapId, KeyEventArgs e, ActionState actionState)
         {
-            if (e.Key == GameSettings.GetInstance().Put_bomb_key)
+            if (actionState.message == "Dropping traps")
             {
-                //TODO: drop a trap
-                Object[] args = new Object[3] { mapId, current_Player.X, current_Player.Y };
-                await connection.SendCoreAsync("DropTrap", args);
+                if (e.Key == GameSettings.GetInstance().Put_bomb_key)
+                {
+                    //TODO: drop a trap
+                    Object[] args = new Object[3] { mapId, current_Player.X, current_Player.Y };
+                    await connection.SendCoreAsync("DropTrap", args);
+                }
             }
+
         }
 
         public void Check_if_steped_on_trap(Map map1, Player current_Player, HubConnection connection, Int32 mapId, KeyEventArgs e)
@@ -455,7 +525,7 @@ namespace Client.Facade
             IEnumerable<string> created = players_gui.Keys.ToList();
             if (current_Player.getObserverCount() == 0)
                 current_Player.Attach(ScoreTracking);
-            current_Player.Notify(names, created, players1, players_gui, canvas1);
+            current_Player.Notify(names, created, players1, players_gui, canvas1, current_Player);
         }
     }
 }
