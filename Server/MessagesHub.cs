@@ -104,8 +104,10 @@ namespace Server
             if (action == "take")
             {
                 if (r.map[y, x].Loot is not Crate)
+                {
                     map_change = "remove;";
-                r.map[y, x].Loot.PickupEffect(p);
+                    r.map[y, x].Loot.PickupEffect(p);
+                }
                 if (r.map[y, x].Loot is not Berry && r.map[y, x].Loot is not Crate)
                 {
                     p.Inventory.Add(r.map[y, x].Loot);
@@ -137,14 +139,17 @@ namespace Server
                 {
                     if (r.map[y, x].Loot is Crate)
                     {
-                        r.map[y, x].Loot.Add(it1, p);
-                        p.Inventory.Remove(it1);
+                        if(r.map[y, x].Loot.Add(it1, p))
+                            p.Inventory.Remove(it1);
                     }
                     else
                     {
-                        map_change = "create;" + it1.Type;
-                        r.map[y, x].Loot = it1;
-                        p.Inventory.Remove(it1);
+                        if (it1 is not Crate)
+                        {
+                            map_change = "create;" + it1.Type;
+                            r.map[y, x].Loot = it1;
+                            p.Inventory.Remove(it1);
+                        }
                     }
                 }
             }

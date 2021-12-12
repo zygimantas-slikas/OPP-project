@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Server;
+using Server.Visitor;
 
 namespace Server
 {
@@ -25,12 +26,18 @@ namespace Server
 
         public virtual bool IsCrate() { return false; }
 
-        public virtual void Add(Item component, Player p)
+        public virtual bool Add(Item component, Player p)
         {
             throw new NotImplementedException();
         }
 
         public virtual Item Remove(Item component, Player p, out bool crateOfItems)
+        {
+            throw new NotImplementedException();
+        }
+
+        //visitor pattern
+        public virtual int Accept(IVisitor<int> visitor, int state)
         {
             throw new NotImplementedException();
         }
@@ -58,6 +65,7 @@ namespace Server
             this.Points = 200;
             this.Type = new string(this.GetType().Name);
         }
+
     }
     class RedBerry : Berry
     {
@@ -82,6 +90,11 @@ namespace Server
         {
             p.AddHealth(this.Heal);
         }
+
+        public override int Accept(IVisitor<int> visitor, int state)
+        {
+            return visitor.VisitLeaf(this, state);
+        }
     }
     public class BlueMedicKit : MedicKit
     {
@@ -90,6 +103,11 @@ namespace Server
             this.Heal = 20;
             this.Type = new string(this.GetType().Name);
         }
+        public override int Accept(IVisitor<int> visitor, int state)
+        {
+            state += 100;
+            return visitor.VisitLeaf(this, state);
+        }
     }
     class RedMedicKit : MedicKit
     {
@@ -97,6 +115,11 @@ namespace Server
         {
             this.Heal = 10;
             this.Type = new string(this.GetType().Name);
+        }
+        public override int Accept(IVisitor<int> visitor, int state)
+        {
+            state += 200;
+            return visitor.VisitLeaf(this, state);
         }
     }
     public class Gun : Item
@@ -116,6 +139,8 @@ namespace Server
         {
             
         }
+
+
     }
     class BlueGun : Gun
     {
@@ -125,6 +150,11 @@ namespace Server
             this.Ammo = 12;
             this.Type = new string(this.GetType().Name);
         }
+        public override int Accept(IVisitor<int> visitor, int state)
+        {
+            state += 200;
+            return visitor.VisitLeaf(this, state);
+        }
     }
     class RedGun : Gun
     {
@@ -133,6 +163,11 @@ namespace Server
             this.Damage = 30;
             this.Ammo = 6;
             this.Type = new string(this.GetType().Name);
+        }
+        public override int Accept(IVisitor<int> visitor, int state)
+        {
+            state += 300;
+            return visitor.VisitLeaf(this, state);
         }
     }
     public class Trap : Item

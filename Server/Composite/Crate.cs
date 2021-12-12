@@ -1,5 +1,6 @@
 ﻿
 using Server;
+using Server.Visitor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +12,8 @@ namespace Client.Composite
     public class Crate : Item
     {
 
-        public enum Crate_type { general, guns, health };
         public override Item.Crate_type Storage { get; set; }
-        List<Item> items = new List<Item>();
-        string action = "";
+        public List<Item> items = new List<Item>();
 
 
         public Crate(Item.Crate_type str = Item.Crate_type.general)
@@ -23,37 +22,43 @@ namespace Client.Composite
             this.Type = this.GetType().Name;
         }
 
-        public override void Add(Item item, Player p)
+        public override bool Add(Item item, Player p)
         {
+            bool addSuccess = false;
             if (this.Storage != Item.Crate_type.general)
             {
                 if ((this.Storage == Item.Crate_type.guns && (item.Type == "BlueGun" || item.Type == "RedGun")) ||
                     (this.Storage == Item.Crate_type.health && (item.Type == "BlueMedicKit" || item.Type == "RedMedicKit")))
+                {
                     items.Add(item);
+                    addSuccess = true;
+                }
             }
             else
             {
                 if(item.Type == "Crate")
                 {
                     items.Add(item);
+                    addSuccess = true;
                 }
             }
+            return addSuccess;
         }
 
         public override Item Remove(Item item, Player p, out bool crateOfItems)
         {
             Item item1 = null;
             crateOfItems = false;
-            if ((this.Storage == Item.Crate_type.guns && (item.Type == "BlueGun" || item.Type == "RedGun")) ||
-                    (this.Storage == Item.Crate_type.health && (item.Type == "BlueMedicKit" || item.Type == "RedMedicKit")))
+            if ((this.Storage == Item.Crate_type.guns || this.Storage == Item.Crate_type.health) && items.Count >= 3)
             {
                 crateOfItems = true;
                 return this;
             }
-            else if (items.Count > 0)
+            else if (items.Count > 0 && this.Storage == Item.Crate_type.general) //Sell
             {
-                item1 = items[items.Count - 1];
-                items.RemoveAt(items.Count - 1);
+                
+                PickupEffect(p);
+                items = new List<Item>();
             }
             return item1;
         }
@@ -68,21 +73,7 @@ namespace Client.Composite
 
         public override void PickupEffect(Player p)
         {
-            int i = 0;
-            string result = "Items in Crate: (";
-
-            foreach (Item component in this.items)
-            {
-                result += component.Type;
-                if (i != this.items.Count - 1)
-                {
-                    result += "+";
-                }
-                i++;
-            }
-
-            result += ")";
-            Console.WriteLine(result);
+            p.Addpoints(this.Accept(new CrateExchangeVisitor(), 0));
         }
 
 
@@ -91,6 +82,11 @@ namespace Client.Composite
             Crate c = new Crate();
             c.Type = this.Type;
             return c;
+        }
+
+        public override int Accept(IVisitor<int> visitor, int state)
+        {
+            return visitor.VisitComposite(this, state);
         }
     }
 }
