@@ -1,4 +1,5 @@
-﻿using Client.Facade;
+﻿using Client.Composite;
+using Client.Facade;
 using Client.Observer;
 using Client.Proxy;
 using Client.State;
@@ -302,6 +303,20 @@ namespace Client
                             break;
                         case "RedMedicKit":
                             item_list.Add(new RedMedicKit());
+                            break;
+                        case "Crate":
+                            string storageValue = (string)loot_items[j]["Storage"];
+                            switch (storageValue)
+                            {
+                                case "1":
+                                    item_list.Add(new Crate(Crate.Crate_type.guns));
+                                    break;
+                                case "2":
+                                    item_list.Add(new Crate(Crate.Crate_type.health));
+                                    break;
+                                default:
+                                    break;
+                            }
                             break;
                         default:
                             break;

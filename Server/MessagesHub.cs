@@ -109,8 +109,10 @@ namespace Server
             {
                 logger.Log("Took an item!", "Action", p);
                 if (r.map[y, x].Loot is not Crate)
+                {
                     map_change = "remove;";
-                r.map[y, x].Loot.PickupEffect(p);
+                    r.map[y, x].Loot.PickupEffect(p);
+                }
                 if (r.map[y, x].Loot is not Berry && r.map[y, x].Loot is not Crate)
                 {
                     p.Inventory.Add(r.map[y, x].Loot);
@@ -118,10 +120,20 @@ namespace Server
                 }
                 else if(r.map[y, x].Loot is Crate)
                 {
-                    Item loot = r.map[y, x].Loot.Remove(new BlueGun(), p);
+                    bool crateOfItems = false;
+                    Item loot = r.map[y, x].Loot.Remove(new BlueGun(), p, out crateOfItems);
                     if (loot != null)
                     {
-                        p.Inventory.Add(loot);
+                        if (crateOfItems)
+                        {
+                            p.Inventory.Add(r.map[y, x].Loot);
+                            map_change = "remove;";
+                        }
+                        else
+                        {
+                            p.Inventory.Add(loot);
+                        }
+                        
                     }
                 }
             }
@@ -133,14 +145,17 @@ namespace Server
                 {
                     if (r.map[y, x].Loot is Crate)
                     {
-                        r.map[y, x].Loot.Add(it1, p);
-                        p.Inventory.Remove(it1);
+                        if(r.map[y, x].Loot.Add(it1, p))
+                            p.Inventory.Remove(it1);
                     }
                     else
                     {
-                        map_change = "create;" + it1.Type;
-                        r.map[y, x].Loot = it1;
-                        p.Inventory.Remove(it1);
+                        if (it1 is not Crate)
+                        {
+                            map_change = "create;" + it1.Type;
+                            r.map[y, x].Loot = it1;
+                            p.Inventory.Remove(it1);
+                        }
                     }
                 }
             }

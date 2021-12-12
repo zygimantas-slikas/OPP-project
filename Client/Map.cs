@@ -91,7 +91,22 @@ namespace Client
                                 }
                                 break;
                             case "Crate":
-                                item1 = new Crate();
+                                string storageValue = (string)pj["map"][i][j]["Loot"]["Storage"];
+                                switch ((string)pj["map"][i][j]["Loot"]["Storage"])
+                                {
+                                    case "1":
+                                        item1 = new Crate(Crate.Crate_type.guns);
+                                        break;
+                                    case "2":
+                                        item1 = new Crate(Crate.Crate_type.health);
+                                        break;
+                                    case "0":
+                                        item1 = new Crate(Crate.Crate_type.general);
+                                        break;
+                                    default:
+                                        item1 = new Crate(Crate.Crate_type.general);
+                                        break;
+                                }
                                 break;
                             default:
                                 item1 = null;
