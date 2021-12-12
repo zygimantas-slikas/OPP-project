@@ -14,7 +14,7 @@ namespace NUnit_tests
             // Arrange
             List<Item> items = new List<Item>();
             Berry berry = new Berry();
-            var player = new Player("1", "player1", 10, 10, items);
+            var player = new Player(1, "1", "player1", 10, 10, items);
             Item item = berry;
 
             // Act

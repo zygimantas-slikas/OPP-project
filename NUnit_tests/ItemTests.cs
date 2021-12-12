@@ -44,8 +44,8 @@ namespace NUnit_tests
             // Arrange
             List<Item> items = new List<Item>();
             BlueBerry berry = new BlueBerry();
-            var player = new Player("1", "player1", 10, 10, items);
-            var player2 = new Player("1", "player2", 10, 10, items);
+            var player = new Player(1, "1", "player1", 10, 10, items);
+            var player2 = new Player(1, "1", "player2", 10, 10, items);
 
             // Act
             berry.PickupEffect(player);
@@ -58,8 +58,8 @@ namespace NUnit_tests
         {
             List<Item> items = new List<Item>();
             BlueMedicKit medickit = new BlueMedicKit();
-            var player = new Player("1", "player1", 10, 10, items);
-            var player2 = new Player("1", "player2", 10, 10, items);
+            var player = new Player(1, "1", "player1", 10, 10, items);
+            var player2 = new Player(1, "1", "player2", 10, 10, items);
 
             medickit.PickupEffect(player);
             Assert.AreNotEqual(player.Health, player2.Health);
@@ -71,7 +71,7 @@ namespace NUnit_tests
             List<Item> items = new List<Item>();
             BlueBerry berry = new BlueBerry();
 
-            var player = new Player("1", "player1", 10, 10, items);
+            var player = new Player(1, "1", "player1", 10, 10, items);
 
             berry.PickupEffect(player);
 
