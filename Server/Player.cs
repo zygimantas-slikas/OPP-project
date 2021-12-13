@@ -9,10 +9,11 @@ namespace Server
         public int Y { get; set; } 
         public /*virtual*/ string Con_id { get; set; }
         public virtual int Health { get; protected set; }
-        public int Points { get; protected set; }
+        public int Points { get; /*protected*/ set; }
         public string Name { get; }
         public List<Item> Inventory { get; set; }
         public virtual string Comment { get; set; }
+        public virtual string State { get; set; }
         public Player(int color, string id, string name, int x, int y, List<Item> inventory)
         {
             this.Color = color;
@@ -24,6 +25,7 @@ namespace Server
             this.Con_id = id;
             this.Health = 100;
             this.Comment = "Connected!";
+            this.State = "Not set";
         }
         public Player(string id, string name)
         {

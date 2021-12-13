@@ -1,5 +1,6 @@
 ﻿using Client.Composite;
 using Client.Facade;
+using Client.Memento;
 using Client.Observer;
 using Client.Proxy;
 using Client.State;
@@ -37,6 +38,8 @@ namespace Client
         protected string[] rooms_data_from_server;
         protected IMapControl map_drawer;
         ActionState actionState = new ActionState();
+        Orginator orginator = new Orginator();
+        Caretaker caretaker = new Caretaker();
         public MainWindow()
         {
             InitializeComponent();
@@ -275,6 +278,12 @@ namespace Client
         //}
         private void Set_players(string json_text)
         {
+            //orginator.Name = current_Player.Name;
+            //orginator.X = 0;
+            //orginator.Y = 0;
+            //orginator.Points = 100000;
+
+            //caretaker.Memento = orginator.SaveMemento();
             //gamestate.setState(new PreparationState(gamestate));
             JArray json_players = JArray.Parse(json_text);
             players1 = new List<Player>();
@@ -324,9 +333,16 @@ namespace Client
                 }
                 players1.Add(new Player((int)json_players[i]["Color"], (int)json_players[i]["Health"],
                     (string)json_players[i]["Name"],(int)json_players[i]["X"], (int)json_players[i]["Y"],
-                    (int)json_players[i]["Points"], item_list, (string)json_players[i]["Comment"]));
+                    (int)json_players[i]["Points"], item_list, (string)json_players[i]["Comment"], (string)json_players[i]["State"]));
             }
             current_Player = players1.Find(x => x.Name == current_player_name);
+            if (orginator.X == 0 && orginator.Y == 0)
+            {
+                caretaker.Memento = orginator.SaveMemento();
+            }
+            orginator.X = current_Player.X;
+            orginator.Y = current_Player.Y;
+            orginator.Points = current_Player.Points;
 
             this.map_drawer.current = current_Player;
             items_scrollbar.Children.Clear();
@@ -370,11 +386,14 @@ namespace Client
                 position.Content = String.Format("X:{0}, Y:{1}", players1[i].X, players1[i].Y);
                 Label log = new Label();
                 log.Content = "Log: " + players1[i].Comment;
+                Label state = new Label();
+                state.Content = "Action State: " + players1[i].State;
                 p1.Children.Add(name);
                 p1.Children.Add(health);
                 p1.Children.Add(points);
                 p1.Children.Add(position);
                 p1.Children.Add(log);
+                p1.Children.Add(state);
                 players_scrollbar.Children.Add(p1);
             }
         }
@@ -422,10 +441,10 @@ namespace Client
         }
         protected void Key_pressed(object sender, KeyEventArgs e)
         {
-            facade.Move_player(map1, current_Player, settings, map_drawer, e, connection, mapId, players_scrollbar, actionState);
+            facade.Move_player(map1, current_Player, settings, map_drawer, e, connection, mapId, /*players_scrollbar, */actionState/*, orginator, caretaker*/);
             facade.Check_if_steped_on_trap(map1, current_Player, connection, mapId, e);
             facade.Drop_trap(current_Player, connection, mapId, e, actionState);
-            facade.Actions_with_items(map1, current_Player, connection, mapId, e, inventory_items_gui, actionState);
+            facade.Actions_with_items(map1, current_Player, connection, mapId, e, inventory_items_gui, actionState, orginator, caretaker);
             //string action = "";
             //string info = "";
             //Invoker invoker = new Invoker();

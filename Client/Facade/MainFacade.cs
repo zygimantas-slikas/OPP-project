@@ -26,31 +26,50 @@ using Client.Adapter;
 using Client.Proxy;
 using Client.State;
 using Client.Composite;
+using Client.Memento;
 
 namespace Client.Facade
 {
     class MainFacade
     {
-        public async void Move_player(Map map1, Player current_Player, GameSettings settings, IMapControl map_controler, KeyEventArgs e, HubConnection connection, Int32 mapId, StackPanel players_scrollbar, ActionState gamestate)
+        public async void Move_player(Map map1, Player current_Player, GameSettings settings, IMapControl map_controler, KeyEventArgs e, HubConnection connection, Int32 mapId, /*StackPanel players_scrollbar,*/ ActionState gamestate/*, Orginator orginator, Caretaker caretaker*/)
         {
             bool changed = false;
-            if (e.Key == Key.P)
-            {
-                if (gamestate.message == null)
-                {
-                    gamestate.setState(new StartMovingState(gamestate));
-                    Label state = new Label();
-                    state.Content = "State: " + gamestate.message;
-                    players_scrollbar.Children.Add(state);
-                }
-                else
-                {
-                    gamestate.NextState();
-                    Label state = new Label();
-                    state.Content = "State: " + gamestate.message;
-                    players_scrollbar.Children.Add(state);
-                }
-            }
+            //if (e.Key == Key.P)
+            //{
+            //    if (gamestate.message == null)
+            //    {
+            //        gamestate.setState(new StartMovingState(gamestate));
+            //        Label state = new Label();
+            //        state.Content = "State: " + gamestate.message;
+            //        players_scrollbar.Children.Add(state);
+            //        current_Player.State = gamestate.message;
+            //    }
+            //    else
+            //    {
+            //        gamestate.NextState();
+            //        Label state = new Label();
+            //        state.Content = "State: " + gamestate.message;
+            //        players_scrollbar.Children.Add(state);
+            //        current_Player.State = gamestate.message;
+            //    }
+            //}
+            //if (e.Key == Key.R)
+            //{
+            //    action = "eik";
+            //    //if (!settings.Delay.IsCompleted) return;
+            //    orginator.RestoreMemento(caretaker.Memento);
+            //    Label state = new Label();
+            //    state.Content = "r: " + orginator.Points;
+            //    players_scrollbar.Children.Add(state);
+            //    current_Player.Points = orginator.Points;
+            //    //current_Player.X -= 2;
+            //    current_Player.Y -= 1;
+            //    changed = true;
+            //    settings.moved();
+            //    //current_Player.move();
+            //}
+
             if (gamestate.message == "Start moving" || gamestate.message == "Picking items" || gamestate.message == "Using inventory" || gamestate.message == "Dropping traps")
             {
                 if (e.Key == GameSettings.GetInstance().Move_up_key)
@@ -176,7 +195,7 @@ namespace Client.Facade
             }
             }
         }
-        public async void Actions_with_items(Map map1, Player current_Player, HubConnection connection, Int32 mapId, KeyEventArgs e, List<Border> inventory_items_gui, ActionState actionState)
+        public async void Actions_with_items(Map map1, Player current_Player, HubConnection connection, Int32 mapId, KeyEventArgs e, List<Border> inventory_items_gui, ActionState actionState, Orginator orginator, Caretaker caretaker)
         {
             string action = "";
             string info = "";
@@ -200,7 +219,32 @@ namespace Client.Facade
                     action = "add_comment4";
                 }
             }
-        
+
+            if (e.Key == Key.P)
+            {
+                if (actionState.message == null)
+                {
+                    action = "change_state";
+                    actionState.setState(new StartMovingState(actionState));
+                    current_Player.State = actionState.message;
+                }
+                else
+                {
+                    action = "change_state";
+                    actionState.NextState();
+                    current_Player.State = actionState.message;
+                }
+            }
+
+            if (e.Key == Key.R)
+            {
+                action = "reset";
+                orginator.RestoreMemento(caretaker.Memento);
+                current_Player.X = orginator.X;
+                current_Player.Y = orginator.Y;
+                current_Player.Points = orginator.Points;
+            }
+
             if (e.Key == Key.O)
             {
                 action = "add_comment5";
@@ -359,7 +403,7 @@ namespace Client.Facade
             //}
             if (action != "")
             {
-                Object[] args = new Object[5] { mapId, current_Player.Y, current_Player.X, action, info };
+                Object[] args = new Object[7] { mapId, current_Player.Y, current_Player.X, current_Player.Points, action, info, current_Player.State };
                 await connection.SendCoreAsync("Action", args);
             }
         }

@@ -98,7 +98,7 @@ namespace Server
                 await this.Clients.Group(map_id.ToString()).SendAsync("Set_players", json_players);
             }
         }
-        public async Task Action(Int32 map_id, Int32 y, Int32 x, string action, string info)
+        public async Task Action(Int32 map_id, Int32 y, Int32 x, Int32 points, string action, string info, string state)
         {
             Room r = Program.rooms.Find(x => x.Id == map_id);
             Player p = r.players.Find(x => x.Con_id == Context.ConnectionId);
@@ -161,7 +161,6 @@ namespace Server
             }
             else if (action == "use_item")
             {
-
             }
             else if (action == "add_comment")
             {
@@ -186,6 +185,16 @@ namespace Server
             else if (action == "add_comment6")
             {
                 loggerChat.Log("I am going to get you!", "Taunt", p);
+            }
+            else if (action == "change_state")
+            {
+                p.State = state;
+            }
+            else if (action == "reset")
+            {
+                p.X = x;
+                p.Y = y;
+                p.Points = points;
             }
             string json_players = r.Players_to_Json();
             await this.Clients.Group(map_id.ToString()).SendAsync("Update_map_state", y, x, map_change);
