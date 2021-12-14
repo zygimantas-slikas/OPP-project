@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Client.Mediator;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,12 +15,12 @@ namespace Client.Proxy
         {
 
         }
-        public override void DrawMap(Map map1, Dictionary<string, Shape> players_gui, Canvas canvas1)
+        public override void DrawMap(Map map1, ScoreMediator m)
         {
             int pos_x = 0, pos_y = 0;
-            canvas1.Children.Clear();
-            canvas1.Height = Convert.ToInt32(map1.map_size) * 50 + 20;
-            canvas1.Width = Convert.ToInt32(map1.map_size) * 50 + 20;
+            m.canvas1.Children.Clear();
+            m.canvas1.Height = Convert.ToInt32(map1.map_size) * 50 + 20;
+            m.canvas1.Width = Convert.ToInt32(map1.map_size) * 50 + 20;
             for (int i = 0; i < Convert.ToInt32(map1.map_size); i++)
             {
                 pos_x = 0;
@@ -49,7 +50,7 @@ namespace Client.Proxy
                     }
                     myRect.Height = 50;
                     myRect.Width = 50;
-                    canvas1.Children.Add(myRect);
+                    m.canvas1.Children.Add(myRect);
                     Canvas.SetTop(myRect, pos_y);
                     Canvas.SetLeft(myRect, pos_x);
                     Canvas.SetZIndex(myRect, 0);
@@ -60,7 +61,7 @@ namespace Client.Proxy
                     if (map1.map[i, j].Loot != null)
                     {
                         map1.map[i, j].Icon = map1.map[i, j].Loot.get_view();
-                        canvas1.Children.Add(map1.map[i, j].Icon);
+                        m.canvas1.Children.Add(map1.map[i, j].Icon);
                         Canvas.SetTop(map1.map[i, j].Icon, pos_y + 5);
                         Canvas.SetLeft(map1.map[i, j].Icon, pos_x + 5);
                         Canvas.SetZIndex(map1.map[i, j].Icon, 2);
@@ -69,15 +70,15 @@ namespace Client.Proxy
                 }
                 pos_y += 50;
             }
-            foreach (var el in players_gui.Values)
+            foreach (var el in m.players_gui.Values)
             {
-                canvas1.Children.Remove(el);
-                canvas1.Children.Add(el);
+                m.canvas1.Children.Remove(el);
+                m.canvas1.Children.Add(el);
                 Canvas.SetZIndex(el, 3);
             }
-            this.SetScrollBar();
+            this.SetScrollBar(m);
         }
-        public override void DrawTile(Map map1, Dictionary<string, Shape> players_gui, Canvas canvas1, int x, int y)
+        public override void DrawTile(Map map1, ScoreMediator m, int x, int y)
         {
             Rectangle myRect = new System.Windows.Shapes.Rectangle();
             myRect.Stroke = System.Windows.Media.Brushes.Black;
@@ -103,7 +104,7 @@ namespace Client.Proxy
             }
             myRect.Height = 50;
             myRect.Width = 50;
-            canvas1.Children.Add(myRect);
+            m.canvas1.Children.Add(myRect);
             Canvas.SetTop(myRect, y*50);
             Canvas.SetLeft(myRect, x*50);
             Canvas.SetZIndex(myRect, 0);
@@ -114,13 +115,13 @@ namespace Client.Proxy
             if (map1.map[y, x].Loot != null)
             {
                 map1.map[y, x].Icon = map1.map[y, x].Loot.get_view();
-                canvas1.Children.Add(map1.map[y, x].Icon);
+                m.canvas1.Children.Add(map1.map[y, x].Icon);
                 Canvas.SetTop(map1.map[y, x].Icon, y*50 + 5);
                 Canvas.SetLeft(map1.map[y, x].Icon, x*50 + 5);
                 Canvas.SetZIndex(map1.map[y, x].Icon, 2);
             }
         }
-        public override void SetScrollBar()
+        public override void SetScrollBar(ScoreMediator m)
         {
             canvas_scrollbar.ScrollToVerticalOffset(current.Y * 50 + 5 - canvas_scrollbar.ActualHeight / 2);
             canvas_scrollbar.ScrollToHorizontalOffset(current.X * 50 + 5 - canvas_scrollbar.ActualWidth / 2);

@@ -9,6 +9,7 @@ using Client.Observer;
 using System.Windows.Shapes;
 using System.Windows.Controls;
 using Client.Iterator;
+using Client.Mediator;
 
 namespace Client
 {
@@ -24,7 +25,7 @@ namespace Client
         public int currentItem { get; private set; }
         private IMovementStrategy strategy;
         public string Comment { get; set; }
-
+        protected ScoreMediator m;
         public IScore this[int itemIndex]
         {
             get => scoreObservers[itemIndex];
@@ -32,7 +33,7 @@ namespace Client
         }
 
         [JsonConstructor]
-        public Player(int color, int Health, string Name, int X, int Y, int points, List<Item> Inventory, string comment)
+        public Player(int color, int Health, string Name, int X, int Y, int points, List<Item> Inventory, string comment, ScoreMediator mediator)
         {
             this.Color = color;
             this.X = X;
@@ -43,6 +44,7 @@ namespace Client
             this.Health = Health;
             this.currentItem = 0;
             this.Comment = comment;
+            this.m = mediator;
         }
         public Player(/*int Health, string Name, int X, int Y, int points, List<Item> Inventory, string comment*/)
         {
@@ -114,6 +116,17 @@ namespace Client
         {
             return scoreObservers.Count;
         }
+
+        public void SendMessage(string msg)
+        {
+            m.Notify(this, msg);
+        }
+
+        public void ReceiveMessage(string msg)
+        {
+
+        }
+
         public void Addpoints(int pts)
         {
             this.Points += pts;

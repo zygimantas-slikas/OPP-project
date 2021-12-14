@@ -1,5 +1,6 @@
 ﻿using Client.Composite;
 using Client.Facade;
+using Client.Mediator;
 using Client.Observer;
 using Client.Proxy;
 using Client.State;
@@ -24,8 +25,8 @@ namespace Client
     public partial class MainWindow : Window
     {
         protected Map map1;
-        protected List<Player> players1;
-        protected Dictionary<String, Shape> players_gui;
+        //protected List<Player> players1;
+        //protected Dictionary<String, Shape> players_gui;
         protected String current_player_name;
         protected Player current_Player;
         protected List<Border> inventory_items_gui;
@@ -37,6 +38,7 @@ namespace Client
         protected string[] rooms_data_from_server;
         protected IMapControl map_drawer;
         ActionState actionState = new ActionState();
+        ScoreMediator m = new ScoreMediator();
         public MainWindow()
         {
             InitializeComponent();
@@ -54,6 +56,7 @@ namespace Client
             join_tab_button.BorderBrush = brush2;
             game_tab_button.BorderBrush = brush2;
             this.map_drawer = new MapDrawProxy(this.canvas_scrollbar, current_Player);
+            //m.AddPlayer(current_Player);
         }
         protected void Connect_to_server(object sender, RoutedEventArgs e)
         {
@@ -148,7 +151,7 @@ namespace Client
             Object[] args = new Object[2] { id, player_name.Text };
             this.connection.SendCoreAsync("Join_map", args);
             this.Show_game_tab(sender, e);
-            this.players_gui = new Dictionary<String, Shape>();
+            //this.players_gui = new Dictionary<String, Shape>();
             this.inventory_items_gui = new List<Border>();
         }
         private void Show_maps_options(string[] list)
@@ -173,14 +176,14 @@ namespace Client
             this.map1 = new Map();
             var t1 = Task.Run(() => map1.From_json(json_text));
             t1.Wait();
-            this.map_drawer.DrawMap(map1, players_gui, canvas1);
+            this.map_drawer.DrawMap(map1, m);
         }
         private void Update_map_state(Int32 y, Int32 x, string text)
         {
             string[] parts1 = text.Split(';');
             if (parts1[0] == "remove")
             {
-                canvas1.Children.Remove(this.map1.map[y, x].Icon);
+                m.canvas1.Children.Remove(this.map1.map[y, x].Icon);
                 this.map1.map[y, x].Icon = null;
                 this.map1.map[y, x].Loot = null;
             }
@@ -207,7 +210,7 @@ namespace Client
                 }
                 this.map1.map[y, x].Loot = it1;
                 this.map1.map[y, x].Icon = it1.get_view();
-                canvas1.Children.Add(this.map1.map[y, x].Icon);
+                m.canvas1.Children.Add(this.map1.map[y, x].Icon);
                 Canvas.SetTop   (map1.map[y, x].Icon, y * 50 + 5);
                 Canvas.SetLeft  (map1.map[y, x].Icon, x * 50 + 5);
                 Canvas.SetZIndex(map1.map[y, x].Icon, 1);
@@ -277,7 +280,7 @@ namespace Client
         {
             //gamestate.setState(new PreparationState(gamestate));
             JArray json_players = JArray.Parse(json_text);
-            players1 = new List<Player>();
+            //players1 = new List<Player>();
             for (int i = 0; i < json_players.Count; i++)
             {
                 List<Item> item_list = new List<Item>(); 
@@ -322,11 +325,12 @@ namespace Client
                             break;
                     }
                 }
-                players1.Add(new Player((int)json_players[i]["Color"], (int)json_players[i]["Health"],
-                    (string)json_players[i]["Name"],(int)json_players[i]["X"], (int)json_players[i]["Y"],
-                    (int)json_players[i]["Points"], item_list, (string)json_players[i]["Comment"]));
+                m.AddPlayer(new Player((int)json_players[i]["Color"], (int)json_players[i]["Health"],
+                    (string)json_players[i]["Name"], (int)json_players[i]["X"], (int)json_players[i]["Y"],
+                    (int)json_players[i]["Points"], item_list, (string)json_players[i]["Comment"], m));
+                
             }
-            current_Player = players1.Find(x => x.Name == current_player_name);
+            current_Player = m.GetPlayer(current_player_name);// m.players1.Find(x => x.Name == current_player_name);
 
             this.map_drawer.current = current_Player;
             items_scrollbar.Children.Clear();
@@ -348,9 +352,9 @@ namespace Client
                 this.inventory_items_gui.Add(b);
                 items_scrollbar.Children.Add(b);
             }
-            facade.Update_players_objects(players1, players_gui, canvas1, current_Player);
+            facade.Update_players_objects(m.players1, m.players_gui, m.canvas1, current_Player);
             players_scrollbar.Children.Clear();
-            for (int i = 0; i < players1.Count; i++)
+            for (int i = 0; i < m.players1.Count; i++)
             {
                 StackPanel p1 = new StackPanel();
                 p1.Margin = new Thickness(10);
@@ -361,15 +365,15 @@ namespace Client
                 brush.Freeze();
                 p1.Background = brush;
                 Label name = new Label();
-                name.Content = "Name: " + players1[i].Name;
+                name.Content = "Name: " + m.players1[i].Name;
                 Label health = new Label();
-                health.Content = "Health: " + players1[i].Health;
+                health.Content = "Health: " + m.players1[i].Health;
                 Label points= new Label();
-                points.Content = "Points: " + players1[i].Points;
+                points.Content = "Points: " + m.players1[i].Points;
                 Label position = new Label();
-                position.Content = String.Format("X:{0}, Y:{1}", players1[i].X, players1[i].Y);
+                position.Content = String.Format("X:{0}, Y:{1}", m.players1[i].X, m.players1[i].Y);
                 Label log = new Label();
-                log.Content = "Log: " + players1[i].Comment;
+                log.Content = "Log: " + m.players1[i].Comment;
                 p1.Children.Add(name);
                 p1.Children.Add(health);
                 p1.Children.Add(points);
@@ -422,7 +426,7 @@ namespace Client
         }
         protected void Key_pressed(object sender, KeyEventArgs e)
         {
-            facade.Move_player(map1, current_Player, settings, map_drawer, e, connection, mapId, players_scrollbar, actionState);
+            facade.Move_player(map1, current_Player, settings, map_drawer, e, connection, mapId, players_scrollbar, actionState, m);
             facade.Check_if_steped_on_trap(map1, current_Player, connection, mapId, e);
             facade.Drop_trap(current_Player, connection, mapId, e, actionState);
             facade.Actions_with_items(map1, current_Player, connection, mapId, e, inventory_items_gui, actionState);

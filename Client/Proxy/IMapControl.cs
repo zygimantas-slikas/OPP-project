@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Shapes;
 using System.Windows.Controls;
+using Client.Mediator;
 
 namespace Client.Proxy
 {
@@ -17,9 +18,9 @@ namespace Client.Proxy
             this.canvas_scrollbar = sc;
             this.current = p;
         }
-        public abstract void DrawMap(Map map1, Dictionary<string, Shape> players_gui, Canvas canvas1);
-        public abstract void DrawTile(Map map1, Dictionary<string, Shape> players_gui, Canvas canvas1, int x, int y);
-        public abstract void SetScrollBar();
+        public abstract void DrawMap(Map map1, ScoreMediator m);
+        public abstract void DrawTile(Map map1, ScoreMediator m, int x, int y);
+        public abstract void SetScrollBar(ScoreMediator m);
 
     }
 }

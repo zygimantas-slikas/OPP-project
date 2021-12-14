@@ -26,12 +26,13 @@ using Client.Adapter;
 using Client.Proxy;
 using Client.State;
 using Client.Composite;
+using Client.Mediator;
 
 namespace Client.Facade
 {
     class MainFacade
     {
-        public async void Move_player(Map map1, Player current_Player, GameSettings settings, IMapControl map_controler, KeyEventArgs e, HubConnection connection, Int32 mapId, StackPanel players_scrollbar, ActionState gamestate)
+        public async void Move_player(Map map1, Player current_Player, GameSettings settings, IMapControl map_controler, KeyEventArgs e, HubConnection connection, Int32 mapId, StackPanel players_scrollbar, ActionState gamestate, ScoreMediator m)
         {
             bool changed = false;
             if (e.Key == Key.P)
@@ -61,7 +62,7 @@ namespace Client.Facade
                     current_Player.Y -= 1;
                     changed = true;
                     //canvas_scrollbar.ScrollToVerticalOffset(current_Player.Y * 50 + 5 - canvas_scrollbar.ActualHeight / 2);
-                    map_controler.SetScrollBar();
+                    map_controler.SetScrollBar(m);
                     settings.moved();
                     if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
                     {
@@ -90,7 +91,7 @@ namespace Client.Facade
                     current_Player.X -= 1;
                     changed = true;
                     //canvas_scrollbar.ScrollToHorizontalOffset(current_Player.X * 50 + 5 - canvas_scrollbar.ActualWidth / 2);
-                    map_controler.SetScrollBar();
+                    map_controler.SetScrollBar(m);
                     settings.moved();
                     if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
                     {
@@ -119,7 +120,7 @@ namespace Client.Facade
                     current_Player.Y += 1;
                     changed = true;
                     //canvas_scrollbar.ScrollToVerticalOffset(current_Player.Y * 50 + 5 - canvas_scrollbar.ActualHeight / 2);
-                    map_controler.SetScrollBar();
+                    map_controler.SetScrollBar(m);
                     settings.moved();
                     if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
                     {
@@ -148,7 +149,7 @@ namespace Client.Facade
                     current_Player.X += 1;
                     changed = true;
                     //canvas_scrollbar.ScrollToHorizontalOffset(current_Player.X * 50 + 5 - canvas_scrollbar.ActualWidth / 2);
-                    map_controler.SetScrollBar();
+                    map_controler.SetScrollBar(m);
                     settings.moved();
                     if (map1.map[current_Player.Y, current_Player.X].Surface == Tile.Tile_type.water)
                     {
@@ -520,12 +521,14 @@ namespace Client.Facade
         }
         public void Update_players_objects(List<Player> players1, Dictionary<String, Shape> players_gui, Canvas canvas1, Player current_Player)
         {
-            IEnumerable<string> names = from Player p in players1 select p.Name;
-            Score ScoreTracking = new Score();
-            IEnumerable<string> created = players_gui.Keys.ToList();
-            if (current_Player.getObserverCount() == 0)
-                current_Player.Attach(ScoreTracking);
-            current_Player.Notify(names, created, players1, players_gui, canvas1, current_Player);
+            //IEnumerable<string> names = from Player p in players1 select p.Name;
+            //Score ScoreTracking = new Score();
+            //IEnumerable<string> created = players_gui.Keys.ToList();
+            //if (current_Player.getObserverCount() == 0)
+            //    current_Player.Attach(ScoreTracking);
+            //current_Player.Notify(names, created, players1, players_gui, canvas1, current_Player);
+            current_Player.SendMessage("update");
+
         }
     }
 }

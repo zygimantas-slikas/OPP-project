@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Client.Mediator;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,17 +21,17 @@ namespace Client.Proxy
         {
             drawer = new MapDrawer(sc, p);
         }
-        public override void DrawMap(Map map1, Dictionary<string, Shape> players_gui, Canvas canvas1)
+        public override void DrawMap(Map map1, ScoreMediator m)//Dictionary<string, Shape> players_gui, Canvas canvas1)
         {
             this.map2 = map1;
-            canvas2 = canvas1;
-            players_gui2 = players_gui;
+            canvas2 = m.canvas1;
+            players_gui2 = m.players_gui;
             drawer.canvas_scrollbar = this.canvas_scrollbar;
             drawer.current = this.current;
-            canvas1.Children.Clear();
-            canvas1.Height = Convert.ToInt32(map1.map_size) * 50 + 20;
-            canvas1.Width = Convert.ToInt32(map1.map_size) * 50 + 20;
-            drawer.SetScrollBar();
+            m.canvas1.Children.Clear();
+            m.canvas1.Height = Convert.ToInt32(map1.map_size) * 50 + 20;
+            m.canvas1.Width = Convert.ToInt32(map1.map_size) * 50 + 20;
+            drawer.SetScrollBar(m);
             this.bitmap = new bool[map1.map_size, map1.map_size];
             int x1, x2, y1, y2;
             x1 = current.X;
@@ -52,27 +53,27 @@ namespace Client.Proxy
                 for (int j = x1; j <= x2; j++)
                 {
                     this.bitmap[j, i] = true;
-                    this.drawer.DrawTile(map1, players_gui, canvas1, j, i);
+                    this.drawer.DrawTile(map1,m, j, i);
                 }
             }
-            foreach (var el in players_gui.Values)
+            foreach (var el in m.players_gui.Values)
             {
-                canvas1.Children.Remove(el);
-                canvas1.Children.Add(el);
+                m.canvas1.Children.Remove(el);
+                m.canvas1.Children.Add(el);
                 Canvas.SetZIndex(el, 3);
             }
         }
 
-        public override void DrawTile(Map map1, Dictionary<string, Shape> players_gui, Canvas canvas1, int x, int y)
+        public override void DrawTile(Map map1, ScoreMediator m, int x, int y)
         {
             
         }
 
-        public override void SetScrollBar()
+        public override void SetScrollBar(ScoreMediator m)
         {
             drawer.canvas_scrollbar = this.canvas_scrollbar;
             drawer.current = this.current;
-            drawer.SetScrollBar();
+            drawer.SetScrollBar(m);
             int x1, x2, y1, y2;
             x1 = ((int)canvas_scrollbar.HorizontalOffset) / 50;
             y1 = ((int)canvas_scrollbar.VerticalOffset) / 50;
@@ -105,7 +106,7 @@ namespace Client.Proxy
                     if (this.bitmap[j,i] == false)
                     {
                         this.bitmap[j, i] = true;
-                        this.drawer.DrawTile(map2, players_gui2, canvas2, j, i);
+                        this.drawer.DrawTile(map2, m, j, i);
                     }
                 }
             }
