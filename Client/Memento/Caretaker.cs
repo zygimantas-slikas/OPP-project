@@ -8,11 +8,11 @@ namespace Client.Memento
 {
     class Caretaker
     {
-        Memento memento;
+        List<Memento> memento = new List<Memento>();
         public Memento Memento
         {
-            set { memento = value; }
-            get { return memento; }
+            set { memento.Add(value); }
+            get { return memento[0]; }
         }
     }
 }
